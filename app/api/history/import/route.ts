@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { connection } from "next/server";
 import { currentUser } from "@/lib/auth";
 import { ensureSchema } from "@/lib/db";
 import { ConversationInput, saveConversation } from "@/lib/history-server";
@@ -7,6 +8,7 @@ import { ConversationInput, saveConversation } from "@/lib/history-server";
 const ImportBody = z.object({ conversations: z.array(ConversationInput).max(50) });
 
 export async function POST(req: Request) {
+  await connection();
   await ensureSchema();
   const user = await currentUser(req);
   if (!user) return Response.json({ error: "unauthorized" }, { status: 401 });

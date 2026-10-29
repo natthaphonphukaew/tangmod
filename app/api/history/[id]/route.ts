@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { currentUser } from "@/lib/auth";
 import { ensureSchema } from "@/lib/db";
 import { ConversationInput, deleteConversation, getConversation, saveConversation } from "@/lib/history-server";
@@ -5,6 +6,7 @@ import { ConversationInput, deleteConversation, getConversation, saveConversatio
 /** GET / PUT / DELETE /api/history/:id — แชทหนึ่งอันของผู้ใช้ที่ login */
 
 async function userOr401(req: Request) {
+  await connection(); // ห้ามสร้างล่วงหน้าตอน build (ดู app/api/history/route.ts)
   await ensureSchema();
   return currentUser(req);
 }

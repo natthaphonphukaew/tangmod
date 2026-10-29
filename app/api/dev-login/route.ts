@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { authOptions, DEV_TEST_USER, getAuth } from "@/lib/auth";
 import { ensureSchema } from "@/lib/db";
 
@@ -7,6 +8,7 @@ import { ensureSchema } from "@/lib/db";
  */
 export async function POST() {
   if (!authOptions.devLogin) return new Response(null, { status: 404 });
+  await connection();
   await ensureSchema();
   const body = { email: DEV_TEST_USER.email, password: DEV_TEST_USER.password };
   const auth = getAuth();
