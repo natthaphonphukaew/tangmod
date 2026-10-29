@@ -27,6 +27,7 @@ npm run dev
 | `npm test` | ตรวจรูปแบบข้อมูลใน `content/` และ id ที่อ้างถึงกัน |
 | `npm run typecheck` | ตรวจ TypeScript |
 | `npm run build` | build สำหรับ production |
+| `npm run feedback` | ดึงรายการ "ตอบไม่ตรง" จากฐานข้อมูล (ตั้ง `DATABASE_URL` ของ Neon ก่อน หรือ `-- --local` สำหรับฐานในเครื่องโดยปิด dev server) → `.data/feedback-export.ndjson` |
 | `npm run eval` | ยิงชุดคำถาม 87 ข้อใน `eval/questions.json` ผ่าน `/api/chat` จริง แล้วตรวจคำตอบ (ใช้โควตา AI จริง ~4 นาที) ดู `--only=id1,id2` / `--cat=unknown` |
 
 ## Login + ประวัติแชทบน server
@@ -49,7 +50,7 @@ login ไม่บังคับ: ไม่ login ก็ถามได้ (ป
 
 ```
 app/api/chat/   POST → NDJSON stream (retrieve → prompt → LLM → validate)
-app/api/feedback/  ปุ่ม "ตอบไม่ตรง" → log (ตอน dev เขียนลง .data/feedback.ndjson)
+app/api/feedback/  ปุ่ม "ตอบไม่ตรง" → ตาราง feedback · lib/rate-limit.ts นับคำขอต่อนาทีใน Postgres (ทุก instance ใช้ร่วมกัน)
 app/api/auth/   Better Auth (login Google, session) · app/api/history/ ประวัติแชทของผู้ใช้ที่ login · app/api/dev-login/ ล็อกอินทดสอบ (dev)
 lib/db/         Drizzle schema + สร้างตาราง + เชื่อม Neon (production) / PGlite (dev)
 lib/auth.ts     ตั้งค่า Better Auth · lib/history-server.ts query ประวัติแชท (ผูกกับ userId เสมอ)
@@ -70,7 +71,7 @@ docs/           ผลค้นคว้าและสเปกเวอร์�
 
 ## ปรับคำตอบ
 
-1. ผู้ใช้กด "ตอบไม่ตรง" → คำถามกับคำตอบไปอยู่ใน `.data/feedback.ndjson` (dev) หรือ log `[feedback]` (production)
+1. ผู้ใช้กด "ตอบไม่ตรง" → คำถามกับคำตอบไปอยู่ในตาราง `feedback` (ไม่ผูกตัวตน) แล้วดึงออกมาด้วย `npm run feedback`
 2. ถ้าขาดข้อมูล เติมใน `content/` ถ้าตอบผิดแนว แก้กฎใน `lib/ai/prompt.ts`
 3. เพิ่มคำถามนั้นเข้า `eval/questions.json` แล้วรัน `npm run eval` ให้ผ่านโดยข้ออื่นไม่ตก
 

@@ -1,33 +1,37 @@
-import { appendFile, mkdir } from "node:fs/promises";
-import path from "node:path";
-import { rateLimited, scrubPII } from "@/lib/ai/guard";
+import { scrubPII } from "@/lib/ai/guard";
 import { FeedbackRequest } from "@/lib/ai/schema";
+import { ensureSchema, getDb } from "@/lib/db";
+import { feedback } from "@/lib/db/schema";
+import { isRateLimited } from "@/lib/rate-limit";
 
 /*
  * POST /api/feedback ← ปุ่ม "ตอบไม่ตรง"
- * log แบบไม่ผูกตัวตน (ไม่เก็บ IP) · ตอน dev เขียนต่อท้าย .data/feedback.ndjson ด้วย เพื่อเอาไปทำชุด eval / เติม KB
- * บน Vercel ระบบไฟล์เขียนไม่ได้ ให้ดูจาก log ของ function แทน
+ * เก็บลงตาราง feedback (Neon บน production, PGlite ตอน dev) แบบไม่ผูกตัวตน ไม่เก็บ IP
+ * ดึงออกมาทำชุด eval / เติม KB ด้วย `npm run feedback`
  */
 export async function POST(req: Request) {
   const parsed = FeedbackRequest.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return Response.json({ ok: false }, { status: 400 });
 
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
-  if (rateLimited(`feedback:${ip}`)) return Response.json({ ok: false }, { status: 429 });
+  if (await isRateLimited(`feedback:${ip}`)) return Response.json({ ok: false }, { status: 429 });
 
   const f = parsed.data;
-  const entry = {
-    at: new Date().toISOString(),
-    ...f,
+  const row = {
+    reason: f.reason,
     question: scrubPII(f.question),
     answer: scrubPII(f.answer),
+    model: f.model ?? null,
+    placeIds: f.place_ids,
+    cardIds: f.card_ids,
   };
-  console.info(`[feedback] ${JSON.stringify(entry)}`);
-
-  if (process.env.NODE_ENV !== "production") {
-    const dir = path.join(process.cwd(), ".data");
-    await mkdir(dir, { recursive: true });
-    await appendFile(path.join(dir, "feedback.ndjson"), `${JSON.stringify(entry)}\n`, "utf8");
+  try {
+    await ensureSchema();
+    await getDb().insert(feedback).values(row);
+  } catch (err) {
+    // เก็บไม่ได้ก็ยังมีใน log ของ Vercel ให้ตามเก็บทีหลัง ผู้ใช้ไม่ต้องรู้
+    console.error("[feedback] save failed", err instanceof Error ? err.message : err);
   }
+  console.info(`[feedback] ${JSON.stringify({ reason: row.reason, model: row.model })}`);
   return new Response(null, { status: 204 });
 }

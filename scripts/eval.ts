@@ -11,7 +11,10 @@
  */
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { POST } from "@/app/api/chat/route";
+// route ใช้ฐานข้อมูลนับ rate limit: ใช้ Postgres ในหน่วยความจำ ไม่แตะ .data/pglite ที่ dev server อาจเปิดอยู่
+process.env.PGLITE_DIR = "memory://";
+delete process.env.DATABASE_URL; // eval ห้ามเขียนตัวนับลงฐานข้อมูลจริงแม้ .env.local จะมี DATABASE_URL
+const { POST } = await import("@/app/api/chat/route");
 import { emptyProfile, type StreamEvent, type ValidatedAnswer } from "@/lib/ai/schema";
 
 type Expect = {

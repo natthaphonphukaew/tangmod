@@ -1,11 +1,12 @@
 import { APICallError, Output, streamText } from "ai";
-import { rateLimited, scrubPII } from "@/lib/ai/guard";
+import { scrubPII } from "@/lib/ai/guard";
 import { offlineAnswer } from "@/lib/ai/mock-model";
 import { chatModels } from "@/lib/ai/models";
 import { buildSystemPrompt, schemaInstructions } from "@/lib/ai/prompt";
 import { retrieve } from "@/lib/ai/retrieve";
 import { ChatAnswer, ChatRequest, type StreamEvent } from "@/lib/ai/schema";
 import { salvageAnswer, validateAnswer } from "@/lib/ai/validate";
+import { isRateLimited } from "@/lib/rate-limit";
 
 export const maxDuration = 60;
 
@@ -28,7 +29,7 @@ export async function POST(req: Request) {
     });
   }
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
-  if (rateLimited(ip)) {
+  if (await isRateLimited(`chat:${ip}`)) {
     return Response.json(
       { type: "error", code: "rate_limited", message: "ถามถี่ไปนิด รอสักครู่แล้วลองใหม่นะ" } satisfies StreamEvent,
       { status: 429 },
@@ -135,7 +136,13 @@ export async function POST(req: Request) {
   });
 
   return new Response(stream, {
-    headers: { "Content-Type": "application/x-ndjson; charset=utf-8", "Cache-Control": "no-store" },
+    headers: {
+      "Content-Type": "application/x-ndjson; charset=utf-8",
+      // no-transform: ห้าม proxy/CDN บีบอัด (Vercel บีบด้วย brotli แล้วพักข้อมูลไว้ส่งก้อนเดียว ข้อความเลยไม่ไหล)
+      "Cache-Control": "no-store, no-transform",
+      "Content-Encoding": "identity",
+      "X-Accel-Buffering": "no",
+    },
   });
 }
 

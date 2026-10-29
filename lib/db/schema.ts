@@ -1,4 +1,4 @@
-import { bigint, boolean, index, jsonb, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { bigint, boolean, index, integer, jsonb, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 /*
  * ตารางของ Better Auth (user / session / account / verification) + ประวัติแชท
@@ -85,4 +85,30 @@ export const conversation = pgTable(
   (t) => [index("conversation_user_updated_idx").on(t.userId, t.updatedAt)],
 );
 
-export const schema = { user, session, account, verification, conversation };
+/**
+ * ตัวนับ rate limit แบบ fixed window ใช้ร่วมกันทุก instance ของ serverless
+ * key เป็น hash ของ IP (ไม่เก็บ IP จริง) · แถวเก่าถูกลบเป็นระยะใน lib/rate-limit.ts
+ */
+export const rateLimit = pgTable("rate_limit", {
+  key: text("key").primaryKey(),
+  windowStart: bigint("window_start", { mode: "number" }).notNull(),
+  count: integer("count").notNull(),
+});
+
+/** ปุ่ม "ตอบไม่ตรง" — ไม่ผูกตัวตนผู้ใช้ ตัดข้อมูลส่วนตัวออกก่อนเก็บ */
+export const feedback = pgTable(
+  "feedback",
+  {
+    id: serial("id").primaryKey(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    reason: text("reason").notNull(),
+    question: text("question").notNull(),
+    answer: text("answer").notNull(),
+    model: text("model"),
+    placeIds: jsonb("place_ids").notNull(),
+    cardIds: jsonb("card_ids").notNull(),
+  },
+  (t) => [index("feedback_created_idx").on(t.createdAt)],
+);
+
+export const schema = { user, session, account, verification, conversation, rateLimit, feedback };

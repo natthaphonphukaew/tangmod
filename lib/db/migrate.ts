@@ -57,4 +57,20 @@ export const MIGRATIONS: string[] = [
     "thread" jsonb NOT NULL
   )`,
   `CREATE INDEX IF NOT EXISTS "conversation_user_updated_idx" ON "conversation" ("user_id", "updated_at")`,
+  `CREATE TABLE IF NOT EXISTS "rate_limit" (
+    "key" text PRIMARY KEY,
+    "window_start" bigint NOT NULL,
+    "count" integer NOT NULL
+  )`,
+  `CREATE TABLE IF NOT EXISTS "feedback" (
+    "id" serial PRIMARY KEY,
+    "created_at" timestamp NOT NULL DEFAULT now(),
+    "reason" text NOT NULL,
+    "question" text NOT NULL,
+    "answer" text NOT NULL,
+    "model" text,
+    "place_ids" jsonb NOT NULL,
+    "card_ids" jsonb NOT NULL
+  )`,
+  `CREATE INDEX IF NOT EXISTS "feedback_created_idx" ON "feedback" ("created_at")`,
 ];

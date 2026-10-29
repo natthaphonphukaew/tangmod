@@ -9,6 +9,7 @@ import { ProgramCard } from "@/components/cards/ProgramCard";
 import { TimelineCard } from "@/components/cards/TimelineCard";
 import { TierBadge } from "@/components/ui/TierBadge";
 import { AntAvatar } from "./AntAvatar";
+import { useRevealText } from "./useRevealText";
 import type { ThreadItem } from "./types";
 
 type Props = {
@@ -22,6 +23,11 @@ type Props = {
 export function AssistantMessage({ item, onShowPlace, onRetry, onFeedback }: Props) {
   const answer = item.answer;
   const text = answer?.message ?? item.partial?.message ?? "";
+  // ค่อย ๆ แสดงเฉพาะคำตอบที่เพิ่งถามในหน้านี้ แชทเก่าจากประวัติแสดงทันที
+  const [fresh] = useState(item.status === "streaming");
+  const { shown, revealing } = useRevealText(text, fresh);
+  // การ์ด หมุด แหล่งที่มา โผล่หลังข้อความแสดงครบ จะได้ไม่เด้งแทรกระหว่างที่ข้อความยังวิ่ง
+  const showExtras = !revealing;
 
   return (
     // แบบแชท AI ที่คนคุ้น: คำตอบไม่มีกรอบ อ่านยาวสบายตา มีแค่ไอคอนมดนำหน้า
@@ -37,14 +43,14 @@ export function AssistantMessage({ item, onShowPlace, onRetry, onFeedback }: Pro
           </div>
         ) : text ? (
           <div className="text-[15px]">
-            <LightMarkdown text={text} />
-            {item.status === "streaming" && <span className="ml-0.5 inline-block h-4 w-1.5 animate-pulse rounded-sm bg-brand align-middle" />}
+            <LightMarkdown text={shown} />
+            {(item.status === "streaming" || revealing) && <span className="ml-0.5 inline-block h-4 w-1.5 animate-pulse rounded-sm bg-brand align-middle" />}
           </div>
         ) : (
           <ThinkingAnt />
         )}
 
-        {answer && answer.places.length > 0 && (
+        {showExtras && answer && answer.places.length > 0 && (
           // รายชื่อสถานที่อยู่ในคำตอบเสมอ กดเพื่อเปิดแผนที่เองได้ แม้คำตอบนี้จะไม่ได้เปิดแผนที่ให้อัตโนมัติ
           <ol className="divide-y divide-line overflow-hidden rounded-[var(--radius-card)] border border-line">
             {answer.places.map((p, i) => {
@@ -72,7 +78,8 @@ export function AssistantMessage({ item, onShowPlace, onRetry, onFeedback }: Pro
           </ol>
         )}
 
-        {answer?.cards.map((card, i) => (
+        {showExtras &&
+          answer?.cards.map((card, i) => (
           <Fragment key={i}>
             {card.type === "program" && <ProgramCard id={card.ids[0]} onShowPlace={onShowPlace} />}
             {card.type === "compare" && <CompareCard ids={card.ids} onShowPlace={onShowPlace} />}
@@ -85,7 +92,7 @@ export function AssistantMessage({ item, onShowPlace, onRetry, onFeedback }: Pro
           </Fragment>
         ))}
 
-        {answer && answer.sources.length > 0 && (
+        {showExtras && answer && answer.sources.length > 0 && (
           <ul className="flex flex-wrap gap-x-3 gap-y-1.5 text-xs">
             {answer.sources.map((s) => (
               <li key={s.id} className="flex items-center gap-1.5">
