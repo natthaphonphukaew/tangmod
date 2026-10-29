@@ -1,0 +1,954 @@
+[
+ {
+  "id": "fee-cs",
+  "cat": "official",
+  "q": "ค่าเทอม CS ที่ SIT เท่าไหร่",
+  "expect": {
+   "include": [
+    "57,?000"
+   ],
+   "cards_any": [
+    "sit-cs"
+   ],
+   "show_map": false
+  }
+ },
+ {
+  "id": "fee-it",
+  "cat": "official",
+  "q": "IT ค่าเทอมคิดยังไง",
+  "expect": {
+   "include": [
+    "1,?800|14,?500|หน่วยกิต"
+   ],
+   "cards_any": [
+    "sit-it"
+   ]
+  }
+ },
+ {
+  "id": "fee-dsi",
+  "cat": "official",
+  "q": "DSI ค่าเทอมเทอมละเท่าไหร่",
+  "expect": {
+   "include": [
+    "47,?500"
+   ],
+   "cards_any": [
+    "sit-dsi"
+   ]
+  }
+ },
+ {
+  "id": "fee-cpe",
+  "cat": "official",
+  "q": "วิศวะคอมค่าเทอมเท่าไหร่",
+  "expect": {
+   "include": [
+    "30,?000"
+   ],
+   "cards_any": [
+    "eng-cpe"
+   ],
+   "show_map": false
+  }
+ },
+ {
+  "id": "total-cpe",
+  "cat": "official",
+  "q": "เรียน CPE จบทั้งหลักสูตรใช้เงินประมาณเท่าไหร่",
+  "expect": {
+   "include": [
+    "240,?000"
+   ],
+   "cards_any": [
+    "eng-cpe"
+   ]
+  }
+ },
+ {
+  "id": "total-cs",
+  "cat": "official",
+  "q": "CS ทั้งหลักสูตรรวมเท่าไหร่",
+  "expect": {
+   "include": [
+    "456,?000"
+   ],
+   "cards_any": [
+    "sit-cs"
+   ]
+  }
+ },
+ {
+  "id": "credits-cs",
+  "cat": "official",
+  "q": "CS เรียนกี่หน่วยกิต",
+  "expect": {
+   "include": [
+    "134"
+   ],
+   "show_map": false
+  }
+ },
+ {
+  "id": "credits-it",
+  "cat": "official",
+  "q": "IT ต้องเรียนกี่หน่วยกิตถึงจบ",
+  "expect": {
+   "include": [
+    "128"
+   ]
+  }
+ },
+ {
+  "id": "credits-dsi",
+  "cat": "official",
+  "q": "DSI กี่หน่วยกิต",
+  "expect": {
+   "include": [
+    "121"
+   ]
+  }
+ },
+ {
+  "id": "credits-cpe",
+  "cat": "official",
+  "q": "CPE กี่หน่วยกิต",
+  "expect": {
+   "include": [
+    "130"
+   ]
+  }
+ },
+ {
+  "id": "lang-cs",
+  "cat": "official",
+  "q": "CS สอนเป็นภาษาอังกฤษไหม",
+  "expect": {
+   "include": [
+    "อังกฤษ"
+   ],
+   "cards_any": [
+    "sit-cs"
+   ]
+  }
+ },
+ {
+  "id": "cmp-cpe-cs",
+  "cat": "official",
+  "q": "คอมวิศวะ กับ CS ต่างกันยังไง",
+  "expect": {
+   "card_types_any": [
+    "compare"
+   ],
+   "cards_all": [
+    "eng-cpe",
+    "sit-cs"
+   ],
+   "show_map": false
+  }
+ },
+ {
+  "id": "cmp-it-dsi",
+  "cat": "official",
+  "q": "IT กับ DSI ต่างกันยังไง",
+  "expect": {
+   "card_types_any": [
+    "compare"
+   ],
+   "cards_all": [
+    "sit-it",
+    "sit-dsi"
+   ]
+  }
+ },
+ {
+  "id": "sit-programs",
+  "cat": "official",
+  "q": "SIT มีสาขาอะไรบ้าง",
+  "expect": {
+   "include": [
+    "\\bIT\\b|เทคโนโลยีสารสนเทศ",
+    "\\bCS\\b|วิทยาการคอมพิวเตอร์",
+    "DSI|นวัตกรรมบริการดิจิทัล"
+   ],
+   "show_map": false,
+   "exclude": [
+    "วิศวกรรมศาสตรบัณฑิต|วิศวศาสตรบัณฑิต"
+   ]
+  }
+ },
+ {
+  "id": "gpax-cs",
+  "cat": "official",
+  "q": "CS รอบ AR ต้องใช้เกรดเท่าไหร่",
+  "expect": {
+   "include": [
+    "3\\.00?"
+   ],
+   "show_map": false
+  }
+ },
+ {
+  "id": "gpax-it",
+  "cat": "official",
+  "q": "IT รอบ portfolio ใช้ GPAX ขั้นต่ำเท่าไหร่",
+  "expect": {
+   "include": [
+    "2\\.75"
+   ]
+  }
+ },
+ {
+  "id": "gpax-dsi",
+  "cat": "official",
+  "q": "DSI ต้องได้เกรดเฉลี่ยเท่าไหร่ถึงยื่นได้",
+  "expect": {
+   "include": [
+    "2\\.50?"
+   ]
+  }
+ },
+ {
+  "id": "gpax-cpe",
+  "cat": "official",
+  "q": "CPE รอบแรกใช้เกรดเท่าไหร่",
+  "expect": {
+   "include": [
+    "3\\.00?"
+   ]
+  }
+ },
+ {
+  "id": "fibo-where",
+  "cat": "official",
+  "q": "FIBO คืออะไร อยู่ตึกไหน",
+  "expect": {
+   "places_any": [
+    "N9"
+   ],
+   "include": [
+    "หุ่นยนต์|robot"
+   ],
+   "show_map": true
+  }
+ },
+ {
+  "id": "fibo-fee",
+  "cat": "official",
+  "q": "FIBO ค่าเทอมเท่าไหร่",
+  "expect": {
+   "include": [
+    "57,?000"
+   ],
+   "cards_any": [
+    "fibo-rai"
+   ]
+  }
+ },
+ {
+  "id": "che-where",
+  "cat": "official",
+  "q": "วิศวะเคมีเรียนตึกไหน",
+  "expect": {
+   "places_any": [
+    "S15"
+   ],
+   "show_map": true
+  }
+ },
+ {
+  "id": "ee-where",
+  "cat": "official",
+  "q": "วิศวะไฟฟ้าเรียนที่ไหน",
+  "expect": {
+   "places_any": [
+    "S12"
+   ],
+   "show_map": true
+  }
+ },
+ {
+  "id": "tracks-cpe",
+  "cat": "official",
+  "q": "CPE มีสายให้เลือกเรียนอะไรบ้าง",
+  "expect": {
+   "include": [
+    "software|data|robot|ซอฟต์แวร์|ข้อมูล|หุ่นยนต์"
+   ],
+   "cards_any": [
+    "eng-cpe"
+   ]
+  }
+ },
+ {
+  "id": "tracks-it",
+  "cat": "official",
+  "q": "IT มี career track อะไรบ้าง",
+  "expect": {
+   "include": [
+    "frontend|backend|full-?stack"
+   ]
+  }
+ },
+ {
+  "id": "seneca",
+  "cat": "official",
+  "q": "CS ไปเรียนต่อแคนาดาได้ยังไง",
+  "expect": {
+   "include": [
+    "seneca",
+    "3\\s*\\+\\s*1|3 ปี"
+   ]
+  }
+ },
+ {
+  "id": "ar2-sit",
+  "cat": "official",
+  "q": "AR รอบ 2 ของ SIT ปิดวันไหน",
+  "expect": {
+   "include": [
+    "25"
+   ],
+   "card_types_any": [
+    "timeline"
+   ],
+   "show_map": false
+  }
+ },
+ {
+  "id": "open-now",
+  "cat": "official",
+  "q": "TCAS70 รอบไหนยังเปิดอยู่",
+  "expect": {
+   "card_types_any": [
+    "timeline"
+   ],
+   "include": [
+    "active recruitment|\\bAR\\b|pre-?u"
+   ]
+  }
+ },
+ {
+  "id": "phet-close",
+  "cat": "official",
+  "q": "ทุนเพชรพระจอมเกล้ายังสมัครทันไหม",
+  "expect": {
+   "include": [
+    "26|ปิด"
+   ]
+  }
+ },
+ {
+  "id": "phet-benefit",
+  "cat": "official",
+  "q": "ทุนเพชรได้อะไรบ้าง",
+  "expect": {
+   "include": [
+    "4,?000"
+   ]
+  }
+ },
+ {
+  "id": "phet-count",
+  "cat": "official",
+  "q": "ทุนเพชรพระจอมเกล้ามีกี่ทุน",
+  "expect": {
+   "include": [
+    "35"
+   ]
+  }
+ },
+ {
+  "id": "phet-exam",
+  "cat": "official",
+  "q": "สอบทุนเพชรสายวิชาการวันไหน",
+  "expect": {
+   "include": [
+    "ม\\.ค|มกราคม|2027-01|01/2027"
+   ]
+  }
+ },
+ {
+  "id": "portfolio-pages",
+  "cat": "official",
+  "q": "portfolio ต้องไม่เกินกี่หน้า",
+  "expect": {
+   "include": [
+    "12"
+   ]
+  }
+ },
+ {
+  "id": "r3",
+  "cat": "official",
+  "q": "รอบ 3 Admission สมัครเมื่อไหร่",
+  "expect": {
+   "include": [
+    "พ\\.ค|พฤษภาคม|2027-05"
+   ]
+  }
+ },
+ {
+  "id": "r1-announce",
+  "cat": "official",
+  "q": "ประกาศผลรอบ 1 เมื่อไหร่",
+  "expect": {
+   "include": [
+    "ก\\.พ|กุมภาพันธ์|2027-02"
+   ]
+  }
+ },
+ {
+  "id": "preu",
+  "cat": "official",
+  "q": "Pre-U KMUTT ปิดรับเมื่อไหร่",
+  "expect": {
+   "include": [
+    "30",
+    "พ\\.ย|พฤศจิกายน|2026-11"
+   ]
+  }
+ },
+ {
+  "id": "kfc-where",
+  "cat": "official",
+  "q": "โรงอาหาร KFC อยู่ไหน",
+  "expect": {
+   "places_any": [
+    "S14"
+   ],
+   "include": [
+    "190|S14|ชั้น 2"
+   ],
+   "show_map": true
+  }
+ },
+ {
+  "id": "kfc-name",
+  "cat": "official",
+  "q": "KFC ในมอคือร้านไก่ทอดเหรอ",
+  "expect": {
+   "include": [
+    "food center|ไม่ใช่"
+   ]
+  }
+ },
+ {
+  "id": "kfc-hours",
+  "cat": "official",
+  "q": "โรงอาหารเปิดกี่โมง",
+  "expect": {
+   "include": [
+    "0?6[:.]00|6 โมง|หกโมง"
+   ],
+   "places_any": [
+    "S14"
+   ]
+  }
+ },
+ {
+  "id": "kfc-sunday",
+  "cat": "official",
+  "q": "วันอาทิตย์โรงอาหารเปิดไหม",
+  "expect": {
+   "include": [
+    "ไม่|ปิด|จันทร์.{0,8}เสาร์|จ\\.?\\s*[–-]\\s*ส"
+   ]
+  }
+ },
+ {
+  "id": "lib-hours",
+  "cat": "official",
+  "q": "ห้องสมุดเปิดกี่โมง",
+  "expect": {
+   "places_any": [
+    "N10"
+   ],
+   "include": [
+    "0?8[:.]00|8 โมง|แปดโมง"
+   ]
+  }
+ },
+ {
+  "id": "lib-late",
+  "cat": "official",
+  "q": "อ่านหนังสือดึกๆ ได้ที่ไหน",
+  "expect": {
+   "include": [
+    "1[78][:.]00|ปิด"
+   ]
+  }
+ },
+ {
+  "id": "lx",
+  "cat": "official",
+  "q": "LX คือตึกอะไร",
+  "expect": {
+   "places_any": [
+    "N16"
+   ],
+   "show_map": true
+  }
+ },
+ {
+  "id": "dorm-where",
+  "cat": "official",
+  "q": "หอพักในมออยู่ตรงไหน",
+  "expect": {
+   "places_any": [
+    "S5",
+    "S6"
+   ],
+   "show_map": true
+  }
+ },
+ {
+  "id": "dorm-price",
+  "cat": "official",
+  "q": "หอในค่าห้องเท่าไหร่",
+  "expect": {
+   "include": [
+    "2,?500|3,?500"
+   ]
+  }
+ },
+ {
+  "id": "clinic",
+  "cat": "official",
+  "q": "ไม่สบายไปหาหมอที่ไหนในมอ",
+  "expect": {
+   "places_any": [
+    "N17"
+   ],
+   "show_map": true
+  }
+ },
+ {
+  "id": "parking",
+  "cat": "official",
+  "q": "ขับรถมาเอารถไปจอดตรงไหน",
+  "expect": {
+   "places_any": [
+    "S2"
+   ],
+   "show_map": true
+  }
+ },
+ {
+  "id": "sit-where",
+  "cat": "official",
+  "q": "SIT อยู่ตึกไหน",
+  "expect": {
+   "places_any": [
+    "N11"
+   ],
+   "show_map": true
+  }
+ },
+ {
+  "id": "cpe-floor",
+  "cat": "official",
+  "q": "ภาควิศวะคอมอยู่ชั้นไหน",
+  "expect": {
+   "include": [
+    "10|11"
+   ],
+   "places_any": [
+    "S4"
+   ]
+  }
+ },
+ {
+  "id": "welcome",
+  "cat": "official",
+  "q": "Welcome Center อยู่ไหน",
+  "expect": {
+   "places_any": [
+    "N1"
+   ],
+   "show_map": true
+  }
+ },
+ {
+  "id": "bus",
+  "cat": "official",
+  "q": "รถเมล์สายไหนผ่านหน้ามอ",
+  "expect": {
+   "include": [
+    "21",
+    "75"
+   ]
+  }
+ },
+ {
+  "id": "bts",
+  "cat": "official",
+  "q": "มาจาก BTS ยังไง",
+  "expect": {
+   "include": [
+    "วงเวียนใหญ่"
+   ]
+  }
+ },
+ {
+  "id": "bus-stop",
+  "cat": "official",
+  "q": "ลงรถเมล์หน้ามอแล้วเดินเข้าทางไหน",
+  "expect": {
+   "places_any": [
+    "bus_stop_front",
+    "main_gate"
+   ]
+  }
+ },
+ {
+  "id": "term-end",
+  "cat": "official",
+  "q": "เทอม 1/2569 ปิดเมื่อไหร่",
+  "expect": {
+   "include": [
+    "ธ\\.ค|ธันวาคม|2026-12"
+   ]
+  }
+ },
+ {
+  "id": "monday",
+  "cat": "official",
+  "q": "บ่ายวันจันทร์มีเรียนไหม",
+  "expect": {
+   "include": [
+    "ไม่มี|ว่าง|กิจกรรม|งดการเรียน"
+   ]
+  }
+ },
+ {
+  "id": "history",
+  "cat": "official",
+  "q": "มจธ. ก่อตั้งปีไหน",
+  "expect": {
+   "include": [
+    "2503|2541|1960"
+   ]
+  }
+ },
+ {
+  "id": "dsi-code",
+  "cat": "niche",
+  "q": "DSI เขียนโค้ดหนักไหม",
+  "expect": {
+   "include": [
+    "รีวิว|รุ่นพี่|ไม่เป็นทางการ"
+   ]
+  }
+ },
+ {
+  "id": "sit-keycard",
+  "cat": "niche",
+  "q": "ตึก SIT เข้ายังไง ต้องใช้บัตรไหม",
+  "expect": {
+   "include": [
+    "คีย์การ์ด|บัตร|key ?card"
+   ]
+  }
+ },
+ {
+  "id": "food-price",
+  "cat": "niche",
+  "q": "ข้าวในโรงอาหารราคาเท่าไหร่",
+  "expect": {
+   "include": [
+    "รีวิว|เก่า|ไม่เป็นทางการ"
+   ]
+  }
+ },
+ {
+  "id": "halal",
+  "cat": "niche",
+  "q": "ในมอมีอาหารฮาลาลไหม",
+  "expect": {
+   "include": [
+    "ฮาลาล"
+   ],
+   "places_any": [
+    "S14"
+   ]
+  }
+ },
+ {
+  "id": "veg",
+  "cat": "niche",
+  "q": "มีอาหารมังสวิรัติไหม",
+  "expect": {
+   "include": [
+    "มังสวิรัติ"
+   ]
+  }
+ },
+ {
+  "id": "no-hardware",
+  "cat": "niche",
+  "q": "ไม่ชอบฮาร์ดแวร์ ควรเรียน CPE หรือ CS",
+  "expect": {
+   "include": [
+    "\\bCS\\b|วิทยาการคอมพิวเตอร์"
+   ],
+   "cards_any": [
+    "sit-cs"
+   ]
+  }
+ },
+ {
+  "id": "cs-physics",
+  "cat": "niche",
+  "q": "CS ต้องเรียนฟิสิกส์ไหม",
+  "expect": {
+   "include": [
+    "ฟิสิกส์"
+   ]
+  }
+ },
+ {
+  "id": "bootcamp",
+  "cat": "niche",
+  "q": "ก่อนเปิดเทอม SIT มีติวอะไรให้ไหม",
+  "expect": {
+   "include": [
+    "bootcamp|บูทแคมป์|ติว"
+   ]
+  }
+ },
+ {
+  "id": "front-food",
+  "cat": "niche",
+  "q": "ร้านอาหารหน้ามอมีร้านไหนบ้าง",
+  "expect": {
+   "include": [
+    "wongnai|รีวิว|ร้าน"
+   ]
+  }
+ },
+ {
+  "id": "unk-laptop",
+  "cat": "unknown",
+  "q": "CPE ต้องใช้โน้ตบุ๊กสเปกไหน",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "unk-salary",
+  "cat": "unknown",
+  "q": "จบ CS เงินเดือนเริ่มต้นเท่าไหร่",
+  "expect": {
+   "admits_unknown": true,
+   "exclude": [
+    "\\d{2},\\d{3}\\s*(–|-|ถึง)\\s*\\d{2},\\d{3}\\s*บาท/?เดือน"
+   ]
+  }
+ },
+ {
+  "id": "unk-seats",
+  "cat": "unknown",
+  "q": "IT รอบ AR รับกี่คน",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "unk-7eleven",
+  "cat": "unknown",
+  "q": "ในมอมีเซเว่นไหม",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "unk-gym",
+  "cat": "unknown",
+  "q": "ฟิตเนสในมอเปิดกี่โมง",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "unk-pool",
+  "cat": "unknown",
+  "q": "สระว่ายน้ำในมออยู่ตรงไหน",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "unk-wifi",
+  "cat": "unknown",
+  "q": "รหัส wifi ของมหาลัยคืออะไร",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "unk-advisor",
+  "cat": "unknown",
+  "q": "อาจารย์ที่ปรึกษาของ CS ปี 1 คือใคร",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "oos-calculus",
+  "cat": "out_of_scope",
+  "q": "ช่วยทำการบ้านแคลคูลัสให้หน่อย",
+  "expect": {
+   "refuse": true
+  }
+ },
+ {
+  "id": "oos-code",
+  "cat": "out_of_scope",
+  "q": "เขียนโค้ด python bubble sort ให้หน่อย",
+  "expect": {
+   "refuse": true,
+   "exclude": [
+    "def |for .* in range"
+   ]
+  }
+ },
+ {
+  "id": "oos-essay",
+  "cat": "out_of_scope",
+  "q": "เขียนเรียงความเรื่องสิ่งแวดล้อม 1 หน้าให้หน่อย",
+  "expect": {
+   "refuse": true
+  }
+ },
+ {
+  "id": "oos-chula",
+  "cat": "out_of_scope",
+  "q": "จุฬาวิศวะคอมค่าเทอมเท่าไหร่",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "oos-human",
+  "cat": "out_of_scope",
+  "q": "เธอเป็นคนจริงหรือเปล่า",
+  "expect": {
+   "include": [
+    "AI|เอไอ|ตัวละคร|ไม่ใช่คน"
+   ]
+  }
+ },
+ {
+  "id": "room-cb2301",
+  "cat": "map",
+  "q": "CB2301 อยู่ตรงไหน",
+  "expect": {
+   "places_any": [
+    "N17"
+   ],
+   "show_map": true,
+   "include": [
+    "ชั้น\\W{0,3}(ที่\\W{0,3})?3"
+   ]
+  }
+ },
+ {
+  "id": "room-cb4",
+  "cat": "map",
+  "q": "ห้อง CB4205 อยู่ตึกไหน ชั้นอะไร",
+  "expect": {
+   "places_any": [
+    "S12"
+   ],
+   "show_map": true,
+   "include": [
+    "ชั้น\\W{0,3}(ที่\\W{0,3})?2"
+   ],
+   "exclude": [
+    "รีวิว"
+   ]
+  }
+ },
+ {
+  "id": "room-cb1-lower",
+  "cat": "map",
+  "q": "cb1101 ไปทางไหน",
+  "expect": {
+   "places_any": [
+    "N20"
+   ],
+   "show_map": true
+  }
+ },
+ {
+  "id": "map-kfc-from-sit",
+  "cat": "map",
+  "q": "จาก SIT เดินไปโรงอาหาร KFC ยังไง",
+  "expect": {
+   "places_all": [
+    "N11",
+    "S14"
+   ],
+   "show_map": true
+  }
+ },
+ {
+  "id": "map-halal",
+  "cat": "map",
+  "q": "ร้านฮาลาลในมออยู่ตึกไหน",
+  "expect": {
+   "places_any": [
+    "S14"
+   ],
+   "show_map": true
+  }
+ },
+ {
+  "id": "map-library-where",
+  "cat": "map",
+  "q": "ห้องสมุดอยู่ตรงไหน",
+  "expect": {
+   "places_any": [
+    "N10"
+   ],
+   "show_map": true
+  }
+ },
+ {
+  "id": "nomap-tcas",
+  "cat": "map",
+  "q": "TCAS70 รอบไหนยังเปิดอยู่",
+  "expect": {
+   "show_map": false
+  }
+ },
+ {
+  "id": "nomap-seneca",
+  "cat": "map",
+  "q": "Seneca 3+1 คืออะไร",
+  "expect": {
+   "show_map": false
+  }
+ },
+ {
+  "id": "nomap-lib-hours",
+  "cat": "map",
+  "q": "ห้องสมุดเปิดกี่โมง",
+  "expect": {
+   "show_map": false
+  }
+ },
+ {
+  "id": "one-mod-all",
+  "cat": "official",
+  "q": "CS ค่าเทอมเท่าไหร่ แล้วในมอมีอาหารฮาลาลไหม",
+  "expect": {
+   "include": [
+    "57,?000",
+    "ฮาลาล"
+   ]
+  }
+ }
+]

@@ -1,0 +1,125 @@
+[
+  {
+    "id": "r1-intl-1",
+    "round": 1, "kind": "apply",
+    "title": "KMUTT International Admission (1)",
+    "start": "2026-08-17", "end": "2026-10-26",
+    "tier": "student", "source_url": "https://www.eduzones.com/2026/08/24/kmutt-tcas70/", "updated_at": "2026-10-28"
+  },
+  {
+    "id": "r1-talent-phet",
+    "round": 1, "kind": "apply",
+    "title": "คัดเลือกตรงความสามารถพิเศษ และทุนเพชรพระจอมเกล้า",
+    "start": "2026-08-17", "end": "2026-10-26",
+    "tier": "student", "source_url": "https://www.eduzones.com/2026/08/24/kmutt-tcas70/", "updated_at": "2026-10-28"
+  },
+  {
+    "id": "r1-ar-all",
+    "round": 1, "kind": "apply",
+    "title": "Active Recruitment (ภาพรวมทุกคณะ รวมโครงการ FIBO School Consortium)",
+    "start": "2026-08-17", "end": "2027-01-11",
+    "tier": "student", "source_url": "https://www.eduzones.com/2026/08/24/kmutt-tcas70/", "updated_at": "2026-10-28"
+  },
+  {
+    "id": "r1-sit-ar-1",
+    "round": 1, "kind": "apply",
+    "title": "Active Recruitment คณะ SIT รอบที่ 1",
+    "faculty": "sit", "program_ids": ["sit-it", "sit-cs", "sit-dsi"],
+    "start": "2026-08-17", "end": "2026-09-28",
+    "tier": "student", "source_url": "https://www.eduzones.com/2026/08/24/kmutt-tcas70/", "updated_at": "2026-10-28"
+  },
+  {
+    "id": "r1-sit-ar-2",
+    "round": 1, "kind": "apply",
+    "title": "Active Recruitment คณะ SIT รอบที่ 2",
+    "faculty": "sit", "program_ids": ["sit-it", "sit-cs", "sit-dsi"],
+    "start": "2026-10-27", "end": "2026-11-25",
+    "tier": "official", "source_url": "https://www.sit.kmutt.ac.th/active-recruitment-it/", "updated_at": "2026-10-28",
+    "conflict_note": "Eduzones ระบุ 20 ต.ค.–16 พ.ย. 69 แต่เว็บ SIT ระบุ 27 ต.ค.–25 พ.ย. 69 จึงใช้ของ SIT"
+  },
+  {
+    "id": "r1-sit-ar-3",
+    "round": 1, "kind": "apply",
+    "title": "Active Recruitment คณะ SIT รอบที่ 3",
+    "faculty": "sit", "program_ids": ["sit-it", "sit-cs", "sit-dsi"],
+    "start": "2026-12-09", "end": "2027-01-18",
+    "tier": "student", "source_url": "https://www.eduzones.com/2026/08/24/kmutt-tcas70/", "updated_at": "2026-10-28"
+  },
+  {
+    "id": "r1-preu",
+    "round": 1, "kind": "apply",
+    "title": "Pre-U KMUTT",
+    "start": "2026-10-01", "end": "2026-11-30",
+    "tier": "student", "source_url": "https://www.eduzones.com/2026/08/24/kmutt-tcas70/", "updated_at": "2026-10-28"
+  },
+  {
+    "id": "r1-posn",
+    "round": 1, "kind": "apply",
+    "title": "ความสามารถด้านวิทยาศาสตร์ (สอวน. / วมว.)",
+    "start": "2026-11-23", "end": "2026-12-28",
+    "tier": "student", "source_url": "https://www.eduzones.com/2026/08/24/kmutt-tcas70/", "updated_at": "2026-10-28"
+  },
+  {
+    "id": "r1-intl-2",
+    "round": 1, "kind": "apply",
+    "title": "KMUTT International Admission (2) และความสามารถด้านภาษาอังกฤษ",
+    "start": "2026-11-23", "end": "2027-01-11",
+    "tier": "student", "source_url": "https://www.eduzones.com/2026/08/24/kmutt-tcas70/", "updated_at": "2026-10-28"
+  },
+  {
+    "id": "phet-exam-academic",
+    "round": 1, "kind": "exam",
+    "title": "สอบทุนเพชรพระจอมเกล้า (สายวิชาการ)",
+    "start": "2027-01-08", "end": "2027-01-11",
+    "tier": "student", "source_url": "https://www.admissionpremium.com/content/9096", "updated_at": "2026-10-28"
+  },
+  {
+    "id": "phet-exam-talent",
+    "round": 1, "kind": "exam",
+    "title": "สอบทุนเพชรพระจอมเกล้า (สายความสามารถพิเศษ)",
+    "start": "2027-01-22", "end": "2027-01-25",
+    "tier": "student", "source_url": "https://www.admissionpremium.com/content/9096", "updated_at": "2026-10-28"
+  },
+  {
+    "id": "r1-announce",
+    "round": 1, "kind": "announce",
+    "title": "ประกาศผลรอบ 1 (ตัวจริง 11 ก.พ. ตัวสำรอง 12 ก.พ.)",
+    "start": "2027-02-11", "end": "2027-02-12",
+    "tier": "student", "source_url": "https://www.eduzones.com/2026/08/24/kmutt-tcas70/", "updated_at": "2026-10-28"
+  },
+  {
+    "id": "r1-confirm",
+    "round": 1, "kind": "confirm",
+    "title": "ยืนยันสิทธิ์รอบ 1 ในระบบ myTCAS",
+    "start": "2027-03-10", "end": "2027-03-11",
+    "tier": "student", "source_url": "https://www.eduzones.com/2026/08/24/kmutt-tcas70/", "updated_at": "2026-10-28"
+  },
+  {
+    "id": "r1-pay",
+    "round": 1, "kind": "pay",
+    "title": "ชำระค่ายืนยันสิทธิ์รอบ 1",
+    "start": "2027-03-16", "end": "2027-04-01",
+    "tier": "student", "source_url": "https://www.eduzones.com/2026/08/24/kmutt-tcas70/", "updated_at": "2026-10-28"
+  },
+  {
+    "id": "r2-quota",
+    "round": 2, "kind": "apply",
+    "title": "รอบ 2 Quota (ปวช., ผู้พิการ, International, Pre-U, TGAT/TPAT, ทายาทวิชาชีพและธุรกิจ, Fresh Start, Active Recruitment)",
+    "start": "2027-03-15", "end": "2027-04-01",
+    "tier": "student", "source_url": "https://www.eduzones.com/2026/08/24/kmutt-tcas70/", "updated_at": "2026-10-28"
+  },
+  {
+    "id": "r3-admission",
+    "round": 3, "kind": "apply",
+    "title": "รอบ 3 Admission (สมัครผ่าน myTCAS)",
+    "start": "2027-05-07", "end": "2027-05-11",
+    "tier": "student", "source_url": "https://www.eduzones.com/2026/08/24/kmutt-tcas70/", "updated_at": "2026-10-28"
+  },
+  {
+    "id": "r3-announce",
+    "round": 3, "kind": "announce",
+    "title": "ประกาศผลรอบ 3 ครั้งที่ 1",
+    "start": "2027-05-22", "end": "2027-05-22",
+    "tier": "student", "source_url": "https://www.eduzones.com/2026/08/24/kmutt-tcas70/", "updated_at": "2026-10-28"
+  }
+]

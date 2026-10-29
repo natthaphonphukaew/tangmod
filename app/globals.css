@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+/*
+ * ทางมด design tokens — อิงสี CI มจธ. (kmutt.ac.th/en/corporate_identity/colors)
+ * บนโทนกระดาษอุ่น: ส้ม = action/หมุด, เหลือง = รอยทางมด, เทาฟ้า = ของรอง
+ * ห้าม: ม่วง, gradient, glassmorphism, glow
+ */
+:root {
+  --paper: #fbf6ee;
+  --paper-deep: #f3ebdd;
+  --card: #fffdf9;
+  --ink: #1e1a16;
+  --ink-soft: #57504a;
+  --line: #e4d9c7;
+
+  --brand: #fa4616;
+  --brand-ink: #c2360b;
+  --trail: #ffc72c;
+  --slate: #7b8189;
+
+  --park: #c9d3b4;
+  --park-deep: #9aab7f;
+  --water: #c4d6dc;
+  --road: #efe5d3;
+  --building: #e8dcc8;
+  --building-edge: #bfae93;
+  /* ตึกที่มีตัวละครให้คุย */
+  --building-persona: #f6d6bf;
+  --building-persona-edge: #d99a74;
+  --building-lit: #ffe39a;
+
+  --ok: #2f7d4f;
+  --warn: #b7791f;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-deep: var(--paper-deep);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-line: var(--line);
+  --color-brand: var(--brand);
+  --color-brand-ink: var(--brand-ink);
+  --color-trail: var(--trail);
+  --color-slate: var(--slate);
+  --color-park: var(--park);
+  --color-park-deep: var(--park-deep);
+  --color-water: var(--water);
+  --color-road: var(--road);
+  --color-building: var(--building);
+  --color-building-edge: var(--building-edge);
+  --color-building-persona: var(--building-persona);
+  --color-building-lit: var(--building-lit);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+
+  --font-sans: var(--font-anuphan), system-ui, sans-serif;
+  --font-display: var(--font-mitr), var(--font-anuphan), sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  --radius-card: 14px;
+  --shadow-card: 0 1px 0 var(--line), 0 6px 18px -10px rgb(30 26 22 / 0.25);
+}
+
+html {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  /* ภาษาไทยต้องการ line-height สูงกว่าละตินเพื่อไม่ให้สระ/วรรณยุกต์ชนกัน */
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand-ink);
+  outline-offset: 2px;
+}
+
+/* รอยทางมด: จุดเรียงกันเดินไปตามเส้น */
+.ant-march {
+  animation: ant-march 1.1s linear infinite;
+}
+@keyframes ant-march {
+  to {
+    stroke-dashoffset: -12;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,517 @@
+[
+  {
+    "id": "N11",
+    "name_th": "อาคารคณะเทคโนโลยีสารสนเทศ",
+    "name_en": "School of Information Technology (SIT) Building",
+    "short": "SIT",
+    "kind": "faculty",
+    "aliases": [
+      "ตึก SIT",
+      "ตึกไอที",
+      "คณะไอที",
+      "SIT Building"
+    ],
+    "tags": [
+      "ชั้น 1–2 เปิด 24 ชม. สำหรับนักศึกษา",
+      "ห้องแล็บคอม",
+      "ใช้คีย์การ์ด"
+    ],
+    "floors": [
+      {
+        "floor": "1–2",
+        "what": "common room และห้องแล็บคอม เปิดให้นักศึกษา 24/7"
+      }
+    ],
+    "description": "ตึกของคณะ SIT เปิดใช้ 6 ธ.ค. 2545 อยู่ใกล้ห้องสมุด ห้องเรียนส่วนหนึ่งของ SIT อยู่ที่ตึก LX ชั้น 10–13",
+    "tier": "official",
+    "source_url": "https://www.sit.kmutt.ac.th/en/campus-life-learning-spaces/",
+    "updated_at": "2026-10-28"
+  },
+  {
+    "id": "S4",
+    "name_th": "อาคารวิศววัฒนะ",
+    "name_en": "Wissawa Wattana Building",
+    "short": "วิศววัฒนะ",
+    "kind": "faculty",
+    "aliases": [
+      "ตึกวิศวะ",
+      "วิศววัฒนะ",
+      "ตึกคอมวิศวะ"
+    ],
+    "tags": [
+      "ภาควิศวกรรมคอมพิวเตอร์ ชั้น 10–11",
+      "แล็บวิศวะ"
+    ],
+    "floors": [
+      {
+        "floor": "10–11",
+        "what": "ภาควิชาวิศวกรรมคอมพิวเตอร์ (CPE)"
+      }
+    ],
+    "description": "ตึกหลักของคณะวิศวกรรมศาสตร์ ภาควิศวกรรมคอมพิวเตอร์อยู่ชั้น 10–11",
+    "tier": "official",
+    "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
+    "updated_at": "2026-10-28"
+  },
+  {
+    "id": "S14",
+    "name_th": "อาคารพระจอมเกล้าราชานุสรณ์ 190 ปี",
+    "name_en": "King Mongkut's 190th Anniversary Memorial Building",
+    "short": "190 ปี",
+    "kind": "food",
+    "aliases": [
+      "KFC",
+      "โรงอาหาร KFC",
+      "King Mongkut's Food Center",
+      "ตึก 190 ปี",
+      "โรงอาหารใหญ่"
+    ],
+    "tags": [
+      "โรงอาหาร KFC ชั้น 2",
+      "มีร้านฮาลาล",
+      "มีมังสวิรัติ",
+      "ชมรม",
+      "ฟิตเนส"
+    ],
+    "hours": [
+      {
+        "days": [
+          "mon",
+          "tue",
+          "wed",
+          "thu",
+          "fri",
+          "sat"
+        ],
+        "open": "06:00",
+        "close": "20:00",
+        "label": "โรงอาหาร KFC (ภาพรวม)"
+      }
+    ],
+    "floors": [
+      {
+        "floor": "2",
+        "what": "โรงอาหาร KFC (King Mongkut's Food Center)"
+      }
+    ],
+    "description": "โรงอาหารหลักของแคมปัส KFC ย่อมาจาก King Mongkut's Food Center ไม่ใช่ร้านไก่ทอด มีอาหารไทย ก๋วยเตี๋ยว ฮาลาล และมังสวิรัติ ในตึกเดียวกันมีห้องชมรมและฟิตเนส",
+    "tier": "official",
+    "source_url": "https://www.kmutt.ac.th/en/?p=1139",
+    "conflict_note": "เวลา 06:00–20:00 เป็นเวลาภาพรวมจากหน้าเว็บมหาวิทยาลัย ไม่ได้ระบุรายร้าน",
+    "updated_at": "2026-10-28"
+  },
+  {
+    "id": "N1",
+    "name_th": "อาคาร Welcome Center",
+    "name_en": "Welcome Center",
+    "short": "Welcome",
+    "kind": "service",
+    "aliases": [
+      "ฝ่ายรับสมัคร",
+      "ที่สมัครเรียน",
+      "Welcome Center"
+    ],
+    "tags": [
+      "ติดต่อเรื่องสมัครเรียน (ตำแหน่งยังไม่ยืนยัน)"
+    ],
+    "description": "จุดต้อนรับของมหาวิทยาลัย ใช้เป็นที่อยู่ของพี่รับสมัครในแอปไปก่อน ตำแหน่งจริงของสำนักงานรับสมัครยังไม่ได้ยืนยัน",
+    "tier": "mock",
+    "source_note": "ชื่อตึกมาจาก master plan ทางการ แต่การเป็นที่ตั้งฝ่ายรับสมัครยังเป็นสมมติฐาน",
+    "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
+    "updated_at": "2026-10-28"
+  },
+  {
+    "id": "N9",
+    "name_th": "อาคารสถาบันวิทยาการหุ่นยนต์ภาคสนาม",
+    "name_en": "Institute of Field Robotics (FIBO)",
+    "short": "FIBO",
+    "kind": "faculty",
+    "aliases": [
+      "FIBO",
+      "ฟีโบ้",
+      "ตึกหุ่นยนต์"
+    ],
+    "tags": [
+      "วิศวกรรมหุ่นยนต์และระบบอัตโนมัติ"
+    ],
+    "description": "ที่ตั้งของ FIBO ซึ่งเปิดสอน วศ.บ. วิศวกรรมหุ่นยนต์และระบบอัตโนมัติ (เปิดปี 2557) เป็นที่แรกในไทย",
+    "tier": "official",
+    "source_url": "https://fibo.kmutt.ac.th/en/engineering-program/",
+    "updated_at": "2026-10-28"
+  },
+  {
+    "id": "N10",
+    "name_th": "สำนักหอสมุด",
+    "name_en": "KMUTT Library",
+    "short": "ห้องสมุด",
+    "kind": "study",
+    "aliases": [
+      "ห้องสมุด",
+      "หอสมุด",
+      "Library",
+      "LIB"
+    ],
+    "tags": [
+      "ที่อ่านหนังสือ",
+      "KLINICS ชั้น 1",
+      "KM Room ชั้น 5 (walk-in)"
+    ],
+    "hours": [
+      {
+        "days": [
+          "mon",
+          "tue",
+          "wed",
+          "thu",
+          "fri"
+        ],
+        "open": "08:00",
+        "close": "18:00",
+        "label": "ชั้น 1 (KLINICS)"
+      },
+      {
+        "days": [
+          "sat",
+          "sun"
+        ],
+        "open": "09:00",
+        "close": "17:00",
+        "label": "ชั้น 1 (KLINICS)"
+      },
+      {
+        "days": [
+          "mon",
+          "tue",
+          "wed",
+          "thu",
+          "fri"
+        ],
+        "open": "08:00",
+        "close": "17:00",
+        "label": "ชั้น 2–5"
+      }
+    ],
+    "description": "ห้องสมุดกลางของมหาวิทยาลัย ขอใช้พื้นที่ผ่านแบบฟอร์ม Library's Space Request ส่วน KM Room ชั้น 5 ใช้แบบ walk-in โทร 02-470-8214",
+    "tier": "official",
+    "source_url": "https://www.lib.kmutt.ac.th/en/",
+    "conflict_note": "ในเว็บห้องสมุดมีตารางเวลาอีกชุดที่ระบุ 08:30–16:30 และหน้าเว็บเก่าระบุว่าช่วงเปิดเทอมเปิด 08:00–21:00",
+    "updated_at": "2026-10-28"
+  },
+  {
+    "id": "N16",
+    "name_th": "อาคารการเรียนรู้พหุวิทยาการ",
+    "name_en": "Learning Exchange (LX)",
+    "short": "LX",
+    "kind": "study",
+    "aliases": [
+      "LX",
+      "ตึก LX",
+      "Learning Exchange"
+    ],
+    "tags": [
+      "co-working ชั้น 1",
+      "Library Learning Commons",
+      "ห้องเรียน SIT ชั้น 10–13"
+    ],
+    "hours": [
+      {
+        "days": [
+          "mon",
+          "tue",
+          "wed",
+          "thu",
+          "fri"
+        ],
+        "open": "08:30",
+        "close": "16:30",
+        "label": "Library Learning Commons ชั้น 1"
+      }
+    ],
+    "floors": [
+      {
+        "floor": "1",
+        "what": "Library Learning Commons และโซน co-working"
+      },
+      {
+        "floor": "2",
+        "what": "ห้อง LEGOBOX (จ.–ศ. 09:00–16:30)"
+      },
+      {
+        "floor": "10–13",
+        "what": "ห้องเรียนและแล็บของ SIT"
+      }
+    ],
+    "description": "ตึก 15 ชั้นสำหรับการเรียนรู้แบบข้ามสาขา ใช้จัดงาน SIT Open House และงานโชว์โปรเจกต์",
+    "tier": "official",
+    "source_url": "https://www.lib.kmutt.ac.th/en/learning-common",
+    "updated_at": "2026-10-28"
+  },
+  {
+    "id": "S12",
+    "name_th": "อาคารเรียนรวม 4",
+    "name_en": "Classroom Building 4 (CB4)",
+    "short": "CB4",
+    "kind": "faculty",
+    "aliases": [
+      "CB4",
+      "อาคารเรียนรวม 4"
+    ],
+    "tags": [
+      "ภาควิศวกรรมไฟฟ้า ชั้น 4",
+      "ENE ชั้น 9–10"
+    ],
+    "floors": [
+      {
+        "floor": "4",
+        "what": "ภาควิชาวิศวกรรมไฟฟ้า"
+      },
+      {
+        "floor": "9–10",
+        "what": "ภาควิชาวิศวกรรมอิเล็กทรอนิกส์และโทรคมนาคม (ENE)"
+      }
+    ],
+    "description": "อาคารเรียนรวมที่มีภาควิศวกรรมไฟฟ้าและภาค ENE",
+    "tier": "official",
+    "source_url": "https://ene.kmutt.ac.th/th/curriculum.php",
+    "updated_at": "2026-10-28"
+  },
+  {
+    "id": "S13",
+    "name_th": "อาคารเรียนรวม 3",
+    "name_en": "Classroom Building 3 (CB3)",
+    "short": "CB3",
+    "kind": "study",
+    "aliases": [
+      "CB3",
+      "อาคารเรียนรวม 3"
+    ],
+    "tags": [],
+    "description": "อาคารเรียนรวม 3 ใช้เป็นห้องเรียนรวมของหลายคณะ",
+    "tier": "mock",
+    "source_note": "การจับคู่ CB3 = S13 อนุมานจากชื่อตึกในผังทางการ ยังต้องตรวจซ้ำ",
+    "updated_at": "2026-10-29"
+  },
+  {
+    "id": "S15",
+    "name_th": "อาคารภาควิชาวิศวกรรมเคมี",
+    "name_en": "Chemical Engineering Building",
+    "short": "ChemEng",
+    "kind": "faculty",
+    "aliases": [
+      "ตึกเคมีวิศวะ",
+      "ภาคเคมี"
+    ],
+    "tags": [
+      "วิศวกรรมเคมี"
+    ],
+    "description": "ตึกของภาควิชาวิศวกรรมเคมี",
+    "tier": "official",
+    "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
+    "updated_at": "2026-10-28"
+  },
+  {
+    "id": "N17",
+    "name_th": "อาคารเรียนรวม 2",
+    "name_en": "Classroom Building 2 (CB2)",
+    "short": "CB2",
+    "kind": "service",
+    "aliases": [
+      "CB2",
+      "อาคารเรียนรวม 2",
+      "คลินิก",
+      "ห้องพยาบาล",
+      "หาหมอ",
+      "ไม่สบาย",
+      "ป่วย",
+      "พยาบาล"
+    ],
+    "tags": [
+      "คลินิก ชั้น 1 ห้อง 2101"
+    ],
+    "hours": [
+      {
+        "days": [
+          "mon",
+          "tue",
+          "wed",
+          "thu",
+          "fri"
+        ],
+        "open": "08:30",
+        "close": "18:00",
+        "label": "คลินิก (ช่วงเปิดเทอม)"
+      },
+      {
+        "days": [
+          "sat"
+        ],
+        "open": "08:30",
+        "close": "17:00",
+        "label": "คลินิก (ช่วงเปิดเทอม)"
+      }
+    ],
+    "description": "อาคารเรียนรวม มีคลินิกของมหาวิทยาลัยอยู่ชั้น 1 ห้อง 2101 (คลินิกจิตเวชเปิดวันศุกร์) โทร 02-470-8440-6",
+    "tier": "official",
+    "source_url": "https://iadmission.kmutt.ac.th/discover/student-life/clinic",
+    "conflict_note": "ที่บอกว่า CB2 = N17 อนุมานจากชื่อตึกใน master plan",
+    "updated_at": "2026-10-28"
+  },
+  {
+    "id": "N20",
+    "name_th": "อาคารเรียนรวม 1",
+    "name_en": "Classroom Building 1 (CB1)",
+    "short": "CB1",
+    "kind": "food",
+    "aliases": [
+      "CB1",
+      "อาคารเรียนรวม 1"
+    ],
+    "tags": [
+      "ร้านอาหารข้างตึก"
+    ],
+    "description": "อาคารเรียนรวม ข้างตึกมีร้านขายอาหาร",
+    "tier": "official",
+    "source_url": "https://grad.kmutt.ac.th/en/announcement-en/where-to-eat/",
+    "updated_at": "2026-10-28"
+  },
+  {
+    "id": "S11",
+    "name_th": "อาคารเรียนรวม 5",
+    "name_en": "Classroom Building 5 (CB5)",
+    "short": "CB5",
+    "kind": "food",
+    "aliases": [
+      "CB5",
+      "อาคารเรียนรวม 5",
+      "ลุงกบ",
+      "Uncle Frog"
+    ],
+    "tags": [
+      "ร้าน Uncle Frog (ลุงกบ)"
+    ],
+    "description": "อาคารเรียนรวม มีร้าน Uncle Frog (ลุงกบ)",
+    "tier": "official",
+    "source_url": "https://bpuu.kmutt.ac.th/restaurant/",
+    "updated_at": "2026-10-28"
+  },
+  {
+    "id": "S5",
+    "name_th": "หอพักธรรมรักษา 2 (ชาย)",
+    "name_en": "Dhammaraksa Residence Hall 2 (male)",
+    "short": "หอชาย",
+    "kind": "dorm",
+    "aliases": [
+      "หอชาย",
+      "หอพักชาย",
+      "หอใน"
+    ],
+    "tags": [
+      "โรงอาหารเล็กใต้หอ",
+      "ห้อง 28 ตร.ม. พัก 2–3 คน"
+    ],
+    "description": "หอพักนักศึกษาชาย 10 ชั้น 109 ห้อง ค่าห้อง 2,500–3,500 บาทต่อคนต่อเดือน ชั้นล่างมีโรงอาหาร LINE @kmutt_residence",
+    "tier": "official",
+    "source_url": "https://residencehall.kmutt.ac.th/?p=17713",
+    "updated_at": "2026-10-28"
+  },
+  {
+    "id": "S6",
+    "name_th": "หอพักธรรมรักษา 1 (หญิง)",
+    "name_en": "Dhammaraksa Residence Hall 1 (female)",
+    "short": "หอหญิง",
+    "kind": "dorm",
+    "aliases": [
+      "หอหญิง",
+      "หอพักหญิง",
+      "หอใน"
+    ],
+    "tags": [
+      "โรงอาหารเล็กใต้หอ",
+      "ห้อง 28 ตร.ม. พัก 2–3 คน"
+    ],
+    "description": "หอพักนักศึกษาหญิง 11 ชั้น 266 ห้อง ค่าห้อง 2,500–3,500 บาทต่อคนต่อเดือน ชั้นล่างมีโรงอาหาร LINE @kmutt_residence",
+    "tier": "official",
+    "source_url": "https://residencehall.kmutt.ac.th/?p=17713",
+    "updated_at": "2026-10-28"
+  },
+  {
+    "id": "S2",
+    "name_th": "อาคารจอดรถ",
+    "name_en": "Car Parking Building",
+    "short": "ที่จอดรถ",
+    "kind": "transport",
+    "aliases": [
+      "ที่จอดรถ",
+      "ลานจอดรถ",
+      "parking"
+    ],
+    "tags": [
+      "จอดรถยนต์"
+    ],
+    "description": "อาคารจอดรถของมหาวิทยาลัย",
+    "tier": "official",
+    "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
+    "updated_at": "2026-10-28"
+  },
+  {
+    "id": "N15",
+    "name_th": "อาคารคณะศิลปศาสตร์",
+    "name_en": "School of Liberal Arts",
+    "short": "ศิลปศาสตร์",
+    "kind": "faculty",
+    "aliases": [
+      "ศิลปศาสตร์",
+      "Liberal Arts"
+    ],
+    "tags": [
+      "สอนร่วมในหลักสูตร DSI"
+    ],
+    "description": "ตึกของคณะศิลปศาสตร์ ซึ่งสอนหลักสูตร DSI ร่วมกับ SIT",
+    "tier": "official",
+    "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
+    "updated_at": "2026-10-28"
+  },
+  {
+    "id": "bus_stop_front",
+    "name_th": "ป้ายรถเมล์หน้ามหาวิทยาลัย (ถ.ประชาอุทิศ)",
+    "name_en": "Front bus stop (Pracha Uthit Rd.)",
+    "short": "ป้ายรถเมล์",
+    "kind": "transport",
+    "aliases": [
+      "ป้ายรถเมล์",
+      "หน้ามอ",
+      "รถเมล์",
+      "สองแถว"
+    ],
+    "tags": [
+      "สาย 21, 75, 88",
+      "สองแถวสาย 77, 88, 99"
+    ],
+    "description": "รถเมล์สาย 21, 75, 88 ผ่านหน้ามหาวิทยาลัย (รุ่นพี่บอกว่าที่ผ่านจริงมีแค่ 21 กับ 75) สองแถวและรถเล็กสาย 77, 88, 99 วิ่งไปแยก กม.9 และสุขสวัสดิ์ ถ้ามาจาก BTS ให้ลงวงเวียนใหญ่ แล้วต่อสาย 21 หรือ 75",
+    "tier": "mock",
+    "source_note": "เส้นทางรถมาจากหน้าเว็บทางการ แต่ตำแหน่งป้ายบนแผนที่ยังเป็นค่าประมาณ",
+    "source_url": "https://www.kmutt.ac.th/en/?p=646",
+    "updated_at": "2026-10-28"
+  },
+  {
+    "id": "main_gate",
+    "name_th": "ประตูหน้า (ถ.ประชาอุทิศ)",
+    "name_en": "Main gate",
+    "short": "ประตูหน้า",
+    "kind": "landmark",
+    "aliases": [
+      "ประตูหน้า",
+      "ประตูใหญ่",
+      "ทางเข้า"
+    ],
+    "tags": [
+      "ทางเข้าหลัก",
+      "ร้านอาหารหน้ามอ"
+    ],
+    "description": "ทางเข้าหลักของมหาวิทยาลัยฝั่งถนนประชาอุทิศ แถวนี้มีร้านอาหารหน้ามอ ที่อยู่ 126 ถ.ประชาอุทิศ แขวงบางมด เขตทุ่งครุ กรุงเทพฯ 10140",
+    "tier": "mock",
+    "source_note": "ตำแหน่งบนแผนที่เป็นค่าประมาณ ยังไม่ได้ยืนยันด้วยการเดินสำรวจ",
+    "source_url": "https://www.kmutt.ac.th/en/about-kmutt/contact-us/",
+    "updated_at": "2026-10-28"
+  }
+]

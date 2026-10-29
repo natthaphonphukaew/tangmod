@@ -1,0 +1,25 @@
+[
+  {
+    "id": "fibo-rai",
+    "faculty": "fibo",
+    "name_th": "วิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมหุ่นยนต์และระบบอัตโนมัติ",
+    "name_en": "B.Eng. Robotics and Automation Engineering",
+    "short": "FIBO",
+    "aliases": ["FIBO", "ฟีโบ้", "หุ่นยนต์", "วิศวะหุ่นยนต์"],
+    "degree": "วศ.บ.",
+    "language": "th",
+    "international": false,
+    "depth": "overview",
+    "credits": 140,
+    "fee": { "model": "flat", "per_semester": 57000, "total_est": 456000 },
+    "fee_source_url": "https://www.kmutt.ac.th/education/tuition-fees/",
+    "place_id": "N9",
+    "summary": "หลักสูตรหุ่นยนต์ระดับ ป.ตรี ที่แรกในไทย (เปิดปี 2557) ใช้โครงสร้างแบบ 10 Modules และ outcome-based education มีโครงการรับสมัคร Active Recruitment แยกเองชื่อ FIBO School Consortium",
+    "careers": [],
+    "contact": "FIBO 02-470-9339 · fibo@kmutt.ac.th",
+    "tier": "official",
+    "source_url": "https://fibo.kmutt.ac.th/en/engineering-program/",
+    "conflict_note": "ภาษาที่ใช้สอนยังไม่ได้ยืนยัน",
+    "updated_at": "2026-10-28"
+  }
+]

@@ -1,0 +1,91 @@
+[
+  {
+    "id": "admission",
+    "label": "สำนักงานคัดเลือกและสรรหานักศึกษา (รับสมัคร)",
+    "phone": "02-470-8333",
+    "email": "admission@kmutt.ac.th",
+    "web": "https://admission.kmutt.ac.th",
+    "social": "FB @KMUTT2ADMISSION",
+    "topics": ["สมัครเรียน", "TCAS", "ทุน", "portfolio"],
+    "source_url": "https://www.kmutt.ac.th/en/about-kmutt/contact-us/"
+  },
+  {
+    "id": "sit",
+    "label": "คณะเทคโนโลยีสารสนเทศ (SIT)",
+    "phone": "02-470-9850",
+    "email": "webadmin@sit.kmutt.ac.th",
+    "web": "https://www.sit.kmutt.ac.th",
+    "social": "LINE @sit.kmutt · FB SIT.Family · IG sit.family",
+    "topics": ["IT", "CS", "DSI", "SIT"],
+    "source_url": "https://www.sit.kmutt.ac.th/contact-us/"
+  },
+  {
+    "id": "eng",
+    "label": "คณะวิศวกรรมศาสตร์",
+    "phone": "02-470-9017",
+    "email": "eng@kmutt.ac.th",
+    "web": "https://eng.kmutt.ac.th",
+    "social": "FB eng.kmutt · IG engineeringkmutt",
+    "topics": ["วิศวะ"],
+    "source_url": "https://eng.kmutt.ac.th"
+  },
+  {
+    "id": "cpe",
+    "label": "ภาควิชาวิศวกรรมคอมพิวเตอร์",
+    "phone": "02-470-9388",
+    "web": "https://www.cpe.kmutt.ac.th",
+    "social": "FB cpe.kmutt",
+    "topics": ["CPE", "คอมวิศวะ"],
+    "source_url": "https://web.cpe.kmutt.ac.th/"
+  },
+  {
+    "id": "fibo",
+    "label": "สถาบันวิทยาการหุ่นยนต์ภาคสนาม (FIBO)",
+    "phone": "02-470-9339",
+    "email": "fibo@kmutt.ac.th",
+    "web": "https://fibo.kmutt.ac.th",
+    "topics": ["FIBO", "หุ่นยนต์"],
+    "source_url": "https://fibo.kmutt.ac.th/en/engineering-program/"
+  },
+  {
+    "id": "residence",
+    "label": "หอพักนักศึกษา (บางมด)",
+    "phone": "02-470-8460-3",
+    "social": "LINE @kmutt_residence",
+    "web": "https://residencehall.kmutt.ac.th",
+    "topics": ["หอพัก"],
+    "source_url": "https://residencehall.kmutt.ac.th/?p=16940"
+  },
+  {
+    "id": "student_affairs",
+    "label": "สำนักงานกิจการนักศึกษา",
+    "phone": "02-470-8110",
+    "web": "https://sao.kmutt.ac.th",
+    "topics": ["กิจกรรม", "ชมรม", "ให้คำปรึกษา"],
+    "source_url": "https://www.kmutt.ac.th/en/about-kmutt/contact-us/"
+  },
+  {
+    "id": "shuttle",
+    "label": "รถรับส่งระหว่างวิทยาเขต",
+    "phone": "02-470-8332",
+    "topics": ["shuttle", "การเดินทาง"],
+    "source_url": "https://www.kmutt.ac.th/en/?p=646"
+  },
+  {
+    "id": "library",
+    "label": "สำนักหอสมุด",
+    "phone": "02-470-8214",
+    "email": "circulation.lib@kmutt.ac.th",
+    "web": "https://www.lib.kmutt.ac.th",
+    "topics": ["ห้องสมุด", "จองห้อง"],
+    "source_url": "https://www.lib.kmutt.ac.th/en/"
+  },
+  {
+    "id": "main",
+    "label": "มจธ. (ตู้สาขา)",
+    "phone": "02-470-8000",
+    "web": "https://www.kmutt.ac.th",
+    "topics": ["ทั่วไป"],
+    "source_url": "https://www.kmutt.ac.th/en/about-kmutt/contact-us/"
+  }
+]
