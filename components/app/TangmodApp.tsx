@@ -99,9 +99,14 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
     };
   }, [userId, session.isPending, store]);
 
+  // thread ล่าสุดที่บันทึกแล้ว (หรือเพิ่งโหลดจากประวัติ) — ใช้แยก "มีข้อความใหม่" ออกจาก "แค่เปิดดูแชทเก่า"
+  const savedThread = useRef<ThreadItem[] | null>(null);
+
   // บันทึกแชทเมื่อคำตอบจบ (ไม่บันทึกระหว่างที่ข้อความยังไหล)
+  // เปิดแชทเก่าเฉย ๆ ห้ามบันทึกซ้ำ ไม่งั้น updatedAt เปลี่ยนแล้วแชทนั้นกระโดดไปบนสุดของรายการ
   useEffect(() => {
-    if (pending || !convId || !hasContent(thread)) return;
+    if (pending || !convId || !hasContent(thread) || thread === savedThread.current) return;
+    savedThread.current = thread;
     void store
       .save({ id: convId, title: titleOf(thread), updatedAt: Date.now(), thread })
       .then(() => store.list())
@@ -259,6 +264,7 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
     if (!c) return;
     abortRef.current?.abort();
     setPending(false);
+    savedThread.current = c.thread;
     setThread(c.thread);
     setConvId(c.id);
     setSelectedId(null);
@@ -301,6 +307,30 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
     }
   };
 
+  // ลบบัญชี: ยืนยันก่อนเสมอ ลบแล้วประวัติแชทบน server หายตาม (FK cascade)
+  const deleteAccount = async () => {
+    const ok = window.confirm(
+      "ลบบัญชีทางมดและประวัติแชททั้งหมดในบัญชีนี้?\n\nลบแล้วกู้คืนไม่ได้ (บัญชี Google ของคุณไม่ได้รับผลกระทบ)",
+    );
+    if (!ok) return;
+    setAuthBusy(true);
+    try {
+      const { error } = await authClient.deleteUser({ callbackURL: "/" });
+      if (error) {
+        window.alert(
+          error.code === "SESSION_EXPIRED"
+            ? "เพื่อความปลอดภัย กรุณาออกจากระบบแล้วเข้าสู่ระบบใหม่ก่อนลบบัญชี"
+            : "ลบบัญชีไม่สำเร็จ ลองใหม่อีกครั้งนะ",
+        );
+        return;
+      }
+      newChat();
+      await session.refetch();
+    } finally {
+      setAuthBusy(false);
+    }
+  };
+
   const sidebar = (onClose?: () => void) => (
     <Sidebar
       conversations={conversations}
@@ -315,6 +345,7 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
         onSignInGoogle: signInGoogle,
         onSignInDev: () => void signInDev(),
         onSignOut: () => void signOut(),
+        onDeleteAccount: () => void deleteAccount(),
       }}
       onNew={newChat}
       onOpenCompass={() => {

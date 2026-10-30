@@ -1,6 +1,7 @@
 "use client";
 
 import { CaretRight, Compass, PaperPlaneRight } from "@phosphor-icons/react";
+import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { assistant } from "@/lib/data";
 import type { FeedbackReason } from "@/lib/ai/schema";
@@ -155,7 +156,10 @@ export function ChatColumn(props: Props) {
           </button>
         </form>
         <p hidden={compact} className="mt-2 text-center text-[11px] leading-snug text-ink-soft">
-          โปรเจกต์นักศึกษา ไม่ใช่ช่องทางทางการของ มจธ. · AI อาจตอบผิดได้ เช็กการ์ดและแหล่งที่มาเสมอ
+          โปรเจกต์นักศึกษา ไม่ใช่ช่องทางทางการของ มจธ. · AI อาจตอบผิดได้ เช็กการ์ดและแหล่งที่มาเสมอ ·{" "}
+          <Link href="/privacy" className="underline hover:text-ink">
+            ความเป็นส่วนตัว
+          </Link>
         </p>
       </div>
     </section>

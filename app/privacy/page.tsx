@@ -1,0 +1,126 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import type { ReactNode } from "react";
+
+export const metadata: Metadata = {
+  title: "ความเป็นส่วนตัว — ทางมด",
+  description: "ทางมดเก็บข้อมูลอะไร ส่งไปที่ไหน เก็บนานแค่ไหน และลบได้อย่างไร",
+};
+
+const UPDATED = "30 ต.ค. 2569";
+
+/*
+ * นโยบายความเป็นส่วนตัวแบบภาษาคน — ต้องตรงกับที่โค้ดทำจริงเสมอ
+ * แก้การเก็บข้อมูลที่ไหน (lib/ai, lib/db, lib/client, app/api) ต้องมาแก้หน้านี้ด้วย
+ */
+export default function PrivacyPage() {
+  return (
+    <main className="min-h-svh bg-paper">
+      <article className="mx-auto max-w-[42rem] px-5 py-10 leading-relaxed">
+        <Link href="/" className="text-sm text-brand-ink hover:underline">
+          ← กลับไปคุยกับน้องมด
+        </Link>
+        <h1 className="mt-4 font-display text-3xl text-ink">ความเป็นส่วนตัว</h1>
+        <p className="mt-2 text-sm text-ink-soft">
+          อัปเดต {UPDATED} · เขียนให้อ่านง่าย ไม่ใช่เอกสารทางกฎหมาย · ทางมดเป็นโปรเจกต์นักศึกษา ไม่ใช่ช่องทางทางการของ มจธ.
+        </p>
+
+        <Summary />
+
+        <Section title="1. คำถามที่พิมพ์ถามน้องมด">
+          <p>
+            เพื่อให้ตอบได้ คำถามและแชทล่าสุดในห้องนั้น (ไม่เกิน 8 ข้อความ) จะถูกส่งไปให้ AI ประมวลผล โดยใช้ตัวหลักคือ <strong>MiniMax</strong>{" "}
+            ผ่านเซิร์ฟเวอร์ของคณะเทคโนโลยีสารสนเทศ (SIT) มจธ. ถ้าตัวหลักล่ม จะสลับไปใช้ <strong>Google Gemini</strong> หรือ <strong>Typhoon</strong>
+          </p>
+          <p>
+            Gemini ที่ใช้เป็นรุ่นฟรี ซึ่ง Google อาจนำข้อความไปใช้พัฒนาบริการ ก่อนส่ง ระบบจึงลบอีเมล เบอร์โทร และเลข 13 หลักออกให้อัตโนมัติ
+            แต่ก็<strong>อย่าพิมพ์ชื่อจริง ที่อยู่ หรือข้อมูลส่วนตัวอื่น</strong>ลงในแชท
+          </p>
+        </Section>
+
+        <Section title="2. ถ้าไม่ได้เข้าสู่ระบบ">
+          <p>
+            ประวัติแชทและสิ่งที่ &ldquo;มดจำว่าสนใจ&rdquo; (สาขาที่กำลังดู ตึกที่เคยกด) เก็บไว้ใน<strong>เบราว์เซอร์เครื่องนี้เท่านั้น</strong> ไม่ได้ส่งขึ้นเซิร์ฟเวอร์ของเรา
+            ลบได้ทุกเมื่อด้วยปุ่มถังขยะหน้าแชทแต่ละอัน ปุ่ม &ldquo;ลืม&rdquo; ในแถบซ้าย หรือล้างข้อมูลเว็บไซต์ในเบราว์เซอร์
+          </p>
+        </Section>
+
+        <Section title="3. ถ้าเข้าสู่ระบบด้วย Google">
+          <p>
+            เราได้รับแค่<strong>ชื่อ อีเมล และรูปโปรไฟล์</strong>จาก Google (ไม่ได้ขอสิทธิ์อ่านอีเมล ไดรฟ์ หรือข้อมูลอื่น) และเก็บ<strong>ประวัติแชทของคุณ</strong>ไว้ในฐานข้อมูล
+            (Neon Postgres ที่สิงคโปร์) เพื่อให้เปิดดูได้ทุกเครื่อง ตอนเข้าสู่ระบบครั้งแรก แชทที่เคยเก็บในเครื่องจะย้ายขึ้นบัญชี
+          </p>
+          <p>ประวัติแชทเปิดดูได้เฉพาะเจ้าของบัญชี ทีมทางมดไม่ได้เปิดอ่านเป็นรายคน</p>
+        </Section>
+
+        <Section title="4. ปุ่ม “ตอบไม่ตรง”">
+          <p>
+            เมื่อกด เราเก็บคำถาม คำตอบของมด และเหตุผลที่เลือก โดย<strong>ไม่ผูกกับบัญชีหรือ IP</strong> (ลบอีเมล เบอร์โทร เลขบัตรออกก่อน)
+            ใช้เพื่อเติมข้อมูลและแก้คำตอบที่ผิด
+          </p>
+        </Section>
+
+        <Section title="5. ข้อมูลที่ระบบเก็บเองเพื่อให้ทำงานได้">
+          <ul className="list-disc space-y-1 pl-5">
+            <li>
+              <strong>กันการใช้งานถี่เกินไป:</strong> เก็บ hash ของ IP (ย้อนกลับเป็น IP จริงไม่ได้) กับจำนวนคำถามในนาทีนั้น รายการเก่าถูกลบทิ้งเป็นระยะโดยอัตโนมัติ
+            </li>
+            <li>
+              <strong>log ของระบบ:</strong> บันทึกว่าคำตอบมาจาก AI ตัวไหน ใช้เวลาเท่าไร โดย<strong>ไม่มีข้อความแชท</strong>
+            </li>
+            <li>
+              <strong>ผู้ให้บริการโฮสต์ (Vercel):</strong> เก็บ log การเข้าถึงทั่วไปของเว็บ เช่น IP และเวลา ตามนโยบายของ Vercel เอง
+            </li>
+            <li>
+              <strong>คุกกี้:</strong> ใช้เฉพาะคุกกี้เข้าสู่ระบบ (ถ้าเข้าสู่ระบบ) ไม่มีโฆษณา ไม่มีตัวติดตามของบุคคลที่สาม และไม่ขายข้อมูล
+            </li>
+          </ul>
+        </Section>
+
+        <Section title="6. เก็บนานแค่ไหน และลบอย่างไร">
+          <ul className="list-disc space-y-1 pl-5">
+            <li>ประวัติแชท: จนกว่าคุณจะลบ (ลบทีละแชทได้ที่ปุ่มถังขยะในแถบซ้าย)</li>
+            <li>
+              <strong>ลบบัญชีและข้อมูลทั้งหมด:</strong> กด &ldquo;ลบบัญชี&rdquo; ท้ายแถบซ้ายตอนเข้าสู่ระบบอยู่ ระบบจะลบบัญชีและประวัติแชททั้งหมดทันที
+              (เพื่อความปลอดภัยต้องเข้าสู่ระบบมาไม่เกิน 1 วัน ถ้านานกว่านั้นให้ออกแล้วเข้าใหม่ก่อน)
+            </li>
+            <li>ข้อมูล &ldquo;ตอบไม่ตรง&rdquo;: เก็บไว้ตลอดช่วงโครงการเพื่อปรับปรุงคำตอบ และไม่ผูกกับตัวคุณ จึงลบรายคนไม่ได้</li>
+          </ul>
+        </Section>
+
+        <Section title="7. ติดต่อ">
+          <p>
+            มีคำถามหรืออยากให้ลบข้อมูล แจ้งได้ที่{" "}
+            <a href="https://github.com/natthaphonphukaew/tangmod/issues" className="text-brand-ink underline" rel="noreferrer">
+              GitHub ของโปรเจกต์
+            </a>{" "}
+            (อย่าใส่ข้อมูลส่วนตัวในหน้านั้น เพราะเป็นหน้าสาธารณะ)
+          </p>
+        </Section>
+      </article>
+    </main>
+  );
+}
+
+function Summary() {
+  return (
+    <section aria-label="สรุปสั้น ๆ" className="mt-6 rounded-[var(--radius-card)] border border-line bg-card p-4 text-sm">
+      <h2 className="font-display text-base">สรุปสั้น ๆ</h2>
+      <ul className="mt-2 list-disc space-y-1 pl-5">
+        <li>ไม่ต้องสมัครก็ใช้ได้ ประวัติแชทจะอยู่ในเครื่องคุณเท่านั้น</li>
+        <li>คำถามถูกส่งไปให้ AI ตอบ (ตัดอีเมล เบอร์โทร เลขบัตรออกก่อน) จึงไม่ควรพิมพ์ข้อมูลส่วนตัว</li>
+        <li>เข้าสู่ระบบแล้ว ประวัติแชทเก็บบนเซิร์ฟเวอร์ให้ใช้ได้ทุกเครื่อง และลบบัญชีพร้อมข้อมูลทั้งหมดได้เอง</li>
+        <li>ไม่มีโฆษณา ไม่มีตัวติดตาม ไม่ขายข้อมูล</li>
+      </ul>
+    </section>
+  );
+}
+
+function Section({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <section className="mt-8 space-y-3 text-[15px] text-ink">
+      <h2 className="font-display text-xl">{title}</h2>
+      {children}
+    </section>
+  );
+}

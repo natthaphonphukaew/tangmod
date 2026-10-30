@@ -1,6 +1,7 @@
 "use client";
 
 import { Brain, ChatCircleText, Compass, GoogleLogo, NotePencil, SignOut, Trash, UserCircle, X } from "@phosphor-icons/react";
+import Link from "next/link";
 import type { AuthOptions } from "@/lib/auth-options";
 import { programById } from "@/lib/data";
 import type { Profile } from "@/lib/ai/schema";
@@ -15,6 +16,7 @@ export type AccountProps = {
   onSignInGoogle: () => void;
   onSignInDev: () => void;
   onSignOut: () => void;
+  onDeleteAccount: () => void;
 };
 
 type Props = {
@@ -113,7 +115,7 @@ export function Sidebar({ conversations, currentId, listedAt, profile, account, 
 }
 
 /** ท้ายแถบซ้าย: login ไม่บังคับ — login แล้วประวัติแชทตามไปทุกเครื่อง */
-function AccountBox({ user, loading, busy, options, onSignInGoogle, onSignInDev, onSignOut }: AccountProps) {
+function AccountBox({ user, loading, busy, options, onSignInGoogle, onSignInDev, onSignOut, onDeleteAccount }: AccountProps) {
   if (loading) return <div className="h-[72px] border-t border-line" aria-hidden />;
   if (user) {
     return (
@@ -128,6 +130,15 @@ function AccountBox({ user, loading, busy, options, onSignInGoogle, onSignInDev,
         <div className="min-w-0 flex-1 leading-tight">
           <p className="truncate text-sm">{user.name}</p>
           <p className="truncate text-[11px] text-ink-soft">ประวัติแชทเก็บในบัญชีนี้</p>
+          <p className="mt-0.5 text-[11px]">
+            <Link href="/privacy" className="text-ink-soft underline hover:text-ink">
+              ความเป็นส่วนตัว
+            </Link>
+            <span className="text-ink-soft"> · </span>
+            <button type="button" onClick={onDeleteAccount} disabled={busy} className="text-ink-soft underline hover:text-brand-ink disabled:opacity-50">
+              ลบบัญชี
+            </button>
+          </p>
         </div>
         <button type="button" onClick={onSignOut} disabled={busy} aria-label="ออกจากระบบ" title="ออกจากระบบ" className="rounded-md p-1.5 text-ink-soft hover:bg-card hover:text-ink disabled:opacity-50">
           <SignOut size={16} />
@@ -162,7 +173,10 @@ function AccountBox({ user, loading, busy, options, onSignInGoogle, onSignInDev,
         </button>
       )}
       <p className="px-1 text-[11px] leading-snug text-ink-soft">
-        {canLogin ? "ยังไม่ได้เข้าสู่ระบบ: " : ""}ประวัติแชทเก็บไว้ในเครื่องนี้ · อย่าพิมพ์ข้อมูลส่วนตัว
+        {canLogin ? "ยังไม่ได้เข้าสู่ระบบ: " : ""}ประวัติแชทเก็บไว้ในเครื่องนี้ · อย่าพิมพ์ข้อมูลส่วนตัว ·{" "}
+        <Link href="/privacy" className="underline hover:text-ink">
+          ความเป็นส่วนตัว
+        </Link>
       </p>
     </div>
   );

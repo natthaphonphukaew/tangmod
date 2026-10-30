@@ -38,6 +38,8 @@ function createAuth() {
           },
         }
       : {},
+    // ผู้ใช้ลบบัญชีเองได้ (ปุ่มในแถบซ้าย) — ประวัติแชทถูกลบตาม (FK cascade) · ต้อง login มาไม่เกิน 1 วัน (freshAge ค่าเริ่มต้น)
+    user: { deleteUser: { enabled: true } },
     session: {
       expiresIn: 60 * 60 * 24 * 30, // 30 วัน
       cookieCache: { enabled: true, maxAge: 5 * 60 },
