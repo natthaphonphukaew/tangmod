@@ -11,11 +11,14 @@
  */
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-// route ใช้ฐานข้อมูลนับ rate limit: ใช้ Postgres ในหน่วยความจำ ไม่แตะ .data/pglite ที่ dev server อาจเปิดอยู่
-process.env.PGLITE_DIR = "memory://";
-delete process.env.DATABASE_URL; // eval ห้ามเขียนตัวนับลงฐานข้อมูลจริงแม้ .env.local จะมี DATABASE_URL
-const { POST } = await import("@/app/api/chat/route");
 import { emptyProfile, type StreamEvent, type ValidatedAnswer } from "@/lib/ai/schema";
+
+// route ใช้ฐานข้อมูลนับ rate limit: ใช้ Postgres ในหน่วยความจำ ไม่แตะ .data/pglite ที่ dev server อาจเปิดอยู่
+// และห้ามเขียนตัวนับลงฐานข้อมูลจริงแม้ .env.local จะมี DATABASE_URL — ต้องตั้งก่อน import route (ทำใน main)
+process.env.PGLITE_DIR = "memory://";
+delete process.env.DATABASE_URL;
+// tsx คอมไพล์เป็น CommonJS ใช้ top-level await ไม่ได้ จึง import route ใน main แล้วเก็บไว้ที่นี่
+let POST: (req: Request) => Promise<Response>;
 
 type Expect = {
   include?: string[];
@@ -75,6 +78,7 @@ async function ask(q: Question, i: number) {
 }
 
 async function main() {
+  ({ POST } = await import("@/app/api/chat/route"));
   console.info = () => {}; // ปิด log ปกติของ route ให้ผล eval อ่านง่าย (warn ยังแสดง)
   const args = Object.fromEntries(process.argv.slice(2).map((a) => a.replace(/^--/, "").split("=")));
   const all = JSON.parse(await readFile(path.join(process.cwd(), "eval/questions.json"), "utf8")) as Question[];
