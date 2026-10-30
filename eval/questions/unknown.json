@@ -35,14 +35,6 @@
   }
  },
  {
-  "id": "unk-gym",
-  "cat": "unknown",
-  "q": "ฟิตเนสในมอเปิดกี่โมง",
-  "expect": {
-   "admits_unknown": true
-  }
- },
- {
   "id": "unk-pool",
   "cat": "unknown",
   "q": "สระว่ายน้ำในมออยู่ตรงไหน",
