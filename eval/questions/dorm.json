@@ -1,0 +1,51 @@
+[
+ {
+  "id": "dorm-outside-price",
+  "cat": "niche",
+  "q": "หอนอกแถวมอราคาเท่าไหร่",
+  "expect": {
+   "include": ["บาท", "3,?000|5,?000|4,?[0-9]00"],
+   "show_map": false
+  }
+ },
+ {
+  "id": "dorm-outside-walk",
+  "cat": "niche",
+  "q": "มีหอนอกที่เดินไปเรียนได้มั้ย",
+  "expect": {
+   "include": ["ประชาอุทิศ|บางมดเพลส|กรีนไลฟ์|มายโฮม"]
+  }
+ },
+ {
+  "id": "dorm-outside-female",
+  "cat": "niche",
+  "q": "หอพักหญิงนอกมอใกล้ๆ มีที่ไหนบ้าง",
+  "expect": {
+   "include": ["บางมดเพลส"]
+  }
+ },
+ {
+  "id": "dorm-outside-bill",
+  "cat": "niche",
+  "q": "หอนอกค่าไฟหน่วยละกี่บาท",
+  "expect": {
+   "include": ["[78] บาท"]
+  }
+ },
+ {
+  "id": "dorm-outside-vs-inside",
+  "cat": "niche",
+  "q": "อยู่หอในกับหอนอกอันไหนถูกกว่า",
+  "expect": {
+   "include": ["2,?500|3,?500"]
+  }
+ },
+ {
+  "id": "dorm-outside-safest",
+  "cat": "unknown",
+  "q": "หอนอกซอยไหนปลอดภัยสุด รุ่นพี่แนะนำที่ไหน",
+  "expect": {
+   "admits_unknown": true
+  }
+ }
+]
