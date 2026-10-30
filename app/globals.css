@@ -58,7 +58,7 @@
   --color-input-edge: var(--input-edge);
 
   --font-sans: var(--font-anuphan), system-ui, sans-serif;
-  --font-display: var(--font-mitr), var(--font-anuphan), sans-serif;
+  --font-display: var(--font-line-seed), var(--font-anuphan), sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 
   --radius-card: 14px;

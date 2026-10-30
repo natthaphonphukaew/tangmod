@@ -76,3 +76,9 @@ docs/           ผลค้นคว้าและสเปกเวอร์�
 3. เพิ่มคำถามนั้นเข้า `eval/questions.json` แล้วรัน `npm run eval` ให้ผ่านโดยข้ออื่นไม่ตก
 
 ผลล่าสุด (29 ต.ค. 69, v3, minimax-m3): 86/87 = 98.9% · หมวดแผนที่ 9/9 · p50 4.2 วิ · p90 8.0 วิ
+
+## เครดิต
+
+- ฟอนต์หัวข้อ: LINE Seed Sans TH © LY Corporation — SIL Open Font License 1.1 ([app/fonts/OFL.txt](app/fonts/OFL.txt))
+- ฟอนต์เนื้อหา: Anuphan (Cadson Demak) และ IBM Plex Mono — SIL Open Font License 1.1 ผ่าน Google Fonts
+- ไอคอน: Phosphor Icons (MIT)

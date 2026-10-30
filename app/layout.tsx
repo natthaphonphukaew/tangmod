@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Anuphan, IBM_Plex_Mono, Mitr } from "next/font/google";
+import { Anuphan, IBM_Plex_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
 // เนื้อหา: Anuphan (Cadson Demak, OFL) — ไทยไม่มีหัว อ่านง่ายบนจอ
@@ -9,11 +10,14 @@ const anuphan = Anuphan({
   weight: "variable",
 });
 
-// หัวข้อ/ชื่อ persona: Mitr (OFL) — รอสลับเป็น LINE Seed Sans TH แบบ self-host
-const mitr = Mitr({
-  variable: "--font-mitr",
-  subsets: ["thai", "latin"],
-  weight: ["500", "600"],
+// หัวข้อ: LINE Seed Sans TH (LY Corporation, OFL 1.1) self-host จาก seed.line.me — สัญญาอนุญาตอยู่ที่ app/fonts/OFL.txt
+const lineSeed = localFont({
+  variable: "--font-line-seed",
+  // ใช้ตัว Bold ไฟล์เดียวครอบน้ำหนัก 400–700: ตัว Regular บางเกินไปสำหรับหัวข้อ และไม่ต้องโหลดสองไฟล์
+  src: [{ path: "./fonts/LINESeedSansTH_W_Bd.woff2", weight: "400 700", style: "normal" }],
+  display: "swap",
+  // ระหว่างโหลดใช้ Anuphan (โหลดมาแล้วสำหรับเนื้อหา) แทน ฟอนต์จะไม่กระโดดมาก
+  fallback: ["var(--font-anuphan)", "sans-serif"],
 });
 
 // รหัสตึก (N11, S4)
@@ -37,7 +41,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="th"
-      className={`${anuphan.variable} ${mitr.variable} ${plexMono.variable} h-full`}
+      className={`${anuphan.variable} ${lineSeed.variable} ${plexMono.variable} h-full`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
