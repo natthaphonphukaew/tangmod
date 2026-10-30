@@ -6,21 +6,24 @@ type Props = {
   title: string;
   mapOpen: boolean;
   onToggleMap: () => void;
-  /** มือถือ: เปิด drawer ประวัติแชท */
+  /** มือถือ และจอกลางตอนเปิดแผนที่ (sidebar ถูกซ่อน): เปิด drawer ประวัติแชท */
   onOpenHistory: () => void;
   onNew: () => void;
 };
 
-/** แถบบนของคอลัมน์แชท: ชื่อแชท + ปุ่มลัดเปิดแผนที่ (มือถือมีปุ่มประวัติและแชทใหม่ด้วย) */
+/** แถบบนของคอลัมน์แชท: ชื่อแชท + ปุ่มลัดเปิดแผนที่ (ตอนไม่มี sidebar มีปุ่มประวัติและแชทใหม่ด้วย) */
 export function TopBar({ title, mapOpen, onToggleMap, onOpenHistory, onNew }: Props) {
+  // sidebar โชว์ตั้งแต่ lg แต่ถ้าเปิดแผนที่ต้องถึง xl (ดู TangmodApp) ปุ่มแทน sidebar ต้องซ่อนตามกัน
+  const noSidebar = mapOpen ? "xl:hidden" : "lg:hidden";
+  const withSidebar = mapOpen ? "max-xl:hidden" : "max-lg:hidden";
   return (
     <header className="flex h-13 shrink-0 items-center gap-1.5 border-b border-line bg-paper px-2 lg:px-4">
-      <button type="button" onClick={onOpenHistory} aria-label="ประวัติแชท" className="rounded-md p-2 text-ink-soft hover:bg-paper-deep hover:text-ink lg:hidden">
+      <button type="button" onClick={onOpenHistory} aria-label="ประวัติแชท" className={`rounded-md p-2 text-ink-soft hover:bg-paper-deep hover:text-ink ${noSidebar}`}>
         <List size={20} />
       </button>
       <p className="min-w-0 flex-1 truncate text-sm">
-        <span className="font-display text-base lg:hidden">ทางมด</span>
-        <span className="text-ink-soft max-lg:hidden">{title}</span>
+        <span className={`font-display text-base ${noSidebar}`}>ทางมด</span>
+        <span className={`text-ink-soft ${withSidebar}`}>{title}</span>
       </p>
       <button
         type="button"
@@ -30,7 +33,7 @@ export function TopBar({ title, mapOpen, onToggleMap, onOpenHistory, onNew }: Pr
       >
         <MapTrifold size={16} weight={mapOpen ? "fill" : "regular"} /> แผนที่
       </button>
-      <button type="button" onClick={onNew} aria-label="แชทใหม่" className="rounded-md p-2 text-ink-soft hover:bg-paper-deep hover:text-ink lg:hidden">
+      <button type="button" onClick={onNew} aria-label="แชทใหม่" className={`rounded-md p-2 text-ink-soft hover:bg-paper-deep hover:text-ink ${noSidebar}`}>
         <NotePencil size={20} />
       </button>
     </header>

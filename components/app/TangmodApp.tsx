@@ -22,7 +22,7 @@ import { CompassDialog } from "@/components/compass/CompassDialog";
 import { trapTab } from "@/components/ui/trap-tab";
 import { programById } from "@/lib/data";
 import { compassSummary, scoreCompass, type CompassAnswers, type CompassResult } from "@/lib/compass";
-import { BottomSheet, detentHeight, useElementHeight, useIsDesktop, type Detent } from "./BottomSheet";
+import { BottomSheet, detentHeight, useElementHeight, useIsDesktop, useIsWide, type Detent } from "./BottomSheet";
 import { MapPanel } from "./MapPanel";
 import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
@@ -56,12 +56,24 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detent, setDetent] = useState<Detent>("half");
   const [drawerOpen, setDrawerOpen] = useState(false);
+  // ปิด drawer แล้วให้ focus กลับไปที่ปุ่ม ☰ ที่เปิด ไม่งั้นปุ่มใน drawer หายไปแล้ว focus หลุดไปที่ body
+  // ข้ามถ้า focus ย้ายไปที่อื่นแล้ว (เช่น กดเข็มทิศใน drawer แล้ว dialog เข็มทิศรับ focus ไป)
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const drawerOpener = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    if (drawerOpen) return;
+    const opener = drawerOpener.current;
+    drawerOpener.current = null;
+    const active = document.activeElement;
+    if (opener && (!active || active === document.body || drawerRef.current?.contains(active))) opener.focus();
+  }, [drawerOpen]);
   const [compassOpen, setCompassOpen] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
   const areaRef = useRef<HTMLDivElement>(null);
   const areaHeight = useElementHeight(areaRef);
   const isDesktop = useIsDesktop();
   const isMobile = !isDesktop;
+  const isWide = useIsWide();
   const sheetMode = isMobile && mapOpen;
   // ระดับ full คลุมแผนที่ไว้ ให้แผนที่คงขนาดแบบ half จะได้ไม่ซูมใหม่ทุกครั้งที่ขยายอ่าน
   const mapDetent: Detent = detent === "full" ? "half" : detent;
@@ -371,13 +383,16 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
       <a href="#chat-input" className="sr-only rounded-md bg-ink px-3 py-2 text-paper focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60]">
         ข้ามไปช่องพิมพ์คำถาม
       </a>
-      <aside className="hidden w-[264px] shrink-0 border-r border-line lg:flex">{sidebar()}</aside>
+      {/* จอ 1024–1279 ตอนเปิดแผนที่: ซ่อน sidebar ให้แชทกว้างพอ (ไม่งั้นเหลือ ~300px) ประวัติแชทเปิดเป็น drawer แทน
+          ใช้ class ไม่ใช่ isWide เพื่อให้ HTML จาก server ตรงกับหน้าจอตั้งแต่แรก */}
+      <aside className={`hidden w-[264px] shrink-0 border-r border-line ${mapOpen ? "xl:flex" : "lg:flex"}`}>{sidebar()}</aside>
 
-      {/* มือถือ: ประวัติแชทเป็น drawer จากซ้าย */}
+      {/* มือถือ (และจอกลางตอนเปิดแผนที่): ประวัติแชทเป็น drawer จากซ้าย */}
       <AnimatePresence>
-        {drawerOpen && isMobile && (
+        {drawerOpen && (isMobile || (mapOpen && !isWide)) && (
           <motion.div
-            className="fixed inset-0 z-40 lg:hidden"
+            ref={drawerRef}
+            className={`fixed inset-0 z-40 ${mapOpen ? "xl:hidden" : "lg:hidden"}`}
             role="dialog"
             aria-modal="true"
             aria-label="ประวัติแชท"
@@ -409,7 +424,10 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
           title={convId ? titleOf(thread) : "แชทใหม่"}
           mapOpen={mapOpen}
           onToggleMap={() => (mapOpen ? setMapOpen(false) : openMap(highlights))}
-          onOpenHistory={() => setDrawerOpen(true)}
+          onOpenHistory={() => {
+            drawerOpener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+            setDrawerOpen(true);
+          }}
           onNew={newChat}
         />
         <div ref={areaRef} className="relative flex min-h-0 flex-1">
