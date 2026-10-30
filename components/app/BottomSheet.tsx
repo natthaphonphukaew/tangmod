@@ -11,16 +11,23 @@ import { useEffect, useRef, useState, useSyncExternalStore, type PointerEvent, t
 
 export type Detent = "peek" | "half" | "full";
 
-const DESKTOP_QUERY = "(min-width: 1024px)";
 const PEEK_PX = 132;
 
-const subscribeMedia = (cb: () => void) => {
-  const mq = window.matchMedia(DESKTOP_QUERY);
-  mq.addEventListener("change", cb);
-  return () => mq.removeEventListener("change", cb);
-};
-export const useIsDesktop = () =>
-  useSyncExternalStore(subscribeMedia, () => window.matchMedia(DESKTOP_QUERY).matches, () => false);
+function useMediaQuery(query: string) {
+  return useSyncExternalStore(
+    (cb) => {
+      const mq = window.matchMedia(query);
+      mq.addEventListener("change", cb);
+      return () => mq.removeEventListener("change", cb);
+    },
+    () => window.matchMedia(query).matches,
+    () => false,
+  );
+}
+/** lg ของ Tailwind: จอคอม (sidebar + แชท + แผงแผนที่) */
+export const useIsDesktop = () => useMediaQuery("(min-width: 1024px)");
+/** xl ของ Tailwind: กว้างพอให้ sidebar อยู่ได้แม้เปิดแผงแผนที่ */
+export const useIsWide = () => useMediaQuery("(min-width: 1280px)");
 
 /** ความสูงของ element (0 ก่อนวัดได้) */
 export function useElementHeight(ref: RefObject<HTMLElement | null>) {
