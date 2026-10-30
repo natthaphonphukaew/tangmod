@@ -102,3 +102,11 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ป้ายชื่อพื้นที่บนแผนที่: ขอบสีกระดาษรอบตัวอักษร ให้อ่านออกเมื่อทับต้นไม้หรือพื้นสี */
+.map-label {
+  paint-order: stroke;
+  stroke: var(--paper-deep);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}

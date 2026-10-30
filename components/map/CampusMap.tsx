@@ -9,6 +9,7 @@ import {
   type ReactZoomPanPinchRef,
 } from "react-zoom-pan-pinch";
 import { placeById } from "@/lib/data";
+import { campusTrees } from "@/lib/map/decor";
 import { anchorOf, domIdOf, focusBoxOf, focusIdOf, mapLayout, trailPath, type MapArea, type MapBuilding } from "@/lib/map/layout";
 
 export type MapHighlight = { placeId: string; n: number };
@@ -89,15 +90,24 @@ export function CampusMap({ highlights, selectedId, onSelect, refitKey }: Props)
             ))}
 
             {mapLayout.canals.map((c, i) => (
-              <path key={i} d={c.d} fill="none" stroke="var(--water)" strokeWidth={c.width} strokeLinecap="round" />
+              <g key={i}>
+                <path d={c.d} fill="none" stroke="var(--water)" strokeWidth={c.width} strokeLinecap="round" />
+                {/* ระลอกน้ำ */}
+                <path d={c.d} fill="none" stroke="var(--card)" strokeOpacity={0.6} strokeWidth={1.2} strokeDasharray="7 13" strokeLinecap="round" />
+              </g>
             ))}
 
             {mapLayout.roads.map((r, i) => (
               <g key={i}>
                 <path d={r.d} fill="none" stroke="var(--building-edge)" strokeOpacity={0.35} strokeWidth={r.width + 3} strokeLinejoin="round" strokeLinecap="round" />
                 <path d={r.d} fill="none" stroke={r.major ? "#e2d4bd" : "var(--card)"} strokeWidth={r.width} strokeLinejoin="round" strokeLinecap="round" />
+                {r.major && (
+                  <path d={r.d} fill="none" stroke="var(--card)" strokeOpacity={0.85} strokeWidth={1.4} strokeDasharray="11 10" strokeLinejoin="round" />
+                )}
               </g>
             ))}
+
+            <MapDecor />
 
             <g className="transition-opacity duration-500">
               {mapLayout.buildings.map((b) => (
@@ -188,6 +198,67 @@ export function CampusMap({ highlights, selectedId, onSelect, refitKey }: Props)
         </span>
       </div>
     </div>
+  );
+}
+
+/**
+ * รายละเอียดแบบแผนที่วาดมือ: ต้นไม้ เส้นสนาม ลู่วิ่ง ระลอกสระน้ำ ป้ายชื่อพื้นที่และถนน
+ * ทั้งหมดเป็นของตกแต่ง ซ่อนจาก screen reader และกดไม่ได้ (ข้อมูลจริงอยู่ที่ตึกและป้ายตึก)
+ */
+function MapDecor() {
+  const field = mapLayout.areas.find((a) => a.type === "ellipse" && a.kind === "field");
+  const track = mapLayout.areas.find((a) => a.type === "ellipse" && a.kind === "track");
+  const pond = mapLayout.areas.find((a) => a.type === "ellipse" && a.kind === "pond");
+  const labelled = mapLayout.areas.filter((a) => a.label);
+  const named = mapLayout.roads.filter((r) => r.name);
+  return (
+    <g aria-hidden pointerEvents="none">
+      {track?.type === "ellipse" &&
+        [0.88, 0.94].map((k) => (
+          <ellipse key={k} cx={track.cx} cy={track.cy} rx={track.rx * k} ry={track.ry * k} fill="none" stroke="var(--card)" strokeOpacity={0.45} strokeWidth={0.8} />
+        ))}
+      {field?.type === "ellipse" && (
+        <g stroke="var(--card)" strokeOpacity={0.7} strokeWidth={1.1} fill="none">
+          <line x1={field.cx} y1={field.cy - field.ry * 0.82} x2={field.cx} y2={field.cy + field.ry * 0.82} />
+          <circle cx={field.cx} cy={field.cy} r={field.ry * 0.32} />
+        </g>
+      )}
+      {pond?.type === "ellipse" && (
+        <g stroke="var(--card)" strokeOpacity={0.7} strokeWidth={1.1} strokeLinecap="round" fill="none">
+          <path d={`M${pond.cx - pond.rx * 0.5} ${pond.cy - 3} q6 -4 12 0 t12 0`} />
+          <path d={`M${pond.cx + pond.rx * 0.05} ${pond.cy + 7} q6 -4 12 0 t12 0`} />
+        </g>
+      )}
+
+      {campusTrees.map((t, i) => (
+        <g key={i} transform={`translate(${t.x} ${t.y})`}>
+          <ellipse cx={1.5} cy={t.r * 0.7} rx={t.r * 0.9} ry={t.r * 0.35} fill="var(--ink)" opacity={0.12} />
+          <circle r={t.r} fill="var(--park-deep)" />
+          <circle cx={-t.r * 0.3} cy={-t.r * 0.32} r={t.r * 0.55} fill="var(--park)" opacity={0.9} />
+        </g>
+      ))}
+
+      {labelled.map((a, i) => {
+        const at = a.type === "ellipse" ? [a.cx, a.cy + a.ry + 13] : a.label_at;
+        if (!at) return null;
+        return (
+          <text key={i} x={at[0]} y={at[1]} textAnchor="middle" fontSize={11} fill="var(--ink-soft)" className="map-label">
+            {a.label}
+          </text>
+        );
+      })}
+      {named.map((r, i) => (
+        <g key={i}>
+          <path id={`road-name-${i}`} d={r.d} fill="none" stroke="none" />
+          {/* ชิดครึ่งบนของถนน: ถนนประชาอุทิศอยู่ขอบล่างของผัง ครึ่งล่างถูกตัด */}
+          <text fontSize={9.5} fill="var(--ink-soft)" dy={-2.5} letterSpacing={1}>
+            <textPath href={`#road-name-${i}`} startOffset="62%" textAnchor="middle">
+              {r.name}
+            </textPath>
+          </text>
+        </g>
+      ))}
+    </g>
   );
 }
 

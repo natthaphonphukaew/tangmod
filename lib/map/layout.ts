@@ -17,7 +17,14 @@ const Building = Rect.extend({
 export type MapBuilding = z.infer<typeof Building>;
 
 const Area = z.discriminatedUnion("type", [
-  z.object({ type: z.literal("path"), kind: z.enum(["ground", "park", "lawn", "water", "plaza"]), d: z.string() }),
+  z.object({
+    type: z.literal("path"),
+    kind: z.enum(["ground", "park", "lawn", "water", "plaza"]),
+    d: z.string(),
+    /** ป้ายชื่อพื้นที่บนแผนที่ (เช่น "สวน") วางที่จุด label_at */
+    label: z.string().optional(),
+    label_at: z.tuple([z.number(), z.number()]).optional(),
+  }),
   z.object({
     type: z.literal("ellipse"),
     kind: z.enum(["track", "field", "pond", "lawn"]),
@@ -25,6 +32,7 @@ const Area = z.discriminatedUnion("type", [
     cy: z.number(),
     rx: z.number(),
     ry: z.number(),
+    label: z.string().optional(),
   }),
 ]);
 export type MapArea = z.infer<typeof Area>;
@@ -34,7 +42,15 @@ const MapLayout = z.object({
   reference: z.object({ title: z.string(), url: z.url(), date: z.string() }),
   north_deg: z.number(),
   areas: z.array(Area),
-  roads: z.array(z.object({ d: z.string(), width: z.number(), major: z.boolean().default(false) })),
+  roads: z.array(
+    z.object({
+      d: z.string(),
+      width: z.number(),
+      major: z.boolean().default(false),
+      /** ชื่อถนน (ใส่เฉพาะที่ยืนยันได้) วาดตามแนวถนน */
+      name: z.string().optional(),
+    }),
+  ),
   canals: z.array(z.object({ d: z.string(), width: z.number() })),
   buildings: z.array(Building),
   points: z.array(z.object({ id: z.string(), x: z.number(), y: z.number() })),

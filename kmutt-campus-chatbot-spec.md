@@ -333,6 +333,6 @@ updated_at: 2026-11-10
 | **W3** 11–17 พ.ย. | CompareCard · TimelineCard · รอยทางมด · ป้ายเปิด/ปิด · bottom sheet บนมือถือ · Compass (stretch) |
 | **W4** 18–25 พ.ย. | ลงรายละเอียดภาพแผนที่ · ทำ state ให้ครบ · a11y · ปุ่ม "ตอบไม่ตรง" · ชุด eval + จูน prompt · ทดสอบกับผู้ใช้จริง · deploy · แผนสำรองวันเดโม |
 
-**สถานะ (30 ต.ค. 69):** deploy แล้วที่ https://tangmod.vercel.app (Vercel sin1 + Neon + login Google) · เสร็จแล้ว: v3 (น้องมดตัวเดียว, แผนที่เป็นตัวช่วย, layout แชท AI, ประวัติแชท local/server, เลขห้อง CB), Major Compass, a11y pass (WCAG 2.2 AA แบบตรวจมือ), rate limit + feedback ใน Postgres, หน้า /privacy + ลบบัญชี, ฟอนต์หัวข้อ LINE Seed Sans TH · ยังเหลือ: ทดสอบกับนักเรียน ม.ปลาย 3–5 คน, ทดสอบกับ screen reader จริง (NVDA/VoiceOver), ลงรายละเอียดภาพแผนที่, เติมข้อมูลจากสัมภาษณ์รุ่นพี่และร้านอาหาร
+**สถานะ (30 ต.ค. 69):** deploy แล้วที่ https://tangmod.vercel.app (Vercel sin1 + Neon + login Google) · เสร็จแล้ว: v3 (น้องมดตัวเดียว, แผนที่เป็นตัวช่วย, layout แชท AI, ประวัติแชท local/server, เลขห้อง CB), Major Compass, a11y pass (WCAG 2.2 AA แบบตรวจมือ), rate limit + feedback ใน Postgres, หน้า /privacy + ลบบัญชี, ฟอนต์หัวข้อ LINE Seed Sans TH, รายละเอียดภาพแผนที่ (ต้นไม้ สนาม สระ ป้ายชื่อ คำนวณตำแหน่งแบบกฎตายตัวใน lib/map/decor.ts) · ยังเหลือ: ทดสอบกับนักเรียน ม.ปลาย 3–5 คน, ทดสอบกับ screen reader จริง (NVDA/VoiceOver), เติมข้อมูลจากสัมภาษณ์รุ่นพี่และร้านอาหาร
 
 **งานเก็บข้อมูลคู่ขนาน** (ผู้พัฒนาทำเอง W1–W3): สัมภาษณ์รุ่นพี่, เดินเก็บราคาโรงอาหาร, ยืนยันจุดที่ข้อมูลขัดกัน (ดู DATA_STATUS)
