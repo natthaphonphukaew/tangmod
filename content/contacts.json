@@ -65,6 +65,21 @@
     "source_url": "https://www.kmutt.ac.th/en/about-kmutt/contact-us/"
   },
   {
+    "id": "registrar",
+    "label": "สำนักงานทะเบียนนักศึกษา",
+    "phone": "02-470-8354",
+    "web": "https://regis.kmutt.ac.th",
+    "topics": ["งานทะเบียน", "ลงทะเบียนเรียน", "ถอนรายวิชา", "ใบรับรองการเป็นนักศึกษา", "ปฏิทินการศึกษา"],
+    "source_url": "https://www.kmutt.ac.th/en/about-kmutt/contact-us/"
+  },
+  {
+    "id": "student_card",
+    "label": "บัตรนักศึกษา",
+    "phone": "02-470-8147",
+    "topics": ["บัตรนักศึกษา", "บัตรหาย", "ทำบัตรใหม่"],
+    "source_url": "https://www.kmutt.ac.th/en/about-kmutt/contact-us/"
+  },
+  {
     "id": "shuttle",
     "label": "รถรับส่งระหว่างวิทยาเขต",
     "phone": "02-470-8332",

@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "eval": "tsx --env-file=.env.local scripts/eval.ts",
     "feedback": "tsx --env-file-if-exists=.env.local scripts/feedback-export.ts",
     "retrieve": "tsx scripts/retrieve-debug.ts"

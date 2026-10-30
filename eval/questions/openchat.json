@@ -1,0 +1,182 @@
+[
+ {
+  "id": "oc-library-today",
+  "cat": "official",
+  "q": "วันนี้หอสมุดเปิดมั้ย",
+  "expect": { "include": ["0?8[:.]00|0?9[:.]00|ปิด"], "places_any": ["N10"] }
+ },
+ {
+  "id": "oc-kfc-saturday",
+  "cat": "official",
+  "q": "วันเสาร์ kfc มอเปิดมั้ยคะ",
+  "expect": { "include": ["0?6[:.]00|6 โมง", "20[:.]00|2 ทุ่ม"] }
+ },
+ {
+  "id": "oc-study-1am",
+  "cat": "official",
+  "q": "เวลานี้ตี 1 อ่านหนังสือได้ที่ไหนบ้าง",
+  "expect": { "include": ["24|SIT"] }
+ },
+ {
+  "id": "oc-study-holiday",
+  "cat": "official",
+  "q": "ปกติวันหยุด ในมอมีที่ไหนเปิดให้อ่านหนังสือบ้างมั้ย",
+  "expect": { "include": ["ห้องสมุด|หอสมุด|SIT|LX"] }
+ },
+ {
+  "id": "oc-exam-when",
+  "cat": "official",
+  "q": "ตารางสอบออกยังครับ เราสอบวันไหน",
+  "expect": { "include": ["30 (พ\\.?ย|พฤศจิกา)|2026-11-30|ไฟนอล|ปลายภาค"], "show_map": false }
+ },
+ {
+  "id": "oc-dec2",
+  "cat": "official",
+  "q": "วันที่ 2 ธันวา มอหยุดหรือยัง",
+  "expect": { "include": ["ประเมินผล|สอบ|12 ธ"] }
+ },
+ {
+  "id": "oc-shuttle-bkt",
+  "cat": "official",
+  "q": "อยากขึ้นรถมอไปบางขุนเทียนต้องทำยังไงบ้างคะ",
+  "expect": { "include": ["0?7[:.]30|shuttle|รถรับส่ง"] }
+ },
+ {
+  "id": "oc-parking",
+  "cat": "official",
+  "q": "ถ้าไม่ได้ลงทะเบียนรถ รถยนต์สามารถจอดที่ไหนได้บ้างคะ",
+  "expect": { "include": ["S2|อาคารจอดรถ|ตึกจอดรถ"] }
+ },
+ {
+  "id": "oc-student-card",
+  "cat": "official",
+  "q": "บัตรนศ.หายต้องทำยังไงบ้างคะ",
+  "expect": { "include": ["8147"], "show_map": false }
+ },
+ {
+  "id": "oc-withdraw",
+  "cat": "unknown",
+  "q": "มอเราเปิดให้ถอนรายวิชาวันไหน",
+  "expect": { "admits_unknown": true, "include": ["ทะเบียน|8354|regis"] }
+ },
+ {
+  "id": "oc-room-cb2201",
+  "cat": "map",
+  "q": "หน้าห้อง cb2201 อยู่ตรงไหน",
+  "expect": { "places_any": ["N17"], "show_map": true, "include": ["ชั้น\\W*2"] }
+ },
+ {
+  "id": "oc-gym-hours",
+  "cat": "niche",
+  "q": "ยิมมอเปิดกี่โมงครับ",
+  "expect": { "include": ["0?6[:.]00|6 โมง"] }
+ },
+ {
+  "id": "oc-gym-sunday",
+  "cat": "niche",
+  "q": "วันอาทิตย์ฟิตเนสมอเปิดไหมครับ",
+  "expect": { "include": ["ปิด"] }
+ },
+ {
+  "id": "oc-lx-hours",
+  "cat": "niche",
+  "q": "พน.lx เปิดถึงกี่โมง",
+  "expect": { "include": ["20[:.]00|2 ทุ่ม|16[:.]30"] }
+ },
+ {
+  "id": "oc-post-office",
+  "cat": "niche",
+  "q": "ไปรษณีย์ในมอปิดกี่โมง",
+  "expect": { "include": ["16[:.]00|4 โมง|บ่ายสี่"] }
+ },
+ {
+  "id": "oc-market",
+  "cat": "niche",
+  "q": "ตลาดมอมีวันไหนบ้างคะ",
+  "expect": { "include": ["อังคาร|อ\\."] }
+ },
+ {
+  "id": "oc-skirt-press",
+  "cat": "niche",
+  "q": "ที่ไหนรับอัดกลีบกระโปรงนศบ้าง",
+  "expect": { "include": ["หอหญิง|S6", "40"] }
+ },
+ {
+  "id": "oc-activity-hours",
+  "cat": "niche",
+  "q": "มีวิธีเก็บชั่วโมงกิจกรรมมั้ยครับ ติดตามกิจกรรมได้ทางไหน",
+  "expect": { "include": ["GCDC|salcactivity|สตาฟ"] }
+ },
+ {
+  "id": "oc-email-problem",
+  "cat": "niche",
+  "q": "ผมมีปัญหากับเมลมอ สามารถติดต่อที่ใดได้บ้างครับ",
+  "expect": { "include": ["สำนักคอม"] }
+ },
+ {
+  "id": "oc-bus-142",
+  "cat": "niche",
+  "q": "รถเมล์142 ยังวิ่งไหมครับ ไม่เห็นใน viabus",
+  "expect": { "include": ["142"], "exclude": ["ไม่วิ่งแล้ว|ยกเลิกแล้ว"] }
+ },
+ {
+  "id": "oc-noodle-today",
+  "cat": "unknown",
+  "q": "วันนี้ร้านขนมจีนลานปูนเปิดไหม",
+  "expect": { "admits_unknown": true }
+ },
+ {
+  "id": "oc-crowd-now",
+  "cat": "unknown",
+  "q": "ตอนนี้สตาร์บัคในมอคนเยอะมั้ย",
+  "expect": { "admits_unknown": true }
+ },
+ {
+  "id": "oc-power-outage",
+  "cat": "unknown",
+  "q": "ที่มอไฟดับไหมคะ",
+  "expect": { "admits_unknown": true }
+ },
+ {
+  "id": "oc-outsider-gym",
+  "cat": "unknown",
+  "q": "คนนอกจะเข้ามาเล่นฟิตเนสในมอได้มั้ย",
+  "expect": { "admits_unknown": true }
+ },
+ {
+  "id": "oc-military-cert",
+  "cat": "unknown",
+  "q": "ใบรับรองการเป็นนักศึกษาที่ใช้ยื่นผ่อนผันทหาร ทำยังไงครับ",
+  "expect": { "admits_unknown": true }
+ },
+ {
+  "id": "oc-fee-installment",
+  "cat": "unknown",
+  "q": "มอเราผ่อนชำระค่าเทอมได้ไหมคะ",
+  "expect": { "admits_unknown": true }
+ },
+ {
+  "id": "oc-probation",
+  "cat": "unknown",
+  "q": "ใครพอมีข้อมูลเรื่องการติดโปรบ้างไหมคะ",
+  "expect": { "admits_unknown": true }
+ },
+ {
+  "id": "oc-loan",
+  "cat": "out_of_scope",
+  "q": "หาคนปล่อยกู้ยอด 600 คืนพรุ่งนี้ครับ",
+  "expect": { "refuse": true }
+ },
+ {
+  "id": "oc-homework-hire",
+  "cat": "out_of_scope",
+  "q": "หาคนรับทำการบ้านค่า",
+  "expect": { "refuse": true }
+ },
+ {
+  "id": "oc-halloween",
+  "cat": "out_of_scope",
+  "q": "Halloween เค้าเที่ยวไหนกันครับ อยากแต่งเป็นผีแล้วไปเที่ยว",
+  "expect": { "refuse": true }
+ }
+]

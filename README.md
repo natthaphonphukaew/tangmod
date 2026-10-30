@@ -29,7 +29,7 @@ npm run dev
 | `npm run typecheck` | ตรวจ TypeScript |
 | `npm run build` | build สำหรับ production |
 | `npm run feedback` | ดึงรายการ "ตอบไม่ตรง" จากฐานข้อมูล (ตั้ง `DATABASE_URL` ของ Neon ก่อน หรือ `-- --local` สำหรับฐานในเครื่องโดยปิด dev server) → `.data/feedback-export.ndjson` |
-| `npm run eval` | ยิงชุดคำถาม 87 ข้อใน `eval/questions/*.json` ผ่าน `/api/chat` จริง แล้วตรวจคำตอบ (ใช้โควตา AI จริง ~4 นาที) ดู `--only=id1,id2` / `--cat=unknown` / `--file=map` |
+| `npm run eval` | ยิงชุดคำถาม 117 ข้อใน `eval/questions/*.json` ผ่าน `/api/chat` จริง แล้วตรวจคำตอบ (ใช้โควตา AI จริง ~4 นาที) ดู `--only=id1,id2` / `--cat=unknown` / `--file=map` |
 | `npm run retrieve -- "คำถาม"` | ดูว่าคำถามนี้ระบบดึงข้อมูลชิ้นไหนให้ AI (ไม่เรียก AI) ใช้แยกว่าตอบผิดเพราะขาดข้อมูลหรือค้นไม่เจอ |
 
 ## Login + ประวัติแชทบน server
@@ -77,7 +77,7 @@ docs/           ผลค้นคว้าและสเปกเวอร์�
 2. ถ้าขาดข้อมูล เติมใน `content/` ถ้าตอบผิดแนว แก้กฎใน `lib/ai/prompt.ts`
 3. เพิ่มคำถามนั้นเข้า `eval/questions/<หัวข้อ>.json` แล้วรัน `npm run eval` ให้ผ่านโดยข้ออื่นไม่ตก
 
-ผลล่าสุด (29 ต.ค. 69, v3, minimax-m3): 86/87 = 98.9% · หมวดแผนที่ 9/9 · p50 4.2 วิ · p90 8.0 วิ
+ผลล่าสุด (30 ต.ค. 69, minimax-m3 + สำรอง gemini-flash-lite): 115/117 = 98.3% · รวมคำถามจริงจาก OpenChat นักศึกษา 30 ข้อ · หมวดแผนที่ 10/10 · p50 5.2 วิ · p90 9.9 วิ
 
 ## เครดิต
 

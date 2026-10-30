@@ -24,7 +24,7 @@ let POST: (req: Request) => Promise<Response>;
 
 const re = (pattern: string) => new RegExp(pattern, "i");
 const UNKNOWN_RE = re("ยังไม่มีข้อมูล|ไม่มีข้อมูล|ไม่ทราบ|ไม่แน่ใจ|ยังไม่ได้|ยืนยันไม่ได้|ไม่สามารถ|สอบถาม|ติดต่อ|ไม่รู้");
-const REFUSE_RE = re("ขอโทษ|ขออภัย|ไม่ได้|ไม่สามารถ|นอกเหนือ|เฉพาะเรื่อง");
+const REFUSE_RE = re("ขอโทษ|ขออภัย|ไม่ได้|ไม่สามารถ|นอกเหนือ|เฉพาะเรื่อง|ปฏิเสธ|ไม่รับ");
 
 function check(e: Expect, a: ValidatedAnswer): string[] {
   const fails: string[] = [];
