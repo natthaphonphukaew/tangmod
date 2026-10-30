@@ -2,9 +2,9 @@
 
 import { ArrowSquareOut, X } from "@phosphor-icons/react";
 import { useEffect, useRef, useState } from "react";
-import { placeById } from "@/lib/data";
+import { holidays, placeById } from "@/lib/data";
 import type { Place } from "@/lib/data/schemas";
-import { isOpenNow } from "@/lib/time";
+import { holidayOn, isOpenNow } from "@/lib/time";
 import { TierBadge } from "@/components/ui/TierBadge";
 
 type Props = {
@@ -30,6 +30,8 @@ export function PlaceCard({ placeId, onClose, onAsk }: Props) {
   if (!place) return null;
 
   const open = isOpenNow(place.hours, now);
+  // วันหยุดราชการ: เวลาเปิดปกติอาจไม่ใช้ บอกตรง ๆ ดีกว่าขึ้นว่า "เปิดอยู่" ทั้งที่อาจปิด
+  const holiday = open !== null ? holidayOn(now, holidays.holidays) : undefined;
 
   return (
     <article
@@ -51,10 +53,14 @@ export function PlaceCard({ placeId, onClose, onAsk }: Props) {
 
       <div className="mt-3 flex flex-wrap items-center gap-1.5">
         <TierBadge tier={place.tier} updatedAt={place.updated_at} />
-        {open !== null && (
-          <span className={`rounded-full px-2 py-0.5 text-xs ${open ? "bg-ok/10 text-ok" : "bg-slate/10 text-ink-soft"}`}>
-            {open ? "เปิดอยู่ตอนนี้" : "ปิดอยู่ตอนนี้"}
-          </span>
+        {holiday ? (
+          <span className="rounded-md bg-warn/10 px-2 py-0.5 text-xs text-warn">วันนี้{holiday.label} · เวลาเปิดอาจต่างจากปกติ</span>
+        ) : (
+          open !== null && (
+            <span className={`rounded-full px-2 py-0.5 text-xs ${open ? "bg-ok/10 text-ok" : "bg-slate/10 text-ink-soft"}`}>
+              {open ? "เปิดอยู่ตอนนี้" : "ปิดอยู่ตอนนี้"}
+            </span>
+          )
         )}
       </div>
 

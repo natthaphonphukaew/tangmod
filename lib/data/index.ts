@@ -7,11 +7,13 @@ import fiboPrograms from "@/content/programs/fibo.json";
 import tcas70Json from "@/content/admission/tcas70.json";
 import contactsJson from "@/content/contacts.json";
 import calendarJson from "@/content/calendar.json";
+import holidaysJson from "@/content/holidays.json";
 import {
   AcademicCalendar,
   AdmissionEvent,
   Contact,
   Assistant,
+  Holidays,
   Place,
   Program,
 } from "./schemas";
@@ -25,6 +27,7 @@ export const programs = z
 export const admissionEvents = z.array(AdmissionEvent).parse(tcas70Json);
 export const contacts = z.array(Contact).parse(contactsJson);
 export const calendar = AcademicCalendar.parse(calendarJson);
+export const holidays = Holidays.parse(holidaysJson);
 
 const byId = <T extends { id: string }>(items: T[]) =>
   new Map(items.map((item) => [item.id, item]));

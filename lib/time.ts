@@ -1,4 +1,4 @@
-import type { Day } from "./data/schemas";
+import type { Day, Holiday } from "./data/schemas";
 
 type Hours = { days: Day[]; open: string; close: string; label?: string };
 
@@ -16,6 +16,15 @@ export function bangkokClock(now: Date): { day: Day; minutes: number } {
   const get = (type: string) => parts.find((p) => p.type === type)!.value;
   const day = get("weekday").slice(0, 3).toLowerCase() as Day;
   return { day: DAY_KEYS.includes(day) ? day : "mon", minutes: Number(get("hour")) * 60 + Number(get("minute")) };
+}
+
+/** วันที่ตามเวลากรุงเทพ รูปแบบ YYYY-MM-DD */
+export const bangkokDate = (now: Date) => new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Bangkok" }).format(now);
+
+/** วันนี้ (ตามเวลากรุงเทพ) เป็นวันหยุดราชการไหม */
+export function holidayOn(now: Date, holidays: Holiday[]): Holiday | undefined {
+  const today = bangkokDate(now);
+  return holidays.find((h) => h.date === today);
 }
 
 const toMinutes = (hhmm: string) => {

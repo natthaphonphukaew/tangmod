@@ -4,6 +4,7 @@ import {
   admissionEvents,
   calendar,
   contacts,
+  holidays,
   places,
   programs,
 } from "@/lib/data";
@@ -130,6 +131,25 @@ function structuredChunks(): Chunk[] {
     tier: calendar.tier,
     source_url: calendar.source_url,
     updated_at: calendar.updated_at,
+  });
+
+  // ผู้ใช้พิมพ์ "2 ธันวา" ไม่ใช่ 2026-12-02: เขียนวันที่ภาษาไทยกำกับ ไม่งั้นโมเดลเทียบวันพลาดแล้วตอบว่าวันธรรมดาเป็นวันหยุด
+  const thaiDate = (iso: string) =>
+    new Intl.DateTimeFormat("th-TH", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(
+      new Date(`${iso}T00:00:00Z`),
+    );
+  chunks.push({
+    id: `holidays:${holidays.year_be}`,
+    namespace: "general",
+    title: `วันหยุดราชการ ${holidays.year_be} (มอหยุดไหม)`,
+    text: [
+      ...holidays.holidays.map((h) => `${thaiDate(h.date)} (${h.date}): ${h.label}`),
+      `วันที่ไม่อยู่ในรายการนี้ไม่ใช่วันหยุดราชการ (แต่อาจอยู่ในช่วงสอบหรือปิดภาค ดูปฏิทินการศึกษา)`,
+      holidays.conflict_note ?? "",
+    ].join("\n"),
+    tier: holidays.tier,
+    source_url: holidays.source_url,
+    updated_at: holidays.updated_at,
   });
 
   for (const c of contacts) {

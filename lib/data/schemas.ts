@@ -170,3 +170,11 @@ export const AcademicCalendar = Provenance.extend({
   rules: z.array(z.string()),
 });
 export type AcademicCalendar = z.infer<typeof AcademicCalendar>;
+
+/** วันหยุดราชการ — ป้าย "เปิดอยู่ตอนนี้" และคำตอบเรื่องเวลาเปิดต้องรู้ ไม่งั้นจะบอกว่าเปิดในวันหยุด */
+export const Holidays = Provenance.extend({
+  year_be: z.number().int(),
+  holidays: z.array(z.object({ date: isoDate, label: z.string() })),
+});
+export type Holidays = z.infer<typeof Holidays>;
+export type Holiday = Holidays["holidays"][number];
