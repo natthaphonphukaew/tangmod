@@ -6,6 +6,7 @@
 - สเปก: [kmutt-campus-chatbot-spec.md](kmutt-campus-chatbot-spec.md)
 - ข้อมูลที่ค้นมาพร้อมแหล่งที่มา: [docs/research/](docs/research/)
 - สถานะข้อมูลและสิ่งที่ยังต้องเก็บ: [content/DATA_STATUS.md](content/DATA_STATUS.md)
+- ทำงานร่วมกัน (branch, PR, ใครดูแลไฟล์ไหน, วิธีเพิ่มข้อมูล): [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## เริ่มใช้งาน
 
@@ -28,7 +29,8 @@ npm run dev
 | `npm run typecheck` | ตรวจ TypeScript |
 | `npm run build` | build สำหรับ production |
 | `npm run feedback` | ดึงรายการ "ตอบไม่ตรง" จากฐานข้อมูล (ตั้ง `DATABASE_URL` ของ Neon ก่อน หรือ `-- --local` สำหรับฐานในเครื่องโดยปิด dev server) → `.data/feedback-export.ndjson` |
-| `npm run eval` | ยิงชุดคำถาม 87 ข้อใน `eval/questions.json` ผ่าน `/api/chat` จริง แล้วตรวจคำตอบ (ใช้โควตา AI จริง ~4 นาที) ดู `--only=id1,id2` / `--cat=unknown` |
+| `npm run eval` | ยิงชุดคำถาม 87 ข้อใน `eval/questions/*.json` ผ่าน `/api/chat` จริง แล้วตรวจคำตอบ (ใช้โควตา AI จริง ~4 นาที) ดู `--only=id1,id2` / `--cat=unknown` / `--file=map` |
+| `npm run retrieve -- "คำถาม"` | ดูว่าคำถามนี้ระบบดึงข้อมูลชิ้นไหนให้ AI (ไม่เรียก AI) ใช้แยกว่าตอบผิดเพราะขาดข้อมูลหรือค้นไม่เจอ |
 
 ## Login + ประวัติแชทบน server
 
@@ -61,7 +63,7 @@ lib/client/     เรียก API, ความจำผู้ใช้, ป�
 components/     app (Sidebar, TopBar, MapPanel, bottom sheet มือถือ), chat (ChatColumn, AssistantMessage), cards (ตัวเลขจริง), map
 content/        ข้อมูลจริง: places, assistant (น้องมด), programs/, admission/, contacts, calendar, map-layout
 content/kb/     ความรู้แบบ Markdown แยก namespace (general/sit/eng/food/admission) แต่ละ ## = 1 chunk
-eval/           ชุดคำถามทดสอบ (official / niche / unknown / out_of_scope / map) · scripts/eval.ts ตัวรัน
+eval/questions/ ชุดคำถามทดสอบ แยกไฟล์ตามหมวด (official / niche / unknown / out_of_scope / map) · scripts/eval.ts ตัวรัน
 docs/           ผลค้นคว้าและสเปกเวอร์ชันเก่า
 ```
 
@@ -73,7 +75,7 @@ docs/           ผลค้นคว้าและสเปกเวอร์�
 
 1. ผู้ใช้กด "ตอบไม่ตรง" → คำถามกับคำตอบไปอยู่ในตาราง `feedback` (ไม่ผูกตัวตน) แล้วดึงออกมาด้วย `npm run feedback`
 2. ถ้าขาดข้อมูล เติมใน `content/` ถ้าตอบผิดแนว แก้กฎใน `lib/ai/prompt.ts`
-3. เพิ่มคำถามนั้นเข้า `eval/questions.json` แล้วรัน `npm run eval` ให้ผ่านโดยข้ออื่นไม่ตก
+3. เพิ่มคำถามนั้นเข้า `eval/questions/<หัวข้อ>.json` แล้วรัน `npm run eval` ให้ผ่านโดยข้ออื่นไม่ตก
 
 ผลล่าสุด (29 ต.ค. 69, v3, minimax-m3): 86/87 = 98.9% · หมวดแผนที่ 9/9 · p50 4.2 วิ · p90 8.0 วิ
 

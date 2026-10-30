@@ -15,7 +15,8 @@ import type { Fee, Program, Tier } from "@/lib/data/schemas";
  * ขนาดยังเล็ก จึงเก็บในหน่วยความจำ ถ้าข้อมูลโตขึ้นค่อยย้ายไป pgvector (สเปกหัวข้อ 7)
  */
 
-export type Namespace = "general" | "sit" | "eng" | "food" | "admission";
+export const NAMESPACES = ["general", "sit", "eng", "food", "admission"] as const;
+export type Namespace = (typeof NAMESPACES)[number];
 
 export type Chunk = {
   id: string;

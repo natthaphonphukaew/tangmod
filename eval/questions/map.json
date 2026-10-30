@@ -1,0 +1,102 @@
+[
+ {
+  "id": "room-cb2301",
+  "cat": "map",
+  "q": "CB2301 อยู่ตรงไหน",
+  "expect": {
+   "places_any": [
+    "N17"
+   ],
+   "show_map": true,
+   "include": [
+    "ชั้น\\W{0,3}(ที่\\W{0,3})?3"
+   ]
+  }
+ },
+ {
+  "id": "room-cb4",
+  "cat": "map",
+  "q": "ห้อง CB4205 อยู่ตึกไหน ชั้นอะไร",
+  "expect": {
+   "places_any": [
+    "S12"
+   ],
+   "show_map": true,
+   "include": [
+    "ชั้น\\W{0,3}(ที่\\W{0,3})?2"
+   ],
+   "exclude": [
+    "รีวิว"
+   ]
+  }
+ },
+ {
+  "id": "room-cb1-lower",
+  "cat": "map",
+  "q": "cb1101 ไปทางไหน",
+  "expect": {
+   "places_any": [
+    "N20"
+   ],
+   "show_map": true
+  }
+ },
+ {
+  "id": "map-kfc-from-sit",
+  "cat": "map",
+  "q": "จาก SIT เดินไปโรงอาหาร KFC ยังไง",
+  "expect": {
+   "places_all": [
+    "N11",
+    "S14"
+   ],
+   "show_map": true
+  }
+ },
+ {
+  "id": "map-halal",
+  "cat": "map",
+  "q": "ร้านฮาลาลในมออยู่ตึกไหน",
+  "expect": {
+   "places_any": [
+    "S14"
+   ],
+   "show_map": true
+  }
+ },
+ {
+  "id": "map-library-where",
+  "cat": "map",
+  "q": "ห้องสมุดอยู่ตรงไหน",
+  "expect": {
+   "places_any": [
+    "N10"
+   ],
+   "show_map": true
+  }
+ },
+ {
+  "id": "nomap-tcas",
+  "cat": "map",
+  "q": "TCAS70 รอบไหนยังเปิดอยู่",
+  "expect": {
+   "show_map": false
+  }
+ },
+ {
+  "id": "nomap-seneca",
+  "cat": "map",
+  "q": "Seneca 3+1 คืออะไร",
+  "expect": {
+   "show_map": false
+  }
+ },
+ {
+  "id": "nomap-lib-hours",
+  "cat": "map",
+  "q": "ห้องสมุดเปิดกี่โมง",
+  "expect": {
+   "show_map": false
+  }
+ }
+]

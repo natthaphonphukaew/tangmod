@@ -46,3 +46,6 @@ next-env.d.ts
 
 # ผล eval (มีคำตอบเต็ม)
 /eval/results/
+
+# ตั้งค่า Claude Code ส่วนตัว (ของที่ใช้ร่วมกันอยู่ใน .claude/skills, CLAUDE.md)
+.claude/settings.local.json

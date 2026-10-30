@@ -1,0 +1,10 @@
+# ทุกไฟล์ข้อความเก็บใน git เป็น LF เสมอ ไม่ว่าเครื่องไหนตั้ง core.autocrlf ไว้อย่างไร
+# (กันกรณีเครื่องหนึ่งเป็น Windows อีกเครื่องเป็น Mac แล้ว diff ขึ้นทั้งไฟล์)
+* text=auto eol=lf
+
+# ไฟล์ไบนารี ห้ามแปลง
+*.woff2 binary
+*.ico binary
+*.png binary
+*.jpg binary
+*.webp binary

@@ -10,7 +10,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "eval": "tsx --env-file=.env.local scripts/eval.ts",
-    "feedback": "tsx --env-file-if-exists=.env.local scripts/feedback-export.ts"
+    "feedback": "tsx --env-file-if-exists=.env.local scripts/feedback-export.ts",
+    "retrieve": "tsx scripts/retrieve-debug.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.91",

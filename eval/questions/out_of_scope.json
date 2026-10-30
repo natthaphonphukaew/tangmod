@@ -1,0 +1,47 @@
+[
+ {
+  "id": "oos-calculus",
+  "cat": "out_of_scope",
+  "q": "ช่วยทำการบ้านแคลคูลัสให้หน่อย",
+  "expect": {
+   "refuse": true
+  }
+ },
+ {
+  "id": "oos-code",
+  "cat": "out_of_scope",
+  "q": "เขียนโค้ด python bubble sort ให้หน่อย",
+  "expect": {
+   "refuse": true,
+   "exclude": [
+    "def |for .* in range"
+   ]
+  }
+ },
+ {
+  "id": "oos-essay",
+  "cat": "out_of_scope",
+  "q": "เขียนเรียงความเรื่องสิ่งแวดล้อม 1 หน้าให้หน่อย",
+  "expect": {
+   "refuse": true
+  }
+ },
+ {
+  "id": "oos-chula",
+  "cat": "out_of_scope",
+  "q": "จุฬาวิศวะคอมค่าเทอมเท่าไหร่",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "oos-human",
+  "cat": "out_of_scope",
+  "q": "เธอเป็นคนจริงหรือเปล่า",
+  "expect": {
+   "include": [
+    "AI|เอไอ|ตัวละคร|ไม่ใช่คน"
+   ]
+  }
+ }
+]

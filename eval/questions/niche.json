@@ -1,0 +1,98 @@
+[
+ {
+  "id": "dsi-code",
+  "cat": "niche",
+  "q": "DSI เขียนโค้ดหนักไหม",
+  "expect": {
+   "include": [
+    "รีวิว|รุ่นพี่|ไม่เป็นทางการ"
+   ]
+  }
+ },
+ {
+  "id": "sit-keycard",
+  "cat": "niche",
+  "q": "ตึก SIT เข้ายังไง ต้องใช้บัตรไหม",
+  "expect": {
+   "include": [
+    "คีย์การ์ด|บัตร|key ?card"
+   ]
+  }
+ },
+ {
+  "id": "food-price",
+  "cat": "niche",
+  "q": "ข้าวในโรงอาหารราคาเท่าไหร่",
+  "expect": {
+   "include": [
+    "รีวิว|เก่า|ไม่เป็นทางการ"
+   ]
+  }
+ },
+ {
+  "id": "halal",
+  "cat": "niche",
+  "q": "ในมอมีอาหารฮาลาลไหม",
+  "expect": {
+   "include": [
+    "ฮาลาล"
+   ],
+   "places_any": [
+    "S14"
+   ]
+  }
+ },
+ {
+  "id": "veg",
+  "cat": "niche",
+  "q": "มีอาหารมังสวิรัติไหม",
+  "expect": {
+   "include": [
+    "มังสวิรัติ"
+   ]
+  }
+ },
+ {
+  "id": "no-hardware",
+  "cat": "niche",
+  "q": "ไม่ชอบฮาร์ดแวร์ ควรเรียน CPE หรือ CS",
+  "expect": {
+   "include": [
+    "\\bCS\\b|วิทยาการคอมพิวเตอร์"
+   ],
+   "cards_any": [
+    "sit-cs"
+   ]
+  }
+ },
+ {
+  "id": "cs-physics",
+  "cat": "niche",
+  "q": "CS ต้องเรียนฟิสิกส์ไหม",
+  "expect": {
+   "include": [
+    "ฟิสิกส์"
+   ]
+  }
+ },
+ {
+  "id": "bootcamp",
+  "cat": "niche",
+  "q": "ก่อนเปิดเทอม SIT มีติวอะไรให้ไหม",
+  "expect": {
+   "include": [
+    "bootcamp|บูทแคมป์|ติว"
+   ]
+  }
+ },
+ {
+  "id": "front-food",
+  "cat": "niche",
+  "q": "ร้านอาหารหน้ามอมีร้านไหนบ้าง",
+  "expect": {
+   "include": [
+    "wongnai|รีวิว|ร้าน"
+   ]
+  }
+ }
+]

@@ -1,0 +1,69 @@
+[
+ {
+  "id": "unk-laptop",
+  "cat": "unknown",
+  "q": "CPE ต้องใช้โน้ตบุ๊กสเปกไหน",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "unk-salary",
+  "cat": "unknown",
+  "q": "จบ CS เงินเดือนเริ่มต้นเท่าไหร่",
+  "expect": {
+   "admits_unknown": true,
+   "exclude": [
+    "\\d{2},\\d{3}\\s*(–|-|ถึง)\\s*\\d{2},\\d{3}\\s*บาท/?เดือน"
+   ]
+  }
+ },
+ {
+  "id": "unk-seats",
+  "cat": "unknown",
+  "q": "IT รอบ AR รับกี่คน",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "unk-7eleven",
+  "cat": "unknown",
+  "q": "ในมอมีเซเว่นไหม",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "unk-gym",
+  "cat": "unknown",
+  "q": "ฟิตเนสในมอเปิดกี่โมง",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "unk-pool",
+  "cat": "unknown",
+  "q": "สระว่ายน้ำในมออยู่ตรงไหน",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "unk-wifi",
+  "cat": "unknown",
+  "q": "รหัส wifi ของมหาลัยคืออะไร",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "unk-advisor",
+  "cat": "unknown",
+  "q": "อาจารย์ที่ปรึกษาของ CS ปี 1 คือใคร",
+  "expect": {
+   "admits_unknown": true
+  }
+ }
+]

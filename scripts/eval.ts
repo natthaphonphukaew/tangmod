@@ -1,17 +1,19 @@
 /*
- * npm run eval — ยิงชุดคำถามใน eval/questions.json ผ่าน /api/chat ตัวจริง (เรียก handler ตรง ไม่ต้องเปิด dev server)
+ * npm run eval — ยิงชุดคำถามใน eval/questions/*.json ผ่าน /api/chat ตัวจริง (เรียก handler ตรง ไม่ต้องเปิด dev server)
  * ตรวจคำตอบแบบกฎตายตัว: ตัวเลข/คำสำคัญในข้อความ, หมุด, การ์ด, การเปิดแผนที่, การปฏิเสธ, การยอมรับว่าไม่รู้
  *
  *   npm run eval                     ทั้งชุด
  *   npm run eval -- --only=fee-cs,bts  เฉพาะบางข้อ
  *   npm run eval -- --cat=unknown      เฉพาะหมวด
+ *   npm run eval -- --file=food        เฉพาะไฟล์ eval/questions/food.json
  *   CHAT_MODELS=google:gemini-3.5-flash npm run eval   เทียบโมเดลอื่น
  *
  * ผลละเอียดเขียนไว้ที่ eval/results/<เวลา>.json (ไม่ขึ้น git)
  */
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { emptyProfile, type StreamEvent, type ValidatedAnswer } from "@/lib/ai/schema";
+import { loadQuestions, type Expect, type Question } from "./eval-questions";
 
 // route ใช้ฐานข้อมูลนับ rate limit: ใช้ Postgres ในหน่วยความจำ ไม่แตะ .data/pglite ที่ dev server อาจเปิดอยู่
 // และห้ามเขียนตัวนับลงฐานข้อมูลจริงแม้ .env.local จะมี DATABASE_URL — ต้องตั้งก่อน import route (ทำใน main)
@@ -19,21 +21,6 @@ process.env.PGLITE_DIR = "memory://";
 delete process.env.DATABASE_URL;
 // tsx คอมไพล์เป็น CommonJS ใช้ top-level await ไม่ได้ จึง import route ใน main แล้วเก็บไว้ที่นี่
 let POST: (req: Request) => Promise<Response>;
-
-type Expect = {
-  include?: string[];
-  exclude?: string[];
-  places_any?: string[];
-  places_all?: string[];
-  cards_any?: string[];
-  cards_all?: string[];
-  card_types_any?: string[];
-  /** true = คำถามต้องการเห็นตำแหน่ง แผนที่ต้องเปิด · false = ไม่ควรเปิดแผนที่ */
-  show_map?: boolean;
-  refuse?: boolean;
-  admits_unknown?: boolean;
-};
-type Question = { id: string; cat: string; q: string; expect: Expect };
 
 const re = (pattern: string) => new RegExp(pattern, "i");
 const UNKNOWN_RE = re("ยังไม่มีข้อมูล|ไม่มีข้อมูล|ไม่ทราบ|ไม่แน่ใจ|ยังไม่ได้|ยืนยันไม่ได้|ไม่สามารถ|สอบถาม|ติดต่อ|ไม่รู้");
@@ -81,9 +68,9 @@ async function main() {
   ({ POST } = await import("@/app/api/chat/route"));
   console.info = () => {}; // ปิด log ปกติของ route ให้ผล eval อ่านง่าย (warn ยังแสดง)
   const args = Object.fromEntries(process.argv.slice(2).map((a) => a.replace(/^--/, "").split("=")));
-  const all = JSON.parse(await readFile(path.join(process.cwd(), "eval/questions.json"), "utf8")) as Question[];
+  const all = loadQuestions();
   const only = args.only?.split(",");
-  const questions = all.filter((q) => (!only || only.includes(q.id)) && (!args.cat || q.cat === args.cat));
+  const questions = all.filter((q) => (!only || only.includes(q.id)) && (!args.cat || q.cat === args.cat) && (!args.file || q.file === `${args.file.replace(/\.json$/, "")}.json`));
   const concurrency = Number(args.concurrency ?? 3);
 
   const results: { id: string; cat: string; q: string; pass: boolean; fails: string[]; model: string; ms: number; answer?: ValidatedAnswer }[] = [];
