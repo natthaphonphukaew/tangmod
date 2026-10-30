@@ -158,6 +158,14 @@ export function CampusMap({ highlights, selectedId, onSelect, refitKey }: Props)
               </g>
             )}
 
+            <g aria-hidden="true" pointerEvents="none">
+              {mapLayout.buildings
+                .filter((b) => lit.has(b.id))
+                .map((b) => (
+                  <BuildingLabel key={b.id} building={b} lit />
+                ))}
+            </g>
+
             {highlights.map((h) => {
               const box = focusBoxOf(h.placeId);
               return box && <rect key={h.placeId} id={focusIdOf(h.placeId)} x={box.x} y={box.y} width={box.w} height={box.h} fill="none" pointerEvents="none" />;
@@ -289,9 +297,6 @@ function BuildingShape({
   const key = place?.kind === "faculty" || place?.kind === "food";
   const top = lit ? "var(--building-lit)" : key ? "var(--building-persona)" : "var(--building)";
   const edge = key ? "var(--building-persona-edge)" : "var(--building-edge)";
-  const cx = b.x + b.w / 2;
-  const cy = b.y + b.h / 2;
-  const showName = Boolean(place?.short) && b.w >= 60;
 
   const activate = () => interactive && onSelect!(b.id);
   const onKeyDown = (e: KeyboardEvent) => {
@@ -325,6 +330,24 @@ function BuildingShape({
         stroke={selected ? "var(--brand-ink)" : edge}
         strokeWidth={selected ? 3 : 1}
       />
+      {/* ตึกที่ไฮไลต์วาดป้ายในเลเยอร์บนรอยทางมดแทน (ดู BuildingLabel ใน CampusMap) */}
+      {!lit && <BuildingLabel building={b} />}
+    </g>
+  );
+}
+
+/**
+ * รหัสตึก + ชื่อย่อ · ตึกที่ไฮไลต์ใช้ halo สีพื้นตึก แล้ววาดทับรอยทางมด
+ * ไม่งั้นเส้นประกับตัวมดที่เดินผ่านกลางตึกจะทับรหัสตึกจนอ่านไม่ออก
+ */
+function BuildingLabel({ building: b, lit = false }: { building: MapBuilding; lit?: boolean }) {
+  const place = placeById.get(b.id);
+  const cx = b.x + b.w / 2;
+  const cy = b.y + b.h / 2;
+  const showName = Boolean(place?.short) && b.w >= 60;
+  const halo = lit ? { paintOrder: "stroke" as const, stroke: "var(--building-lit)", strokeWidth: 4, strokeLinejoin: "round" as const } : {};
+  return (
+    <>
       <text
         x={cx}
         y={showName ? cy - 7 : cy}
@@ -333,15 +356,16 @@ function BuildingShape({
         className="font-mono"
         fontSize={place ? 15 : 12}
         fill={lit ? "var(--ink)" : place ? "var(--brand-ink)" : "var(--ink-soft)"}
+        {...halo}
       >
         {b.id}
       </text>
       {showName && (
-        <text x={cx} y={cy + 11} textAnchor="middle" dominantBaseline="central" fontSize={13} fill="var(--ink)">
+        <text x={cx} y={cy + 11} textAnchor="middle" dominantBaseline="central" fontSize={13} fill="var(--ink)" {...halo}>
           {place!.short}
         </text>
       )}
-    </g>
+    </>
   );
 }
 
