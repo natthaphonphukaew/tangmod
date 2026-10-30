@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   admissionEvents,
   findIntegrityProblems,
+  holidays,
   assistant,
   placeById,
   programById,
@@ -39,6 +40,15 @@ describe("content", () => {
 
   it("ไทม์ไลน์ TCAS70 ไม่มีวันจบที่มาก่อนวันเริ่ม", () => {
     for (const e of admissionEvents) expect(e.start <= e.end, e.id).toBe(true);
+  });
+
+  it("วันหยุดเรียงตามวันที่ ไม่ซ้ำ และอยู่ในปีที่ระบุ", () => {
+    const dates = holidays.holidays.map((h) => h.date);
+    expect(dates).toEqual([...new Set(dates)].sort());
+    for (const d of dates) expect(Number(d.slice(0, 4)) + 543, d).toBe(holidays.year_be);
+    // กันพิมพ์วันผิด: วันชดเชยต้องตกวันจันทร์
+    for (const h of holidays.holidays.filter((x) => x.label.includes("ชดเชย")))
+      expect(new Date(`${h.date}T00:00:00Z`).getUTCDay(), h.date).toBe(1);
   });
 
   it("ข้อมูล mock ต้องบอกเหตุผลไว้เสมอ", () => {
