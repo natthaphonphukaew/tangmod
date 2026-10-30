@@ -70,7 +70,7 @@ git push -u origin data/dorm-outside
 | `npm run eval -- --file=food` | ยิงคำถามในไฟล์ `eval/questions/food.json` ผ่าน AI จริง |
 | `npm run eval -- --only=id1,id2` | เฉพาะบางข้อ |
 | `npm run eval` | ทั้งชุด (~4 นาที ใช้โควตาจริง) — รันเมื่อแก้ `lib/ai/` |
-| `npm run feedback` | ดึงคำถามที่ผู้ใช้กด "ตอบไม่ตรง" (ต้องมี `DATABASE_URL` ของ Neon) |
+| `npm run feedback` | ดึงคำถามจากผู้ใช้จริง: ที่กด "ตอบไม่ตรง" และที่มดตอบเองว่าข้อมูลไม่พอ (เก็บอัตโนมัติ) · ต้องมี `DATABASE_URL` ของ Neon · `--reason=auto_low_confidence` ดูเฉพาะที่ตอบไม่ได้ |
 
 **โควตา AI:** ทั้งสองคนใช้โควตาเดียวกันถ้าใช้ key เดียวกัน อย่ารัน eval ทั้งชุดพร้อมกัน ใช้ `--file` / `--only` ระหว่างทำ แล้วรันทั้งชุดครั้งเดียวก่อนเปิด PR
 
