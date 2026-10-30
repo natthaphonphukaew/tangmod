@@ -1,6 +1,6 @@
 "use client";
 
-import { Brain, ChatCircleText, GoogleLogo, NotePencil, SignOut, Trash, UserCircle, X } from "@phosphor-icons/react";
+import { Brain, ChatCircleText, Compass, GoogleLogo, NotePencil, SignOut, Trash, UserCircle, X } from "@phosphor-icons/react";
 import type { AuthOptions } from "@/lib/auth-options";
 import { programById } from "@/lib/data";
 import type { Profile } from "@/lib/ai/schema";
@@ -25,6 +25,7 @@ type Props = {
   profile: Profile;
   account: AccountProps;
   onNew: () => void;
+  onOpenCompass: () => void;
   onOpen: (id: string) => void;
   onDelete: (id: string) => void;
   onForget: () => void;
@@ -35,7 +36,7 @@ type Props = {
 const dayKey = (t: number) => new Date(t).toDateString();
 
 /** แถบซ้าย: แชทใหม่ + ประวัติแชท + ความจำที่โปร่งใส */
-export function Sidebar({ conversations, currentId, listedAt, profile, account, onNew, onOpen, onDelete, onForget, onClose }: Props) {
+export function Sidebar({ conversations, currentId, listedAt, profile, account, onNew, onOpenCompass, onOpen, onDelete, onForget, onClose }: Props) {
   const today = dayKey(listedAt);
   const groups = [
     { label: "วันนี้", items: conversations.filter((c) => dayKey(c.updatedAt) === today) },
@@ -59,6 +60,13 @@ export function Sidebar({ conversations, currentId, listedAt, profile, account, 
           className="flex w-full items-center gap-2 rounded-[10px] border border-line bg-card px-3 py-2 text-sm hover:border-brand/40"
         >
           <NotePencil size={16} /> แชทใหม่
+        </button>
+        <button
+          type="button"
+          onClick={onOpenCompass}
+          className="mt-1.5 flex w-full items-center gap-2 rounded-[10px] px-3 py-2 text-sm text-ink-soft hover:bg-card hover:text-ink"
+        >
+          <Compass size={16} weight="duotone" className="text-brand-ink" /> เข็มทิศสาขา
         </button>
       </div>
 

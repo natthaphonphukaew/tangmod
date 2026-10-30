@@ -41,6 +41,13 @@ describe("history store (local)", () => {
     expect(await createLocalHistoryStore(kv).list()).toEqual([]);
   });
 
+  it("แชทที่มีแค่ผลเข็มทิศก็เก็บได้ และตั้งชื่อว่าเข็มทิศสาขา", async () => {
+    const store = createLocalHistoryStore(memory());
+    const compass: ThreadItem[] = [{ kind: "compass", id: "c1", answers: { coding: 3, hardware: 0, math_theory: 3, design_ux: 1, business: 0, lang: 2, budget: 3 }, results: [{ programId: "sit-cs", percent: 90, pros: [], cons: [] }] }];
+    await store.save({ id: "cmp1", title: titleOf(compass), updatedAt: 1, thread: compass });
+    expect(await store.list()).toEqual([{ id: "cmp1", title: "เข็มทิศสาขา", updatedAt: 1 }]);
+  });
+
   it("ชื่อแชทมาจากคำถามแรก", () => {
     expect(titleOf(thread("  CB2301   อยู่ไหน "))).toBe("CB2301 อยู่ไหน");
     expect(titleOf([])).toBe("แชทใหม่");

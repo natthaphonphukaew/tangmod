@@ -1,4 +1,4 @@
-import type { ThreadItem } from "@/components/chat/types";
+import { hasContent, type ThreadItem } from "@/components/chat/types";
 
 /*
  * ประวัติแชท (แถบซ้าย) — UI คุยผ่าน interface HistoryStore เท่านั้น
@@ -24,7 +24,8 @@ type KV = Pick<Storage, "getItem" | "setItem">;
 
 /** ชื่อแชท = คำถามแรก (ตัดให้สั้น) */
 export function titleOf(thread: ThreadItem[]): string {
-  const first = thread.find((i) => i.kind === "user");
+  const first = thread.find((i) => i.kind === "user" || i.kind === "compass");
+  if (first?.kind === "compass") return "เข็มทิศสาขา";
   const text = first?.kind === "user" ? first.text.trim().replace(/\s+/g, " ") : "";
   return text.length > 40 ? `${text.slice(0, 40)}…` : text || "แชทใหม่";
 }
@@ -32,7 +33,7 @@ export function titleOf(thread: ThreadItem[]): string {
 /** เก็บเฉพาะข้อความที่จบแล้ว คำตอบที่กำลังไหลหรือ error ไม่ต้องจำ */
 function storable(thread: ThreadItem[]): ThreadItem[] {
   return thread
-    .filter((i) => i.kind === "user" || (i.status === "done" && i.answer))
+    .filter((i) => i.kind !== "assistant" || (i.status === "done" && i.answer))
     .map((i) => (i.kind === "assistant" ? { ...i, partial: undefined } : i))
     .slice(-MAX_ITEMS);
 }
@@ -84,7 +85,7 @@ export function createLocalHistoryStore(storage?: KV): HistoryStore {
     },
     async save(conversation) {
       const thread = storable(conversation.thread);
-      if (!thread.some((i) => i.kind === "user")) return;
+      if (!hasContent(thread)) return;
       const rest = readAll().filter((c) => c.id !== conversation.id);
       writeAll([{ ...conversation, thread }, ...rest].sort((a, b) => b.updatedAt - a.updatedAt).slice(0, MAX_CONVERSATIONS));
     },
@@ -112,7 +113,7 @@ export const serverHistoryStore: HistoryStore = {
   },
   async save(conversation) {
     const thread = storable(conversation.thread);
-    if (!thread.some((i) => i.kind === "user")) return;
+    if (!hasContent(thread)) return;
     await api(`/api/history/${encodeURIComponent(conversation.id)}`, {
       method: "PUT",
       body: JSON.stringify({ ...conversation, title: conversation.title.slice(0, 80), thread }),

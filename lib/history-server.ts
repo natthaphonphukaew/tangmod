@@ -15,7 +15,7 @@ export const ConversationInput = z
     id: z.string().min(8).max(64).regex(/^[\w-]+$/),
     title: z.string().min(1).max(80),
     updatedAt: z.number().int().nonnegative(),
-    thread: z.array(z.object({ kind: z.enum(["user", "assistant"]), id: z.string().max(64) }).loose()).max(60),
+    thread: z.array(z.object({ kind: z.enum(["user", "assistant", "compass"]), id: z.string().max(64) }).loose()).max(60),
   })
   .refine((c) => JSON.stringify(c.thread).length <= MAX_THREAD_BYTES, { message: "แชทยาวเกินไป" });
 export type ConversationInput = z.infer<typeof ConversationInput>;

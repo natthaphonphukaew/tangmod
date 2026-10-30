@@ -1,11 +1,13 @@
 "use client";
 
-import { PaperPlaneRight } from "@phosphor-icons/react";
+import { CaretRight, Compass, PaperPlaneRight } from "@phosphor-icons/react";
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { assistant } from "@/lib/data";
 import type { FeedbackReason } from "@/lib/ai/schema";
 import { AntAvatar } from "./AntAvatar";
 import { AssistantMessage } from "./AssistantMessage";
+import { CompassResultCard } from "@/components/compass/CompassResultCard";
+import type { CompassResult } from "@/lib/compass";
 import type { ThreadItem } from "./types";
 
 type Props = {
@@ -17,6 +19,10 @@ type Props = {
   onShowPlace: (placeId: string) => void;
   onRetry: () => void;
   onFeedback: (assistantId: string, reason: FeedbackReason) => void;
+  /** เปิดเข็มทิศสาขา (ถาม 7 ข้อ) */
+  onOpenCompass: () => void;
+  /** ผลเข็มทิศ → ปักหมุดตึกคณะตามอันดับ */
+  onCompassMap: (results: CompassResult[]) => void;
   /** มือถือระดับ peek: เหลือแค่ช่องพิมพ์ */
   compact?: boolean;
   onInputFocus?: () => void;
@@ -57,7 +63,7 @@ export function ChatColumn(props: Props) {
     <section aria-label="แชท" className="flex min-h-0 flex-1 flex-col">
       <div ref={scrollRef} hidden={compact} className="min-h-0 flex-1 overflow-y-auto" aria-live="polite">
         {empty ? (
-          <EmptyState onPick={submit} />
+          <EmptyState onPick={submit} onOpenCompass={props.onOpenCompass} />
         ) : (
           <div className="mx-auto w-full max-w-[46rem] space-y-6 px-4 py-6 lg:px-6">
             {thread.map((item) =>
@@ -65,6 +71,14 @@ export function ChatColumn(props: Props) {
                 <p key={item.id} className="ml-auto w-fit max-w-[85%] rounded-[var(--radius-card)] rounded-tr-sm bg-ink px-3.5 py-2 text-[15px] whitespace-pre-wrap text-paper">
                   {item.text}
                 </p>
+              ) : item.kind === "compass" ? (
+                <CompassResultCard
+                  key={item.id}
+                  results={item.results}
+                  onAsk={submit}
+                  onShowMap={() => props.onCompassMap(item.results)}
+                  onRetake={props.onOpenCompass}
+                />
               ) : (
                 <AssistantMessage
                   key={item.id}
@@ -134,7 +148,7 @@ export function ChatColumn(props: Props) {
 }
 
 /** หน้าแรกของแชทใหม่: น้องมด + คำทักทาย + คำถามตัวอย่าง อยู่กลางจอ */
-function EmptyState({ onPick }: { onPick: (text: string) => void }) {
+function EmptyState({ onPick, onOpenCompass }: { onPick: (text: string) => void; onOpenCompass: () => void }) {
   return (
     <div className="mx-auto flex h-full w-full max-w-[46rem] flex-col items-center justify-center gap-5 px-4 py-10 text-center">
       <AntAvatar size={56} />
@@ -142,6 +156,18 @@ function EmptyState({ onPick }: { onPick: (text: string) => void }) {
         <h2 className="font-display text-2xl text-ink">ถามน้องมดได้ทุกเรื่องในบางมด</h2>
         <p className="mx-auto max-w-md text-sm text-ink-soft">{assistant.greeting}</p>
       </div>
+      <button
+        type="button"
+        onClick={onOpenCompass}
+        className="flex w-full max-w-xl items-center gap-3 rounded-[var(--radius-card)] border border-brand/30 bg-brand/5 px-4 py-3 text-left hover:border-brand/60"
+      >
+        <Compass size={28} weight="duotone" className="shrink-0 text-brand-ink" />
+        <span className="min-w-0 flex-1">
+          <span className="block font-display text-base text-ink">ยังไม่รู้จะเลือกสาขาไหน?</span>
+          <span className="block text-xs text-ink-soft">เข็มทิศสาขา · ตอบ 7 ข้อ ไม่ถึง 1 นาที แล้วมดจัดอันดับสาขาที่เข้ากับเราให้</span>
+        </span>
+        <CaretRight size={18} className="shrink-0 text-brand-ink" />
+      </button>
       <div className="grid w-full max-w-xl grid-cols-1 gap-2 sm:grid-cols-2">
         {assistant.starter_chips.map((chip) => (
           <button

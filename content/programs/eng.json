@@ -35,6 +35,7 @@
   },
   {
     "id": "eng-cpe-inter",
+    "vibe": { "hardware": 3, "math_theory": 3, "design_ux": 1, "business": 0, "coding": 3, "note": "ทีมประเมินเองจากโครงสร้างหลักสูตร ไม่ใช่คะแนนทางการ (ใช้ค่าเดียวกับ CPE ภาคไทย สอนเป็นภาษาอังกฤษ)" },
     "faculty": "eng",
     "name_th": "วิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมคอมพิวเตอร์ (หลักสูตรนานาชาติ)",
     "name_en": "B.Eng. Computer Engineering (International Program)",

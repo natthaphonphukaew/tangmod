@@ -17,7 +17,10 @@ import type { AuthOptions } from "@/lib/auth-options";
 import { applyAnswer, clearProfile, loadProfile, markVisited, saveProfile } from "@/lib/client/profile-store";
 import type { MapHighlight } from "@/components/map/CampusMap";
 import { ChatColumn } from "@/components/chat/ChatColumn";
-import type { ThreadItem } from "@/components/chat/types";
+import { hasContent, type ThreadItem } from "@/components/chat/types";
+import { CompassDialog } from "@/components/compass/CompassDialog";
+import { programById } from "@/lib/data";
+import { compassSummary, scoreCompass, type CompassAnswers, type CompassResult } from "@/lib/compass";
 import { BottomSheet, detentHeight, useElementHeight, useIsDesktop, type Detent } from "./BottomSheet";
 import { MapPanel } from "./MapPanel";
 import { Sidebar } from "./Sidebar";
@@ -52,6 +55,7 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detent, setDetent] = useState<Detent>("half");
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [compassOpen, setCompassOpen] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
   const areaRef = useRef<HTMLDivElement>(null);
   const areaHeight = useElementHeight(areaRef);
@@ -96,7 +100,7 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
 
   // บันทึกแชทเมื่อคำตอบจบ (ไม่บันทึกระหว่างที่ข้อความยังไหล)
   useEffect(() => {
-    if (pending || !convId || !thread.some((i) => i.kind === "user")) return;
+    if (pending || !convId || !hasContent(thread)) return;
     void store
       .save({ id: convId, title: titleOf(thread), updatedAt: Date.now(), thread })
       .then(() => store.list())
@@ -116,7 +120,12 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
   };
 
   const last = thread.at(-1);
-  const chips = last?.kind === "assistant" && last.answer ? last.answer.chips : [];
+  const chips =
+    last?.kind === "assistant" && last.answer
+      ? last.answer.chips
+      : last?.kind === "compass"
+        ? compassChips(last.results)
+        : [];
 
   const openMap = (focus: MapHighlight[], select: string | null = null) => {
     setHighlights(focus);
@@ -134,6 +143,8 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
     const history: ChatTurn[] = priorThread
       .flatMap((item): ChatTurn[] => {
         if (item.kind === "user") return [{ role: "user", text: item.text }];
+        // ผลเข็มทิศส่งเป็นข้อความสรุป ผู้ใช้จะได้ถามต่อ เช่น "ทำไม CS ได้คะแนนสูงสุด"
+        if (item.kind === "compass") return [{ role: "assistant", text: compassSummary(item.results) }];
         if (item.answer) return [{ role: "assistant", text: item.answer.message }];
         return [];
       })
@@ -217,6 +228,17 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
     send(`${place.short ?? place.name_th} (${place.id}) มีอะไรบ้าง เปิดกี่โมง`);
   };
 
+  // เข็มทิศสาขา: คิดผลในเครื่อง ใส่การ์ดผลลงแชท จดสาขาอันดับต้นไว้ในความจำ แล้วให้ตึกคณะเรืองตามอันดับบนแผนที่
+  const finishCompass = (answers: CompassAnswers) => {
+    setCompassOpen(false);
+    const results = scoreCompass(answers);
+    if (!convId) setConvId(crypto.randomUUID());
+    setThread((t) => [...t, { kind: "compass", id: nextId(), answers, results }]);
+    const top = results.slice(0, 2).map((r) => r.programId);
+    updateProfile((p) => ({ ...p, considering_programs: [...new Set([...top, ...p.considering_programs])].slice(0, 8) }));
+    openMap(compassHighlights(results));
+  };
+
   const newChat = () => {
     abortRef.current?.abort();
     setPending(false);
@@ -240,7 +262,9 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
     setConvId(c.id);
     setSelectedId(null);
     const lastAnswer = c.thread.findLast((i): i is Extract<ThreadItem, { kind: "assistant" }> => i.kind === "assistant" && !!i.answer)?.answer;
-    if (lastAnswer?.show_map) openMap(toHighlights(lastAnswer));
+    const lastItem = c.thread.at(-1);
+    if (lastItem?.kind === "compass") openMap(compassHighlights(lastItem.results));
+    else if (lastAnswer?.show_map) openMap(toHighlights(lastAnswer));
     else {
       setMapOpen(false);
       setHighlights([]);
@@ -292,6 +316,10 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
         onSignOut: () => void signOut(),
       }}
       onNew={newChat}
+      onOpenCompass={() => {
+        setDrawerOpen(false);
+        setCompassOpen(true);
+      }}
       onOpen={(id) => void openConversation(id)}
       onDelete={(id) => void deleteConversation(id)}
       onForget={() => {
@@ -346,6 +374,8 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
               onShowPlace={showPlace}
               onRetry={retry}
               onFeedback={feedback}
+              onOpenCompass={() => setCompassOpen(true)}
+              onCompassMap={(results) => openMap(compassHighlights(results))}
             />
           </BottomSheet>
 
@@ -371,6 +401,19 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
           )}
         </div>
       </main>
+
+      <CompassDialog open={compassOpen} onClose={() => setCompassOpen(false)} onDone={finishCompass} />
     </div>
   );
+}
+
+/** ตึกคณะของสาขาเรียงตามอันดับที่ดีที่สุดของตึกนั้น (IT/CS/DSI อยู่ N11 ตึกเดียวกัน) */
+function compassHighlights(results: CompassResult[]): MapHighlight[] {
+  const placeIds = [...new Set(results.map((r) => programById.get(r.programId)?.place_id).filter((id): id is string => !!id))];
+  return placeIds.map((placeId, i) => ({ placeId, n: i + 1 }));
+}
+
+function compassChips(results: CompassResult[]): string[] {
+  const [a, b] = results.map((r) => programById.get(r.programId)?.short ?? r.programId);
+  return [`เล่าเรื่อง ${a} ให้ฟังหน่อย`, `${a} กับ ${b} ต่างกันยังไง`, "ทำไม " + a + " ได้คะแนนสูงสุด"];
 }

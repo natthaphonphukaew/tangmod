@@ -1,6 +1,7 @@
 [
   {
     "id": "fibo-rai",
+    "vibe": { "hardware": 3, "math_theory": 3, "design_ux": 1, "business": 0, "coding": 2, "note": "ทีมประเมินเองจากโครงสร้างหลักสูตร ไม่ใช่คะแนนทางการ (หุ่นยนต์และระบบอัตโนมัติ: ฮาร์ดแวร์ กลไก การควบคุม)" },
     "faculty": "fibo",
     "name_th": "วิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมหุ่นยนต์และระบบอัตโนมัติ",
     "name_en": "B.Eng. Robotics and Automation Engineering",
