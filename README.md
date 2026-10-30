@@ -28,7 +28,7 @@ npm run dev
 | `npm test` | ตรวจรูปแบบข้อมูลใน `content/` และ id ที่อ้างถึงกัน |
 | `npm run typecheck` | ตรวจ TypeScript |
 | `npm run build` | build สำหรับ production |
-| `npm run feedback` | ดึงรายการ "ตอบไม่ตรง" จากฐานข้อมูล (ตั้ง `DATABASE_URL` ของ Neon ก่อน หรือ `-- --local` สำหรับฐานในเครื่องโดยปิด dev server) → `.data/feedback-export.ndjson` |
+| `npm run feedback` | ดึงรายการ "ตอบไม่ตรง" และคำถามที่มดตอบเองว่าข้อมูลไม่พอ จากฐานข้อมูล (ตั้ง `DATABASE_URL` ของ Neon ก่อน หรือ `-- --local` สำหรับฐานในเครื่องโดยปิด dev server) → `.data/feedback-export.ndjson` |
 | `npm run eval` | ยิงชุดคำถาม 117 ข้อใน `eval/questions/*.json` ผ่าน `/api/chat` จริง แล้วตรวจคำตอบ (ใช้โควตา AI จริง ~4 นาที) ดู `--only=id1,id2` / `--cat=unknown` / `--file=map` |
 | `npm run retrieve -- "คำถาม"` | ดูว่าคำถามนี้ระบบดึงข้อมูลชิ้นไหนให้ AI (ไม่เรียก AI) ใช้แยกว่าตอบผิดเพราะขาดข้อมูลหรือค้นไม่เจอ |
 
@@ -73,7 +73,7 @@ docs/           ผลค้นคว้าและสเปกเวอร์�
 
 ## ปรับคำตอบ
 
-1. ผู้ใช้กด "ตอบไม่ตรง" → คำถามกับคำตอบไปอยู่ในตาราง `feedback` (ไม่ผูกตัวตน) แล้วดึงออกมาด้วย `npm run feedback`
+1. ผู้ใช้กด "ตอบไม่ตรง" หรือมดตอบเองว่าข้อมูลไม่พอ (confidence = low, [lib/unanswered.ts](lib/unanswered.ts)) → คำถามกับคำตอบไปอยู่ในตาราง `feedback` (ไม่ผูกตัวตน) แล้วดึงออกมาด้วย `npm run feedback`
 2. ถ้าขาดข้อมูล เติมใน `content/` ถ้าตอบผิดแนว แก้กฎใน `lib/ai/prompt.ts`
 3. เพิ่มคำถามนั้นเข้า `eval/questions/<หัวข้อ>.json` แล้วรัน `npm run eval` ให้ผ่านโดยข้ออื่นไม่ตก
 

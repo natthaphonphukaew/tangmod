@@ -25,6 +25,12 @@ vi.mock("@/lib/ai/models", () => ({
 }));
 
 const { POST } = await import("./route");
+const { getDb } = await import("@/lib/db");
+const { feedback } = await import("@/lib/db/schema");
+const { UNANSWERED_REASON } = await import("@/lib/unanswered");
+
+const unanswered = async () =>
+  (await getDb().select().from(feedback)).filter((r) => r.reason === UNANSWERED_REASON).map((r) => r.question);
 
 async function events(message: string) {
   const res = await POST(
@@ -49,6 +55,19 @@ describe("/api/chat", () => {
     const last = evs.at(-1)!;
     expect(last.type).toBe("final");
     expect(last.type === "final" && last.model).toBe("backup");
+  });
+
+  it("คำถามที่ข้อมูลไม่พอ (confidence low) ถูกเก็บไว้ให้เติมข้อมูล คำถามที่ตอบได้ไม่เก็บ", async () => {
+    const before = await unanswered();
+    const evs = await events("วันนี้ร้านขนมจีนลานปูนเปิดไหม โทร 0812345678");
+    const last = evs.at(-1)!;
+    expect(last.type === "final" && last.data.confidence).toBe("low");
+    const after = await unanswered();
+    expect(after.length).toBe(before.length + 1);
+    // เบอร์โทรถูกลบก่อนเก็บ
+    expect(after.at(-1)).toContain("ขนมจีน");
+    expect(after.at(-1)).not.toContain("0812345678");
+    expect(after).not.toContain("CS ค่าเทอมเท่าไหร่");
   });
 
   it("คำขอผิดรูปแบบ → 400", async () => {

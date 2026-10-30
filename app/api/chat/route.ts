@@ -7,6 +7,7 @@ import { retrieve } from "@/lib/ai/retrieve";
 import { ChatAnswer, ChatRequest, type StreamEvent } from "@/lib/ai/schema";
 import { salvageAnswer, validateAnswer } from "@/lib/ai/validate";
 import { isRateLimited } from "@/lib/rate-limit";
+import { recordUnanswered } from "@/lib/unanswered";
 
 export const maxDuration = 60;
 
@@ -20,6 +21,7 @@ const REST_OUTPUT_MS = 15_000;
  * POST /api/chat → NDJSON stream: {type:"partial"}* แล้วตามด้วย {type:"final"} หรือ {type:"error"}
  * 1 ข้อความ = เรียก LLM 1 ครั้ง (ประหยัดโควตาฟรี) · ถ้าโมเดลแรกล้มก่อนส่งอะไรออกไป จะลองตัวถัดไป
  * ถ้าล้มหมดทุกตัว → ตอบด้วยโหมดออฟไลน์ ผู้ใช้จะได้หมุดและการ์ดอยู่ดี
+ * คำตอบที่ confidence = low (ข้อมูลไม่พอ) เก็บคำถามไว้ให้ทีมเติมข้อมูล (lib/unanswered.ts)
  */
 export async function POST(req: Request) {
   const parsed = ChatRequest.safeParse(await req.json().catch(() => null));
@@ -104,6 +106,8 @@ export async function POST(req: Request) {
           send({ type: "final", data: answer, model: candidate.id });
           const usage = await result.usage;
           log({ model: candidate.id, map: answer.show_map, confidence: answer.confidence, ms: Date.now() - startedAt, tokens: { in: usage.inputTokens, out: usage.outputTokens, think: usage.outputTokenDetails?.reasoningTokens }, context: retrieved.chunks.map((c) => c.id) });
+          // บันทึกก่อนปิด stream: บน serverless งานที่ค้างหลังส่ง response จบอาจถูกตัด (ผู้ใช้เห็นคำตอบไปแล้วตั้งแต่ final)
+          if (answer.confidence === "low") await recordUnanswered({ question: message, answer, model: candidate.id });
           controller.close();
           return;
         } catch (error) {
@@ -116,6 +120,7 @@ export async function POST(req: Request) {
               const answer = validateAnswer(salvaged, message);
               send({ type: "final", data: answer, model: candidate.id });
               log({ model: candidate.id, salvaged: true, confidence: answer.confidence, ms: Date.now() - startedAt });
+              if (answer.confidence === "low") await recordUnanswered({ question: message, answer, model: candidate.id });
               controller.close();
               return;
             }
