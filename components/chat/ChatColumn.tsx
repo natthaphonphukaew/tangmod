@@ -2,7 +2,7 @@
 
 import { CaretRight, Compass, PaperPlaneRight } from "@phosphor-icons/react";
 import Link from "next/link";
-import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type FormEvent, type KeyboardEvent } from "react";
 import { assistant } from "@/lib/data";
 import type { FeedbackReason } from "@/lib/ai/schema";
 import { AntAvatar } from "./AntAvatar";
@@ -174,8 +174,30 @@ const plainText = (md: string) =>
     .replace(/\s+/g, " ")
     .trim();
 
-/** หน้าแรกของแชทใหม่: น้องมด + คำทักทาย + คำถามตัวอย่าง อยู่กลางจอ */
+const CHIPS_SHOWN = 6;
+
+/**
+ * สุ่มคำถามตัวอย่างครั้งเดียวต่อการโหลดหน้า มีทั้งเรื่องเลือกสาขาและชีวิตนักศึกษา (ดู docs/research/openchat-2569.md)
+ * สุ่มใน render ตรง ๆ ไม่ได้: HTML จาก server จะไม่ตรงกับเบราว์เซอร์ จึงอ่านผ่าน useSyncExternalStore
+ * ที่ฝั่ง server คืน null (เว้นที่ไว้) แล้วเบราว์เซอร์ค่อยใส่ชุดที่สุ่ม
+ */
+let pickedChips: string[] | null = null;
+function pickChips() {
+  if (!pickedChips) {
+    const pool = [...assistant.starter_chips];
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    pickedChips = pool.slice(0, CHIPS_SHOWN);
+  }
+  return pickedChips;
+}
+const noSubscribe = () => () => {};
+
+/** หน้าแรกของแชทใหม่: น้องมด + คำทักทาย + เข็มทิศสาขา + คำถามตัวอย่างแบบสุ่ม อยู่กลางจอ */
 function EmptyState({ onPick, onOpenCompass }: { onPick: (text: string) => void; onOpenCompass: () => void }) {
+  const chips = useSyncExternalStore(noSubscribe, pickChips, () => null);
   return (
     <div className="mx-auto flex h-full w-full max-w-[46rem] flex-col items-center justify-center gap-5 px-4 py-10 text-center">
       <AntAvatar size={56} />
@@ -195,8 +217,8 @@ function EmptyState({ onPick, onOpenCompass }: { onPick: (text: string) => void;
         </span>
         <CaretRight size={18} className="shrink-0 text-brand-ink" />
       </button>
-      <div className="grid w-full max-w-xl grid-cols-1 gap-2 sm:grid-cols-2">
-        {assistant.starter_chips.map((chip) => (
+      <div className={`grid w-full max-w-xl grid-cols-1 gap-2 sm:grid-cols-2 ${chips ? "" : "invisible"}`}>
+        {(chips ?? assistant.starter_chips.slice(0, CHIPS_SHOWN)).map((chip) => (
           <button
             key={chip}
             type="button"

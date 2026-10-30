@@ -140,7 +140,8 @@ export const Assistant = z.object({
   scope: z.array(z.string()).min(1),
   tone: z.string(),
   greeting: z.string(),
-  starter_chips: z.array(z.string()).min(2).max(6),
+  /** คำถามตัวอย่างหน้าแรก สุ่มขึ้นมาทีละ 6 อัน (ChatColumn) มีทั้งเรื่องเลือกสาขาและชีวิตนักศึกษา */
+  starter_chips: z.array(z.string()).min(6).max(20),
 });
 export type Assistant = z.infer<typeof Assistant>;
 

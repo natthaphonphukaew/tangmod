@@ -15,7 +15,8 @@ describe("content", () => {
   });
 
   it("น้องมดมีชิปเริ่มต้นและคำทักทาย", () => {
-    expect(assistant.starter_chips.length).toBeGreaterThanOrEqual(4);
+    expect(assistant.starter_chips.length).toBeGreaterThanOrEqual(6);
+    expect(new Set(assistant.starter_chips).size).toBe(assistant.starter_chips.length);
     expect(assistant.greeting).toContain("มด");
   });
 

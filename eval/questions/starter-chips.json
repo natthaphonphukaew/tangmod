@@ -1,0 +1,74 @@
+[
+ {
+  "id": "chip-cpe-vs-cs",
+  "cat": "official",
+  "q": "คอมวิศวะ กับ CS ต่างกันยังไง",
+  "expect": { "cards_any": ["eng-cpe", "sit-cs"], "show_map": false }
+ },
+ {
+  "id": "chip-tcas-open",
+  "cat": "official",
+  "q": "TCAS70 รอบไหนยังเปิดอยู่",
+  "expect": { "include": ["รอบ"], "show_map": false }
+ },
+ {
+  "id": "chip-fees",
+  "cat": "official",
+  "q": "ค่าเทอม IT CS DSI เท่าไหร่",
+  "expect": { "include": ["47,?500"], "cards_any": ["sit-dsi", "sit-cs", "sit-it"], "show_map": false }
+ },
+ {
+  "id": "chip-dorm-rent",
+  "cat": "official",
+  "q": "หอในค่าห้องเดือนละเท่าไหร่",
+  "expect": { "include": ["2,?500|3,?500"] }
+ },
+ {
+  "id": "chip-bts",
+  "cat": "official",
+  "q": "มาบางมดยังไงจาก BTS",
+  "expect": { "include": ["21|75"] }
+ },
+ {
+  "id": "chip-halal",
+  "cat": "official",
+  "q": "โรงอาหารมีร้านฮาลาลไหม",
+  "expect": { "include": ["ฮาลาล|ฮาล้าล"] }
+ },
+ {
+  "id": "chip-cb2301",
+  "cat": "map",
+  "q": "CB2301 อยู่ตรงไหน",
+  "expect": { "places_any": ["N17"], "show_map": true, "include": ["ชั้น\\W*3"] }
+ },
+ {
+  "id": "chip-study-1am",
+  "cat": "official",
+  "q": "ตี 1 อ่านหนังสือที่ไหนได้",
+  "expect": { "include": ["24|SIT"] }
+ },
+ {
+  "id": "chip-final-exam",
+  "cat": "official",
+  "q": "สอบปลายภาคเริ่มวันไหน",
+  "expect": { "include": ["30 (พ\\.?ย|พฤศจิกา)|2026-11-30"], "show_map": false }
+ },
+ {
+  "id": "chip-gym",
+  "cat": "niche",
+  "q": "ยิมมอเปิดกี่โมง",
+  "expect": { "include": ["0?6[:.]00|6 โมง"] }
+ },
+ {
+  "id": "chip-student-card",
+  "cat": "official",
+  "q": "บัตรนักศึกษาหายทำยังไง",
+  "expect": { "include": ["8147"], "show_map": false }
+ },
+ {
+  "id": "chip-holidays-month",
+  "cat": "official",
+  "q": "เดือนนี้มอหยุดวันไหนบ้าง",
+  "expect": { "include": ["วันหยุด|ไม่มี"], "exclude": ["สิงหา|วันแม่|เมษา|มกรา"], "show_map": false }
+ }
+]

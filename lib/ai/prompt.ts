@@ -37,18 +37,21 @@ export function admissionNow(now: Date): string[] {
 }
 
 /**
- * วันหยุดราชการวันนี้ และที่จะถึงใน 14 วัน — กันตอบว่า "เปิด" ในวันหยุด
- * ไม่มีวันหยุดใกล้ ๆ ก็ไม่ใส่อะไร: บรรทัด "วันนี้ไม่ใช่วันหยุด" ทำให้โมเดลยกเรื่องวันหยุดมาตอบคำถามที่ไม่เกี่ยว
+ * วันหยุดราชการวันนี้ ที่จะถึงใน 14 วัน และทั้งเดือนนี้ — กันตอบว่า "เปิด" ในวันหยุด
+ * "เดือนนี้หยุดวันไหน" คัดจากรายการทั้งปีให้เลย เพราะโมเดลคัดเองพลาด (เคยตอบว่า ต.ค. มีแค่วันแม่ 12 ส.ค.)
+ * ไม่มีวันหยุดเลยก็ไม่ใส่อะไร: บรรทัด "วันนี้ไม่ใช่วันหยุด" ทำให้โมเดลยกเรื่องวันหยุดมาตอบคำถามที่ไม่เกี่ยว
  * (คำถามเรื่องวันหยุดวันอื่นใช้ chunk holidays:<ปี> ที่ค้นเจอด้วยคำว่า "หยุด")
  */
 export function holidaysNow(now: Date): string {
   const today = isoBangkok(now);
   const todayHoliday = holidays.holidays.find((h) => h.date === today);
   const soon = holidays.holidays.filter((h) => h.date > today && daysBetween(today, h.date) <= 14);
-  if (!todayHoliday && !soon.length) return "";
+  const thisMonth = holidays.holidays.filter((h) => h.date.slice(0, 7) === today.slice(0, 7));
+  if (!todayHoliday && !soon.length && !thisMonth.length) return "";
   return [
     todayHoliday ? `วันนี้เป็นวันหยุดราชการ: ${todayHoliday.label}` : "",
     soon.length ? `วันหยุดราชการที่จะถึง: ${soon.map((h) => `${h.date} ${h.label}`).join(" · ")}` : "",
+    thisMonth.length ? `วันหยุดราชการเดือนนี้ทั้งหมด: ${thisMonth.map((h) => `${h.date} ${h.label}`).join(" · ")}` : "",
     `(${holidays.conflict_note})`,
   ]
     .filter(Boolean)
