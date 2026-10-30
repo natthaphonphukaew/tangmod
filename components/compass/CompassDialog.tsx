@@ -4,6 +4,7 @@ import { ArrowLeft, Compass, X } from "@phosphor-icons/react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { QUESTIONS, type CompassAnswers } from "@/lib/compass";
+import { trapTab } from "@/components/ui/trap-tab";
 
 type Props = {
   open: boolean;
@@ -21,6 +22,8 @@ function Steps({ onClose, onDone }: Omit<Props, "open">) {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Partial<CompassAnswers>>({});
   const firstOption = useRef<HTMLButtonElement>(null);
+  // จำปุ่มที่กดเปิดไว้ตั้งแต่ตอนสร้าง (ก่อน effect ย้าย focus ไปตัวเลือกแรก) แล้วคืน focus ตอนปิด
+  const [opener] = useState(() => document.activeElement as HTMLElement | null);
   const q = QUESTIONS[step];
   const labels = q.kind === "budget" ? q.options.map((o) => o.label) : q.options;
 
@@ -33,6 +36,8 @@ function Steps({ onClose, onDone }: Omit<Props, "open">) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
+  // ปิดแล้วคืน focus ให้ปุ่มที่กดเปิด คนใช้คีย์บอร์ดจะได้ไม่หลงตำแหน่ง
+  useEffect(() => () => opener?.focus?.(), [opener]);
 
   const choose = (index: number) => {
     const next = { ...answers, [q.id]: index };
@@ -53,6 +58,7 @@ function Steps({ onClose, onDone }: Omit<Props, "open">) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="compass-question"
+        onKeyDown={trapTab}
         className="flex h-[100svh] w-full flex-col bg-paper sm:h-auto sm:max-w-lg sm:rounded-[20px] sm:shadow-xl"
         initial={reduceMotion ? false : { y: 24, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}

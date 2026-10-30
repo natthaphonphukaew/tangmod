@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, MotionConfig } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import type { Place } from "@/lib/data/schemas";
 import { emptyProfile, type ChatTurn, type FeedbackReason, type Profile, type ValidatedAnswer } from "@/lib/ai/schema";
@@ -19,6 +19,7 @@ import type { MapHighlight } from "@/components/map/CampusMap";
 import { ChatColumn } from "@/components/chat/ChatColumn";
 import { hasContent, type ThreadItem } from "@/components/chat/types";
 import { CompassDialog } from "@/components/compass/CompassDialog";
+import { trapTab } from "@/components/ui/trap-tab";
 import { programById } from "@/lib/data";
 import { compassSummary, scoreCompass, type CompassAnswers, type CompassResult } from "@/lib/compass";
 import { BottomSheet, detentHeight, useElementHeight, useIsDesktop, type Detent } from "./BottomSheet";
@@ -333,13 +334,30 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
   const sheetPx = sheetMode && areaHeight ? detentHeight(mapDetent, areaHeight) : 0;
 
   return (
+    // reducedMotion="user": ผู้ใช้ที่ตั้งลดการเคลื่อนไหวในเครื่อง จะไม่เห็นแอนิเมชันของ motion ทั้งแอป
+    <MotionConfig reducedMotion="user">
     <div className="flex h-svh overflow-hidden bg-paper">
+      <a href="#chat-input" className="sr-only rounded-md bg-ink px-3 py-2 text-paper focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60]">
+        ข้ามไปช่องพิมพ์คำถาม
+      </a>
       <aside className="hidden w-[264px] shrink-0 border-r border-line lg:flex">{sidebar()}</aside>
 
       {/* มือถือ: ประวัติแชทเป็น drawer จากซ้าย */}
       <AnimatePresence>
         {drawerOpen && isMobile && (
-          <motion.div className="fixed inset-0 z-40 lg:hidden" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <motion.div
+            className="fixed inset-0 z-40 lg:hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-label="ประวัติแชท"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") setDrawerOpen(false);
+              else trapTab(e);
+            }}
+          >
             <button type="button" aria-label="ปิดเมนู" className="absolute inset-0 bg-ink/30" onClick={() => setDrawerOpen(false)} />
             <motion.div
               className="absolute inset-y-0 left-0 w-[82%] max-w-[300px] shadow-xl"
@@ -355,6 +373,7 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
       </AnimatePresence>
 
       <main className="flex min-w-0 flex-1 flex-col">
+        <h1 className="sr-only">ทางมด — ผู้ช่วยแชทประจำแคมปัส มจธ. บางมด</h1>
         <TopBar
           title={convId ? titleOf(thread) : "แชทใหม่"}
           mapOpen={mapOpen}
@@ -404,6 +423,7 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
 
       <CompassDialog open={compassOpen} onClose={() => setCompassOpen(false)} onDone={finishCompass} />
     </div>
+    </MotionConfig>
   );
 }
 

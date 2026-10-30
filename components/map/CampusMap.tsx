@@ -80,8 +80,9 @@ export function CampusMap({ highlights, selectedId, onSelect, refitKey }: Props)
             viewBox={`0 0 ${VB_W} ${VB_H}`}
             preserveAspectRatio="xMidYMid meet"
             className="h-full w-full select-none"
-            role="img"
-            aria-label="แผนที่แคมปัส มจธ. บางมด"
+            // ห้ามใช้ role="img": จะทำให้ปุ่มตึกข้างในถูกซ่อนจาก screen reader
+            role="group"
+            aria-label="แผนที่แคมปัส มจธ. บางมด กดตึกเพื่อดูรายละเอียด"
           >
             {mapLayout.areas.map((area, i) => (
               <AreaShape key={i} area={area} />
@@ -260,7 +261,7 @@ function BuildingShape({
         dominantBaseline="central"
         className="font-mono"
         fontSize={place ? 15 : 12}
-        fill={place ? "var(--brand-ink)" : "var(--slate)"}
+        fill={lit ? "var(--ink)" : place ? "var(--brand-ink)" : "var(--ink-soft)"}
       >
         {b.id}
       </text>
@@ -296,7 +297,7 @@ function PointMarker({
       aria-label={place.name_th}
       onClick={() => onSelect?.(id)}
       onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onSelect?.(id)}
-      className="cursor-pointer outline-none transition-opacity duration-500"
+      className="cursor-pointer outline-none transition-opacity duration-500 [&:focus-visible>circle:nth-of-type(1)]:stroke-[var(--brand-ink)] [&:focus-visible>circle:nth-of-type(1)]:[stroke-width:3.5]"
       opacity={dimmed ? 0.38 : 1}
     >
       <title>{place.name_th}</title>
@@ -320,7 +321,7 @@ function Pin({ x, y, n, delay }: { x: number; y: number; n: number; delay: numbe
         <ellipse cx={0} cy={1} rx={7} ry={2.5} fill="var(--ink)" opacity={0.25} />
         <path
           d="M0 0 C-4 -10 -15 -18 -15 -31 A15 15 0 1 1 15 -31 C15 -18 4 -10 0 0 Z"
-          fill="var(--brand)"
+          fill="var(--brand-ink)"
           stroke="var(--card)"
           strokeWidth={2.5}
         />

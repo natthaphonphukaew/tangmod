@@ -37,6 +37,18 @@ export function ChatColumn(props: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const empty = thread.length === 0;
 
+  // screen reader: ประกาศเมื่อเริ่มหาคำตอบ และอ่านคำตอบเต็มครั้งเดียวตอนจบ (ไม่อ่านทุกตัวอักษรที่ไหลเข้ามา)
+  const lastDone = thread.findLast((i) => (i.kind === "assistant" && i.status !== "streaming") || i.kind === "compass");
+  const announcement = pending
+    ? "มดกำลังหาคำตอบ"
+    : lastDone?.kind === "compass"
+      ? "ได้ผลเข็มทิศสาขาแล้ว"
+      : lastDone?.kind === "assistant"
+        ? lastDone.status === "error"
+          ? (lastDone.error ?? "เกิดข้อผิดพลาด")
+          : `${plainText(lastDone.answer?.message ?? "")}${lastDone.answer?.show_map ? " เปิดแผนที่ให้แล้ว" : ""}`
+        : "";
+
   // เลื่อนลงล่างสุดเมื่อมีข้อความใหม่หรือคำตอบไหลเข้ามา
   const last = thread.at(-1);
   const lastLen = last?.kind === "assistant" ? (last.partial?.message?.length ?? 0) + (last.answer ? 1 : 0) : 0;
@@ -61,7 +73,10 @@ export function ChatColumn(props: Props) {
 
   return (
     <section aria-label="แชท" className="flex min-h-0 flex-1 flex-col">
-      <div ref={scrollRef} hidden={compact} className="min-h-0 flex-1 overflow-y-auto" aria-live="polite">
+      <p role="status" aria-live="polite" className="sr-only">
+        {announcement}
+      </p>
+      <div ref={scrollRef} hidden={compact} className="min-h-0 flex-1 overflow-y-auto">
         {empty ? (
           <EmptyState onPick={submit} onOpenCompass={props.onOpenCompass} />
         ) : (
@@ -114,7 +129,7 @@ export function ChatColumn(props: Props) {
             e.preventDefault();
             submit(draft);
           }}
-          className="flex items-end gap-2 rounded-[18px] border border-line bg-card px-3.5 py-2.5 shadow-[var(--shadow-card)] focus-within:border-brand/50"
+          className="flex items-end gap-2 rounded-[18px] border border-input-edge bg-card px-3.5 py-2.5 shadow-[var(--shadow-card)] focus-within:border-brand-ink focus-within:ring-2 focus-within:ring-brand/25"
         >
           <label htmlFor="chat-input" className="sr-only">
             พิมพ์คำถาม
@@ -128,7 +143,7 @@ export function ChatColumn(props: Props) {
             onKeyDown={onKeyDown}
             onFocus={props.onInputFocus}
             placeholder="ถามน้องมดได้เลย เช่น CB2301 อยู่ไหน"
-            className="field-sizing-content max-h-40 min-h-6 flex-1 resize-none bg-transparent text-[15px] outline-none placeholder:text-ink-soft/70"
+            className="field-sizing-content max-h-40 min-h-6 flex-1 resize-none bg-transparent text-[15px] outline-none placeholder:text-ink-soft"
           />
           <button
             type="submit"
@@ -146,6 +161,14 @@ export function ChatColumn(props: Props) {
     </section>
   );
 }
+
+/** ตัดเครื่องหมาย markdown ออกก่อนให้ screen reader อ่าน (ไม่งั้นจะอ่าน "ดอกจัน ดอกจัน") */
+const plainText = (md: string) =>
+  md
+    .replace(/\*\*|__|[*_`#>]/g, "")
+    .replace(/^\s*[-•]\s+/gm, "")
+    .replace(/\s+/g, " ")
+    .trim();
 
 /** หน้าแรกของแชทใหม่: น้องมด + คำทักทาย + คำถามตัวอย่าง อยู่กลางจอ */
 function EmptyState({ onPick, onOpenCompass }: { onPick: (text: string) => void; onOpenCompass: () => void }) {

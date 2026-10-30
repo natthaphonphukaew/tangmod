@@ -48,7 +48,7 @@ export function Sidebar({ conversations, currentId, listedAt, profile, account, 
       <div className="flex items-center gap-2 px-3 pt-3 pb-2">
         <p className="flex-1 px-1 font-display text-xl text-ink">ทางมด</p>
         {onClose && (
-          <button type="button" onClick={onClose} aria-label="ปิดเมนู" className="rounded-md p-1.5 text-ink-soft hover:bg-card hover:text-ink">
+          <button type="button" onClick={onClose} aria-label="ปิดเมนู" autoFocus className="rounded-md p-1.5 text-ink-soft hover:bg-card hover:text-ink">
             <X size={18} />
           </button>
         )}
@@ -95,7 +95,7 @@ export function Sidebar({ conversations, currentId, listedAt, profile, account, 
                     type="button"
                     onClick={() => onDelete(c.id)}
                     aria-label={`ลบแชท ${c.title}`}
-                    className="absolute top-1/2 right-1 -translate-y-1/2 rounded p-1 text-ink-soft opacity-0 group-hover:opacity-100 hover:text-ink focus:opacity-100 max-lg:opacity-60"
+                    className="absolute top-1/2 right-1 -translate-y-1/2 rounded p-1.5 text-ink-soft opacity-0 group-hover:opacity-100 hover:text-ink focus:opacity-100 max-lg:opacity-60"
                   >
                     <Trash size={14} />
                   </button>

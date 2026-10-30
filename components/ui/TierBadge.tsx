@@ -6,7 +6,7 @@ import type { Tier } from "@/lib/data/schemas";
 const TIERS = {
   official: { label: "ทางการ", Icon: SealCheck, className: "text-brand-ink border-brand/30 bg-brand/5" },
   student: { label: "ไม่เป็นทางการ", Icon: ChatsCircle, className: "text-warn border-warn/30 bg-trail/10" },
-  mock: { label: "ข้อมูลตัวอย่าง", Icon: Flask, className: "text-slate border-slate/30 bg-slate/5" },
+  mock: { label: "ข้อมูลตัวอย่าง", Icon: Flask, className: "text-ink-soft border-slate/40 bg-slate/5" },
 } satisfies Record<Tier, unknown>;
 
 export function TierBadge({ tier, updatedAt }: { tier: Tier; updatedAt?: string }) {

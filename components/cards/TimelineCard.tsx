@@ -28,10 +28,10 @@ export function TimelineCard({ programIds }: { programIds: string[] }) {
           const toEnd = daysUntil(e.end, now);
           const open = toStart <= 0 && toEnd >= 0;
           const status = open
-            ? { text: toEnd === 0 ? "ปิดวันนี้" : `เปิดอยู่ · เหลือ ${toEnd} วัน`, cls: toEnd <= 7 ? "bg-brand text-white" : "bg-ok/10 text-ok" }
+            ? { text: toEnd === 0 ? "ปิดวันนี้" : `เปิดอยู่ · เหลือ ${toEnd} วัน`, cls: toEnd <= 7 ? "bg-brand-ink text-white" : "bg-ok/10 text-ok" }
             : toStart > 0
               ? { text: `อีก ${toStart} วัน`, cls: "bg-paper-deep text-ink-soft" }
-              : { text: "ปิดแล้ว", cls: "bg-slate/10 text-slate" };
+              : { text: "ปิดแล้ว", cls: "bg-slate/10 text-ink-soft" };
           return (
             <li key={e.id} className="flex gap-2.5">
               <span className={`mt-1.5 size-2 shrink-0 rounded-full ${open ? "bg-brand" : "bg-line"}`} />

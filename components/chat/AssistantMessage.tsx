@@ -62,7 +62,7 @@ export function AssistantMessage({ item, onShowPlace, onRetry, onFeedback }: Pro
                     onClick={() => onShowPlace(p.place_id)}
                     className="group flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm hover:bg-paper"
                   >
-                    <span className="grid size-5 shrink-0 place-items-center rounded-full bg-brand font-display text-xs text-white">{i + 1}</span>
+                    <span className="grid size-5 shrink-0 place-items-center rounded-full bg-brand-ink font-display text-xs text-white">{i + 1}</span>
                     <span className="min-w-0 flex-1">
                       <span className="font-medium">{place?.short ?? place?.name_th}</span>
                       {p.place_id.length <= 3 && <span className="font-mono text-xs text-ink-soft"> {p.place_id}</span>}

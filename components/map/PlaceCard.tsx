@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowSquareOut, X } from "@phosphor-icons/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { placeById } from "@/lib/data";
 import type { Place } from "@/lib/data/schemas";
 import { isOpenNow } from "@/lib/time";
@@ -22,12 +22,22 @@ export function PlaceCard({ placeId, onClose, onAsk }: Props) {
     const timer = setInterval(() => setNow(new Date()), 60_000);
     return () => clearInterval(timer);
   }, []);
+  // เปิดการ์ดแล้วย้าย focus มาที่การ์ด คนใช้คีย์บอร์ด/screen reader จะได้รู้ว่ามีการ์ดเปิดขึ้น (กด Tab ต่อเข้าไปข้างในได้)
+  const cardRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    cardRef.current?.focus({ preventScroll: true });
+  }, [placeId]);
   if (!place) return null;
 
   const open = isOpenNow(place.hours, now);
 
   return (
-    <article className="w-full max-w-sm rounded-[var(--radius-card)] border border-line bg-card p-4 shadow-[var(--shadow-card)]">
+    <article
+      ref={cardRef}
+      tabIndex={-1}
+      aria-label={`ข้อมูล ${place.name_th}`}
+      className="w-full max-w-sm rounded-[var(--radius-card)] border border-line bg-card p-4 shadow-[var(--shadow-card)]"
+    >
       <header className="flex items-start gap-3">
         <span className="mt-0.5 rounded-md bg-paper-deep px-1.5 py-0.5 font-mono text-sm text-brand-ink">{place.id.length <= 3 ? place.id : "•"}</span>
         <div className="min-w-0 flex-1">
@@ -42,7 +52,7 @@ export function PlaceCard({ placeId, onClose, onAsk }: Props) {
       <div className="mt-3 flex flex-wrap items-center gap-1.5">
         <TierBadge tier={place.tier} updatedAt={place.updated_at} />
         {open !== null && (
-          <span className={`rounded-full px-2 py-0.5 text-xs ${open ? "bg-ok/10 text-ok" : "bg-slate/10 text-slate"}`}>
+          <span className={`rounded-full px-2 py-0.5 text-xs ${open ? "bg-ok/10 text-ok" : "bg-slate/10 text-ink-soft"}`}>
             {open ? "เปิดอยู่ตอนนี้" : "ปิดอยู่ตอนนี้"}
           </span>
         )}

@@ -29,8 +29,9 @@
   --building-persona-edge: #d99a74;
   --building-lit: #ffe39a;
 
-  --ok: #2f7d4f;
-  --warn: #b7791f;
+  --ok: #276a43; /* ≥5:1 บนพื้น ok/10 */
+  --warn: #94600f; /* 5.2:1 บน card (เดิม #b7791f ได้ 3.6 ไม่ผ่าน AA) */
+  --input-edge: #8f8576; /* ขอบช่องกรอก ≥3:1 ตาม WCAG 1.4.11 */
 }
 
 @theme inline {
@@ -54,6 +55,7 @@
   --color-building-lit: var(--building-lit);
   --color-ok: var(--ok);
   --color-warn: var(--warn);
+  --color-input-edge: var(--input-edge);
 
   --font-sans: var(--font-anuphan), system-ui, sans-serif;
   --font-display: var(--font-mitr), var(--font-anuphan), sans-serif;
