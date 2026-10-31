@@ -1,9 +1,9 @@
 "use client";
 
-import { Brain, ClockCounterClockwise, Compass, GoogleLogo, NotePencil, SignOut, Trash, UserCircle, X } from "@phosphor-icons/react";
+import { Brain, ClockCounterClockwise, Compass, GoogleLogo, NotePencil, SignOut, Trash, X } from "@phosphor-icons/react";
 import Link from "next/link";
-import type { ReactNode } from "react";
-import { AntAvatar } from "@/components/brand/AntMascot";
+import { useState, type ReactNode } from "react";
+import { AntAvatar, AntMascot } from "@/components/brand/AntMascot";
 import type { AuthOptions } from "@/lib/auth-options";
 import { programById } from "@/lib/data";
 import type { Profile } from "@/lib/ai/schema";
@@ -70,9 +70,10 @@ export function Sidebar({ conversations, currentId, listedAt, profile, account, 
 
       <div className="mt-4 min-h-0 flex-1 overflow-y-auto px-3 pb-3">
         {groups.length === 0 && (
-          <p className="px-3 py-2 text-sm text-ink-soft">
+          <div className="flex flex-col items-center px-3 py-4 text-center text-sm text-ink-soft">
+            <AntMascot pose="laptop" className="mb-2 h-24 w-auto opacity-90" />
             ยังไม่มีประวัติแชท คำถามที่ถามจะเก็บไว้{account.user ? "ในบัญชีของคุณ" : "ในเครื่องนี้"}
-          </p>
+          </div>
         )}
         {groups.map((g) => (
           <section key={g.label} className="mb-3">
@@ -134,31 +135,38 @@ function NavItem({ icon, label, active = false, onClick }: { icon: ReactNode; la
 function AccountBox({ user, loading, busy, options, onSignInGoogle, onSignInDev, onSignOut, onDeleteAccount }: AccountProps) {
   if (loading) return <div className="h-[68px]" aria-hidden />;
   if (user) {
+    // แถวบน: รูป + ชื่อ (ชื่อได้ความกว้างเต็มที่) · แถวล่าง: ลิงก์บรรทัดเดียว + ปุ่มออกจากระบบชิดขวา
     return (
-      <div className="flex items-center gap-3 rounded-[var(--radius-card)] border border-line bg-card p-2.5 shadow-[var(--shadow-card)]">
-        {user.image ? (
-          // รูปโปรไฟล์จาก Google (โดเมนภายนอก) ใช้ img ธรรมดา ไม่ผ่าน next/image
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={user.image} alt="" className="size-10 shrink-0 rounded-full" referrerPolicy="no-referrer" />
-        ) : (
-          <UserCircle size={40} weight="duotone" className="shrink-0 text-ink-soft" />
-        )}
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-[15px] font-semibold">{user.name}</p>
-          <p className="truncate text-xs text-ink-soft">ประวัติแชทเก็บในบัญชีนี้</p>
-          <p className="text-xs">
-            <Link href="/privacy" className="inline-flex min-h-8 items-center whitespace-nowrap text-ink-soft underline hover:text-ink">
-              ความเป็นส่วนตัว
-            </Link>
-            <span className="text-ink-soft"> · </span>
-            <button type="button" onClick={onDeleteAccount} disabled={busy} className="inline-flex min-h-8 items-center text-ink-soft underline hover:text-brand-ink disabled:opacity-50">
-              ลบบัญชี
-            </button>
-          </p>
+      <div className="rounded-[var(--radius-card)] border border-line bg-card px-3 pt-3 pb-1 shadow-[var(--shadow-card)]">
+        <div className="flex items-center gap-2.5">
+          <ProfilePhoto name={user.name} image={user.image} />
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-[15px] leading-[1.4] font-semibold" title={user.name}>
+              {user.name}
+            </p>
+            <p className="truncate text-xs text-ink-soft">ประวัติแชทเก็บในบัญชีนี้</p>
+          </div>
         </div>
-        <button type="button" onClick={onSignOut} disabled={busy} aria-label="ออกจากระบบ" title="ออกจากระบบ" className="grid size-10 shrink-0 place-items-center rounded-full text-ink-soft hover:bg-paper hover:text-ink disabled:opacity-50">
-          <SignOut size={18} />
-        </button>
+        <div className="mt-1 flex items-center text-xs text-ink-soft">
+          <Link href="/privacy" className="inline-flex min-h-9 items-center whitespace-nowrap underline hover:text-ink">
+            ความเป็นส่วนตัว
+          </Link>
+          <span aria-hidden className="px-1.5">
+            ·
+          </span>
+          <button type="button" onClick={onDeleteAccount} disabled={busy} className="inline-flex min-h-9 items-center whitespace-nowrap underline hover:text-brand-ink disabled:opacity-50">
+            ลบบัญชี
+          </button>
+          <button
+            type="button"
+            onClick={onSignOut}
+            disabled={busy}
+            title="ออกจากระบบ"
+            className="ml-auto inline-flex min-h-9 items-center gap-1 rounded-full px-2 whitespace-nowrap hover:bg-paper hover:text-ink disabled:opacity-50"
+          >
+            <SignOut size={16} /> ออก
+          </button>
+        </div>
       </div>
     );
   }
@@ -192,6 +200,23 @@ function AccountBox({ user, loading, busy, options, onSignInGoogle, onSignInDev,
         </Link>
       </p>
     </div>
+  );
+}
+
+/** รูปโปรไฟล์ Google · ไม่มีรูปหรือโหลดไม่ขึ้น ใช้ตัวอักษรแรกของชื่อบนพื้นส้มอ่อนแทน */
+function ProfilePhoto({ name, image }: { name: string; image: string | null }) {
+  const [broken, setBroken] = useState(false);
+  if (image && !broken) {
+    return (
+      // รูปจาก Google (โดเมนภายนอก) ใช้ img ธรรมดา ไม่ผ่าน next/image
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={image} alt="" onError={() => setBroken(true)} className="size-9 shrink-0 rounded-full object-cover" referrerPolicy="no-referrer" />
+    );
+  }
+  return (
+    <span aria-hidden className="grid size-9 shrink-0 place-items-center rounded-full bg-brand-tint font-display text-base text-brand-ink">
+      {name.trim().charAt(0).toUpperCase() || "?"}
+    </span>
   );
 }
 

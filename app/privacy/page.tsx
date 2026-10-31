@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 export const metadata: Metadata = {
-  title: "ความเป็นส่วนตัว — ทางมด",
+  title: "ความเป็นส่วนตัว",
   description: "ทางมดเก็บข้อมูลอะไร ส่งไปที่ไหน เก็บนานแค่ไหน และลบได้อย่างไร",
 };
 
