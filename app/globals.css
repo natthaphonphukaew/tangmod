@@ -25,10 +25,7 @@
   --trail: #ffc72c;
   --slate: #7b8189;
 
-  /* น้องมด (components/brand/AntMascot.tsx) */
-  --ant: #fa6a2e;
-  --ant-deep: #d9481a;
-  --ant-light: #ffa16b;
+  /* วงเหลืองหลังน้องมด และพื้นโลโก้ (app/icon.png ใช้สีเดียวกัน) */
   --sun: #ffe3b0;
 
   --park: #c9d3b4;
@@ -73,7 +70,6 @@
   --color-brand-tint: var(--brand-tint);
   --color-trail-tint: var(--trail-tint);
   --color-sun: var(--sun);
-  --color-ant: var(--ant);
 
   --font-sans: var(--font-anuphan), system-ui, sans-serif;
   --font-display: var(--font-line-seed), var(--font-anuphan), sans-serif;
@@ -150,4 +146,15 @@ body {
   stroke: var(--paper-deep);
   stroke-width: 3px;
   stroke-linejoin: round;
+}
+
+/* น้องมดท่าคิดขยับขึ้นลงเบา ๆ ระหว่างรอคำตอบ (ปิดเองเมื่อผู้ใช้ตั้งลดการเคลื่อนไหว) */
+@keyframes ant-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
 }

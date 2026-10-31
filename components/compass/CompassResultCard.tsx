@@ -3,7 +3,7 @@
 import { ArrowClockwise, Check, Compass, MapPin, Warning } from "@phosphor-icons/react";
 import { programById } from "@/lib/data";
 import type { CompassResult } from "@/lib/compass";
-import { AntAvatar } from "@/components/brand/AntMascot";
+import { AntAvatar, AntMascot } from "@/components/brand/AntMascot";
 
 type Props = {
   results: CompassResult[];
@@ -19,8 +19,11 @@ export function CompassResultCard({ results, onAsk, onShowMap, onRetake }: Props
     <div className="flex gap-3">
       <AntAvatar size={28} />
       <div className="min-w-0 flex-1 space-y-3 pt-0.5">
-        <p className="text-[15px]">
+        <p className="flex items-center gap-3 text-[15px]">
+          <AntMascot pose="peace" className="h-16 w-auto shrink-0" />
+          <span>
           จากคำตอบของเรา สาขาที่น่าจะเข้ากันที่สุดคือ <strong>{programById.get(results[0].programId)?.short}</strong> ลองดูเหตุผลด้านล่าง แล้วถามมดต่อได้เลย
+          </span>
         </p>
         <section aria-label="ผลเข็มทิศสาขา" className="overflow-hidden rounded-[var(--radius-card)] border border-line bg-card">
           <header className="flex items-center gap-2 border-b border-line px-3.5 py-2.5">

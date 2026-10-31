@@ -24,7 +24,7 @@ export function HomeScreen({ onPick, onOpenCompass }: { onPick: (text: string) =
             {/* มือถือ: มดตัวเล็กอยู่แถวเดียวกับคำทักทาย หัวข้อจะได้กว้างเต็มจอ ไม่ตัดกลางคำ */}
             <div className="flex items-end justify-between">
               <p className="inline-flex min-h-8 items-center rounded-full bg-trail-tint px-3.5 text-sm font-semibold text-ink">สวัสดีจ้า!</p>
-              <AntMascot className="-mb-3 w-24 sm:hidden" />
+              <AntMascot priority sizes="72px" className="-mb-2 h-24 w-auto sm:hidden" />
             </div>
             {/* บรรทัดแรกห้ามตัด: ตัวตัดคำไทยเคยแยกเป็น "ถามน้องมดได้ทุก / เรื่อง" */}
             <h2 className="mt-3 font-display text-[28px] leading-[1.32] text-ink sm:text-4xl xl:text-5xl">
@@ -33,7 +33,11 @@ export function HomeScreen({ onPick, onOpenCompass }: { onPick: (text: string) =
             </h2>
             <p className="mt-3 max-w-[34rem] text-[15px] leading-[1.7] text-ink-soft sm:text-[17px]">{assistant.greeting}</p>
           </div>
-          <AntMascot className="hidden w-44 shrink-0 sm:block xl:w-64" />
+          {/* วงเหลืองอุ่นหลังน้องมด แบบ ref */}
+          <div className="relative hidden shrink-0 sm:block">
+            <div aria-hidden className="absolute inset-x-[-12%] bottom-[4%] aspect-square rounded-full bg-sun" />
+            <AntMascot priority sizes="(min-width: 1280px) 184px, 140px" className="relative h-48 w-auto xl:h-64" />
+          </div>
         </div>
 
         <button

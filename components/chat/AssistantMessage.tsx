@@ -8,7 +8,7 @@ import { CompareCard } from "@/components/cards/CompareCard";
 import { ProgramCard } from "@/components/cards/ProgramCard";
 import { TimelineCard } from "@/components/cards/TimelineCard";
 import { TierBadge } from "@/components/ui/TierBadge";
-import { AntAvatar } from "@/components/brand/AntMascot";
+import { AntAvatar, AntMascot } from "@/components/brand/AntMascot";
 import { useRevealText } from "./useRevealText";
 import type { ThreadItem } from "./types";
 
@@ -156,7 +156,14 @@ const REASONS: [FeedbackReason, string][] = [
 /** ปุ่ม "ตอบไม่ตรง": กดแล้วเลือกเหตุผลสั้น ๆ คำถามนี้จะถูกเก็บไว้เติมข้อมูล (ไม่มีตัวตนผู้ใช้) */
 function FeedbackRow({ onSend }: { onSend: (reason: FeedbackReason) => void }) {
   const [state, setState] = useState<"idle" | "choosing" | "sent">("idle");
-  if (state === "sent") return <p className="text-[13px] text-ink-soft">ขอบคุณนะ มดจดไว้แล้ว จะเอาไปเติมข้อมูลให้ตอบได้ดีขึ้น</p>;
+  if (state === "sent") {
+    return (
+      <p className="flex items-center gap-2 text-[13px] text-ink-soft">
+        <AntMascot pose="thumbs" className="h-10 w-auto" />
+        ขอบคุณนะ มดจดไว้แล้ว จะเอาไปเติมข้อมูลให้ตอบได้ดีขึ้น
+      </p>
+    );
+  }
   if (state === "idle") {
     return (
       <button
@@ -191,15 +198,11 @@ function FeedbackRow({ onSend }: { onSend: (reason: FeedbackReason) => void }) {
   );
 }
 
-/** มดเดินวน ๆ ระหว่างรอคำตอบ */
+/** น้องมดท่าคิด (มีกล่อง "...") ระหว่างรอคำตอบ */
 function ThinkingAnt() {
   return (
-    <div className="flex items-center gap-2 py-1 text-sm text-ink-soft" role="status">
-      <span className="flex gap-1">
-        {[0, 1, 2].map((i) => (
-          <span key={i} className="size-1.5 animate-bounce rounded-full bg-trail" style={{ animationDelay: `${i * 120}ms` }} />
-        ))}
-      </span>
+    <div className="flex items-center gap-3 text-sm text-ink-soft" role="status">
+      <AntMascot pose="think" className="h-16 w-auto motion-safe:animate-[ant-bob_1.6s_ease-in-out_infinite]" />
       มดกำลังหาคำตอบ…
     </div>
   );
