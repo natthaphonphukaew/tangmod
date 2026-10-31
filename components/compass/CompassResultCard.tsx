@@ -3,7 +3,7 @@
 import { ArrowClockwise, Check, Compass, MapPin, Warning } from "@phosphor-icons/react";
 import { programById } from "@/lib/data";
 import type { CompassResult } from "@/lib/compass";
-import { AntAvatar } from "@/components/chat/AntAvatar";
+import { AntAvatar } from "@/components/brand/AntMascot";
 
 type Props = {
   results: CompassResult[];
@@ -77,10 +77,10 @@ export function CompassResultCard({ results, onAsk, onShowMap, onRetake }: Props
             })}
           </ol>
           <footer className="flex items-center gap-3 border-t border-line px-3.5 py-2.5">
-            <button type="button" onClick={onShowMap} className="inline-flex items-center gap-1 text-xs text-brand-ink hover:underline">
-              <MapPin size={14} weight="duotone" /> ดูตึกคณะบนแผนที่
+            <button type="button" onClick={onShowMap} className="inline-flex min-h-10 items-center gap-1.5 rounded-full px-3 text-[13px] font-medium text-brand-ink hover:bg-brand-tint lg:min-h-9">
+              <MapPin size={16} weight="duotone" /> ดูตึกคณะบนแผนที่
             </button>
-            <p className="flex-1 text-right text-[11px] text-ink-soft">คะแนนลักษณะสาขาทีมประเมินเอง ไม่ใช่คะแนนทางการ</p>
+            <p className="flex-1 text-right text-xs text-ink-soft">คะแนนลักษณะสาขาทีมประเมินเอง ไม่ใช่คะแนนทางการ</p>
           </footer>
         </section>
       </div>

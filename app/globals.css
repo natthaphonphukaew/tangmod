@@ -3,7 +3,8 @@
 /*
  * ทางมด design tokens — อิงสี CI มจธ. (kmutt.ac.th/en/corporate_identity/colors)
  * บนโทนกระดาษอุ่น: ส้ม = action/หมุด, เหลือง = รอยทางมด, เทาฟ้า = ของรอง
- * ห้าม: ม่วง, gradient, glassmorphism, glow
+ * ปุ่มทึบที่มีตัวหนังสือใช้ brand-ink (ขาวบน brand ได้ 3.5:1 ไม่ผ่าน AA) · brand ใช้กับไอคอนและหัวข้อตัวใหญ่
+ * ตกแต่งด้วยก้อนสีแบน (flat) ได้ ห้าม: ม่วง, gradient, glassmorphism, glow
  */
 :root {
   --paper: #fbf6ee;
@@ -12,11 +13,23 @@
   --ink: #1e1a16;
   --ink-soft: #57504a;
   --line: #e4d9c7;
+  /* ขอบการ์ดที่กดได้: --line จางเกิน (1.37:1) มองไม่ออกว่าเป็นปุ่ม */
+  --line-strong: #d9c9ae;
+  --brand-tint: #fde9dc;
+  --trail-tint: #fff4d6;
 
   --brand: #fa4616;
   --brand-ink: #c2360b;
+  /* รหัสตึกบนพื้นตึกสีส้มอ่อน (brand-ink ได้แค่ 4.0:1) */
+  --brand-deep: #a32c07;
   --trail: #ffc72c;
   --slate: #7b8189;
+
+  /* น้องมด (components/brand/AntMascot.tsx) */
+  --ant: #fa6a2e;
+  --ant-deep: #d9481a;
+  --ant-light: #ffa16b;
+  --sun: #ffe3b0;
 
   --park: #c9d3b4;
   --park-deep: #9aab7f;
@@ -56,13 +69,41 @@
   --color-ok: var(--ok);
   --color-warn: var(--warn);
   --color-input-edge: var(--input-edge);
+  --color-line-strong: var(--line-strong);
+  --color-brand-tint: var(--brand-tint);
+  --color-trail-tint: var(--trail-tint);
+  --color-sun: var(--sun);
+  --color-ant: var(--ant);
 
   --font-sans: var(--font-anuphan), system-ui, sans-serif;
   --font-display: var(--font-line-seed), var(--font-anuphan), sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 
-  --radius-card: 14px;
-  --shadow-card: 0 1px 0 var(--line), 0 6px 18px -10px rgb(30 26 22 / 0.25);
+  /* ไทยมีสระบน/ล่างและวรรณยุกต์ซ้อน: line-height ต้องสูงกว่าค่า Tailwind เดิม (xs 1.33, sm 1.43) */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.55;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.6;
+  --text-base: 1rem;
+  --text-base--line-height: 1.65;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.55;
+  --text-xl: 1.25rem;
+  --text-xl--line-height: 1.45;
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: 1.4;
+  --text-3xl: 1.875rem;
+  --text-3xl--line-height: 1.35;
+  --text-4xl: 2.25rem;
+  --text-4xl--line-height: 1.3;
+  --text-5xl: 2.875rem;
+  --text-5xl--line-height: 1.28;
+
+  --radius-sm: 10px;
+  --radius-card: 16px;
+  --radius-sheet: 24px;
+  --shadow-card: 0 1px 2px rgb(30 26 22 / 0.06), 0 8px 24px -14px rgb(30 26 22 / 0.22);
+  --shadow-float: 0 2px 4px rgb(30 26 22 / 0.05), 0 12px 32px -16px rgb(30 26 22 / 0.3);
 }
 
 html {

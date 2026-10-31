@@ -11,7 +11,7 @@ import { useEffect, useRef, useState, useSyncExternalStore, type PointerEvent, t
 
 export type Detent = "peek" | "half" | "full";
 
-const PEEK_PX = 132;
+const PEEK_PX = 140;
 
 function useMediaQuery(query: string) {
   return useSyncExternalStore(
@@ -45,7 +45,8 @@ export function useElementHeight(ref: RefObject<HTMLElement | null>) {
 /** ความสูงของ sheet ในแต่ละระดับ เทียบกับพื้นที่ที่ sheet อยู่ (ใต้แถบบน) */
 export function detentHeight(detent: Detent, areaH: number) {
   if (detent === "peek") return PEEK_PX;
-  if (detent === "half") return Math.round(areaH * 0.5);
+  // ซ่อนคำเตือนท้ายจอใน sheet แล้ว ขยับเป็น 56% ให้อ่านคำตอบได้ราว 10 บรรทัด
+  if (detent === "half") return Math.round(areaH * 0.56);
   return areaH - 48; // เหลือแผนที่ให้เห็นนิดหน่อย จะได้รู้ว่าปัดลงได้
 }
 
@@ -113,7 +114,7 @@ export function BottomSheet({ mode, detent, onDetentChange, areaHeight, children
       style={{ height: sheet ? height : "auto" }}
       className={
         sheet
-          ? "absolute inset-x-0 bottom-0 z-20 flex flex-col overflow-hidden rounded-t-[20px] border-t border-line bg-paper shadow-[0_-8px_24px_-12px_rgba(30,26,22,0.25)]"
+          ? "absolute inset-x-0 bottom-0 z-20 flex flex-col overflow-hidden rounded-t-[var(--radius-sheet)] border-t border-line-strong bg-paper shadow-[0_-8px_32px_-12px_rgba(60,30,10,0.22)]"
           : "relative flex min-h-0 min-w-0 flex-1 flex-col"
       }
     >
@@ -130,9 +131,9 @@ export function BottomSheet({ mode, detent, onDetentChange, areaHeight, children
         tabIndex={0}
         aria-label={detent === "full" ? "ย่อแชท" : "ขยายแชท"}
         onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onDetentChange(NEXT_ON_TAP[detent])}
-        className="flex shrink-0 cursor-grab touch-none justify-center pt-2 pb-1.5 select-none"
+        className="flex h-11 shrink-0 cursor-grab touch-none items-center justify-center select-none"
       >
-        <span className="h-1 w-10 rounded-full bg-line" />
+        <span className="h-[5px] w-9 rounded-full bg-slate" />
       </div>
       {children}
     </motion.div>

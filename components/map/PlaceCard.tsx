@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowSquareOut, X } from "@phosphor-icons/react";
+import { ArrowSquareOut, ChatCircleText, X } from "@phosphor-icons/react";
 import { useEffect, useRef, useState } from "react";
 import { holidays, placeById } from "@/lib/data";
 import type { Place } from "@/lib/data/schemas";
@@ -38,33 +38,33 @@ export function PlaceCard({ placeId, onClose, onAsk }: Props) {
       ref={cardRef}
       tabIndex={-1}
       aria-label={`ข้อมูล ${place.name_th}`}
-      className="w-full max-w-sm rounded-[var(--radius-card)] border border-line bg-card p-4 shadow-[var(--shadow-card)]"
+      className="w-full max-w-[22rem] rounded-[20px] border border-line-strong bg-card p-4 shadow-[var(--shadow-float)]"
     >
       <header className="flex items-start gap-3">
-        <span className="mt-0.5 rounded-md bg-paper-deep px-1.5 py-0.5 font-mono text-sm text-brand-ink">{place.id.length <= 3 ? place.id : "•"}</span>
+        <span className="mt-0.5 rounded-lg bg-brand-tint px-2 py-0.5 font-mono text-sm text-brand-ink">{place.id.length <= 3 ? place.id : "•"}</span>
         <div className="min-w-0 flex-1">
-          <h2 className="font-display text-base leading-snug">{place.name_th}</h2>
-          <p className="text-xs text-ink-soft">{place.name_en}</p>
+          <h2 className="font-display text-lg leading-[1.4]">{place.name_th}</h2>
+          <p className="text-[13px] text-ink-soft">{place.name_en}</p>
         </div>
-        <button type="button" onClick={onClose} aria-label="ปิด" className="rounded-md p-1 text-ink-soft hover:bg-paper hover:text-ink">
-          <X size={16} />
+        <button type="button" onClick={onClose} aria-label="ปิด" className="-mt-1 -mr-1 grid size-11 shrink-0 place-items-center rounded-full text-ink-soft hover:bg-paper hover:text-ink lg:size-9">
+          <X size={18} />
         </button>
       </header>
 
       <div className="mt-3 flex flex-wrap items-center gap-1.5">
         <TierBadge tier={place.tier} updatedAt={place.updated_at} />
         {holiday ? (
-          <span className="rounded-md bg-warn/10 px-2 py-0.5 text-xs text-warn">วันนี้{holiday.label} · เวลาเปิดอาจต่างจากปกติ</span>
+          <span className="rounded-lg bg-warn/10 px-2.5 py-0.5 text-[13px] text-warn">วันนี้{holiday.label} · เวลาเปิดอาจต่างจากปกติ</span>
         ) : (
           open !== null && (
-            <span className={`rounded-full px-2 py-0.5 text-xs ${open ? "bg-ok/10 text-ok" : "bg-slate/10 text-ink-soft"}`}>
+            <span className={`rounded-full px-2.5 py-0.5 text-[13px] font-medium ${open ? "bg-ok/10 text-ok" : "bg-slate/10 text-ink-soft"}`}>
               {open ? "เปิดอยู่ตอนนี้" : "ปิดอยู่ตอนนี้"}
             </span>
           )
         )}
       </div>
 
-      <p className="mt-3 text-sm">{place.description}</p>
+      <p className="mt-3 text-[15px] leading-[1.6]">{place.description}</p>
 
       {place.floors && (
         <ul className="mt-3 space-y-1 text-sm">
@@ -78,7 +78,7 @@ export function PlaceCard({ placeId, onClose, onAsk }: Props) {
       )}
 
       {place.hours && (
-        <ul className="mt-3 space-y-0.5 text-xs text-ink-soft">
+        <ul className="mt-3 space-y-0.5 text-sm text-ink tabular-nums">
           {place.hours.map((h, i) => (
             <li key={i}>
               {h.label ? `${h.label}: ` : ""}
@@ -93,15 +93,24 @@ export function PlaceCard({ placeId, onClose, onAsk }: Props) {
 
       <footer className="mt-4 flex items-center justify-between gap-2 border-t border-line pt-3">
         {onAsk ? (
-          <button type="button" onClick={() => onAsk(place)} className="text-sm text-brand-ink hover:underline">
-            ถามมดเรื่องที่นี่
+          <button
+            type="button"
+            onClick={() => onAsk(place)}
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-brand-ink px-4 text-sm font-semibold text-white hover:bg-brand-ink/90 lg:min-h-10"
+          >
+            <ChatCircleText size={18} weight="fill" /> ถามมดเรื่องที่นี่
           </button>
         ) : (
           <span />
         )}
         {place.source_url && (
-          <a href={place.source_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs text-brand-ink hover:underline">
-            แหล่งที่มา <ArrowSquareOut size={12} />
+          <a
+            href={place.source_url}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex min-h-11 items-center gap-1 rounded-full px-3 text-[13px] font-medium text-brand-ink hover:bg-brand-tint lg:min-h-9"
+          >
+            แหล่งที่มา <ArrowSquareOut size={14} />
           </a>
         )}
       </footer>

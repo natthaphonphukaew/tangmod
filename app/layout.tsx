@@ -35,6 +35,9 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#fbf6ee",
+  // ช่องพิมพ์ชิดล่าง: ให้คีย์บอร์ดดันเนื้อหาขึ้น (Chrome 108+) และใช้พื้นที่ใต้ขอบจอโค้ง (padding ด้วย env(safe-area-inset-bottom))
+  viewportFit: "cover",
+  interactiveWidget: "resizes-content",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
