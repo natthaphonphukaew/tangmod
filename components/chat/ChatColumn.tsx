@@ -6,6 +6,9 @@ import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 
 import type { FeedbackReason } from "@/lib/ai/schema";
 import { AssistantMessage } from "./AssistantMessage";
 import { HomeScreen } from "./HomeScreen";
+import { useTypewriter } from "./useTypewriter";
+import { useReducedMotion } from "motion/react";
+import { assistant } from "@/lib/data";
 import { CompassResultCard } from "@/components/compass/CompassResultCard";
 import type { CompassResult } from "@/lib/compass";
 import type { ThreadItem } from "./types";
@@ -31,11 +34,19 @@ type Props = {
 };
 
 const MAX_LEN = 500;
+// ตัวอย่างคำถามที่พิมพ์วนในช่องพิมพ์: ใช้ชุดเดียวกับการ์ดหน้าแรก (คำถามที่ตอบได้ดี ผ่าน eval แล้ว)
+const EXAMPLES = assistant.starter_chips;
 
 /** คอลัมน์แชทแบบที่คนคุ้นจาก ChatGPT/Claude: ข้อความกว้างไม่เกิน ~720px อยู่กลาง ช่องพิมพ์อยู่ล่าง */
 export function ChatColumn(props: Props) {
   const { thread, chips, pending, compact = false } = props;
   const [draft, setDraft] = useState("");
+  const reduceMotion = useReducedMotion();
+  // หยุดพิมพ์ตัวอย่างเมื่อผู้ใช้เริ่มพิมพ์ หรือตั้งลดการเคลื่อนไหวไว้ในเครื่อง
+  // แตะช่องพิมพ์แล้วตัวอย่างหายทันที (ไม่ต้องรอพิมพ์ตัวแรก) กลับมาวนต่อเมื่อออกจากช่องโดยยังว่างอยู่
+  const [focused, setFocused] = useState(false);
+  const showExample = !draft && !focused;
+  const example = useTypewriter(EXAMPLES, showExample && !reduceMotion && !compact);
   const scrollRef = useRef<HTMLDivElement>(null);
   const empty = thread.length === 0;
 
@@ -145,17 +156,30 @@ export function ChatColumn(props: Props) {
           <label htmlFor="chat-input" className="sr-only">
             พิมพ์คำถาม
           </label>
-          <textarea
-            id="chat-input"
-            rows={1}
-            value={draft}
-            maxLength={MAX_LEN}
-            onChange={(e) => setDraft(e.target.value)}
-            onKeyDown={onKeyDown}
-            onFocus={props.onInputFocus}
-            placeholder="ถามมดได้เลย เช่น CB2301 อยู่ไหน"
-            className="field-sizing-content mb-2.5 max-h-40 min-h-6 flex-1 resize-none bg-transparent text-base leading-[1.6] outline-none placeholder:text-ink-soft lg:mb-2"
-          />
+          <div className="relative mb-2.5 min-w-0 flex-1 lg:mb-2">
+            {/* ตัวอย่างคำถามที่พิมพ์วน (ตกแต่ง) · placeholder จริงยังอยู่ให้ screen reader แต่โปร่งใส */}
+            {showExample && (
+              <span aria-hidden className="pointer-events-none absolute inset-0 truncate text-base leading-[1.6] text-ink-soft">
+                <span className="max-sm:hidden">ถามมดได้เลย </span>เช่น {example}
+                {!reduceMotion && <span className="ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[3px] animate-pulse rounded-full bg-brand" />}
+              </span>
+            )}
+            <textarea
+              id="chat-input"
+              rows={1}
+              value={draft}
+              maxLength={MAX_LEN}
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={onKeyDown}
+              onFocus={() => {
+                setFocused(true);
+                props.onInputFocus?.();
+              }}
+              onBlur={() => setFocused(false)}
+              placeholder="ถามมดได้เลย เช่น CB2301 อยู่ไหน"
+              className="field-sizing-content block max-h-40 min-h-6 w-full resize-none bg-transparent text-base leading-[1.6] outline-none placeholder:text-transparent"
+            />
+          </div>
           <button
             type="submit"
             disabled={pending || !draft.trim()}
