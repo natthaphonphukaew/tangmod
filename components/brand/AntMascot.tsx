@@ -44,7 +44,9 @@ export function AntAvatar({ size = 40, className = "" }: { size?: number; classN
       aria-hidden
       width={size}
       height={size}
-      className={`shrink-0 rounded-full select-none ${className}`}
+      // อยู่ในแถว flex บ่อย: ล็อกขนาดและ self-start ไม่งั้นถูกยืดสูงเท่าข้อความข้าง ๆ
+      style={{ width: size, height: size }}
+      className={`shrink-0 self-start rounded-full object-cover select-none ${className}`}
       draggable={false}
     />
   );

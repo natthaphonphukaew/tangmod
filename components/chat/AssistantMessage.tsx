@@ -28,12 +28,13 @@ export function AssistantMessage({ item, onShowPlace, onRetry, onFeedback }: Pro
   const { shown, revealing } = useRevealText(text, fresh);
   // การ์ด หมุด แหล่งที่มา โผล่หลังข้อความแสดงครบ จะได้ไม่เด้งแทรกระหว่างที่ข้อความยังวิ่ง
   const showExtras = !revealing;
+  const thinking = item.status !== "error" && !text;
 
   return (
     // แบบแชท AI ที่คนคุ้น: คำตอบไม่มีกรอบ อ่านยาวสบายตา มีแค่ไอคอนมดนำหน้า
     <div className="flex gap-3">
-      <AntAvatar size={32} />
-      <div className="min-w-0 flex-1 space-y-4 pt-1">
+      {thinking ? <AntMascot pose="think" sizes="64px" className="-ml-2 h-16 w-auto shrink-0 motion-safe:animate-[ant-bob_1.6s_ease-in-out_infinite]" /> : <AntAvatar size={32} />}
+      <div className={`min-w-0 flex-1 space-y-4 ${thinking ? "self-center" : "pt-1"}`}>
         {item.status === "error" ? (
           <div className="rounded-[var(--radius-card)] border border-line-strong bg-card p-4 text-[15px]">
             <p>{item.error}</p>
@@ -198,13 +199,12 @@ function FeedbackRow({ onSend }: { onSend: (reason: FeedbackReason) => void }) {
   );
 }
 
-/** น้องมดท่าคิด (มีกล่อง "...") ระหว่างรอคำตอบ */
+/** ข้อความระหว่างรอคำตอบ (น้องมดท่าคิดอยู่ตรงตำแหน่งโลโก้แล้ว) */
 function ThinkingAnt() {
   return (
-    <div className="flex items-center gap-3 text-sm text-ink-soft" role="status">
-      <AntMascot pose="think" className="h-16 w-auto motion-safe:animate-[ant-bob_1.6s_ease-in-out_infinite]" />
+    <p className="text-sm text-ink-soft" role="status">
       มดกำลังหาคำตอบ…
-    </div>
+    </p>
   );
 }
 

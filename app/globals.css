@@ -121,6 +121,12 @@ body {
   outline-offset: 2px;
 }
 
+/* ช่องพิมพ์แชทใช้วงโฟกัสของแคปซูลทั้งอัน (focus-within บน form) แทนเส้นรอบ textarea
+   ต้องเขียนตรงนี้: กฎ :focus-visible ข้างบนอยู่นอก layer จึงชนะ class outline-none ของ Tailwind เสมอ */
+#chat-input:focus-visible {
+  outline: none;
+}
+
 /* รอยทางมด: จุดเรียงกันเดินไปตามเส้น */
 .ant-march {
   animation: ant-march 1.1s linear infinite;
