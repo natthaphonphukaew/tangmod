@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Place } from "@/lib/data/schemas";
 import { emptyProfile, type ChatTurn, type FeedbackReason, type Profile, type ValidatedAnswer } from "@/lib/ai/schema";
 import { sendFeedback, streamChat } from "@/lib/client/chat-client";
@@ -20,6 +20,7 @@ import { ChatColumn } from "@/components/chat/ChatColumn";
 import { hasContent, type ThreadItem } from "@/components/chat/types";
 import { CompassDialog } from "@/components/compass/CompassDialog";
 import { trapTab } from "@/components/ui/trap-tab";
+import { UndoToast, type Undo } from "@/components/ui/UndoToast";
 import { programById } from "@/lib/data";
 import { compassSummary, scoreCompass, type CompassAnswers, type CompassResult } from "@/lib/compass";
 import { BottomSheet, detentHeight, useElementHeight, useIsDesktop, useIsWide, type Detent } from "./BottomSheet";
@@ -290,10 +291,36 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
     }
   };
 
+  // ลบทันทีแล้วให้เลิกทำได้ใน toast (ปุ่มลบอยู่ติดแถวประวัติ กดพลาดง่ายบนมือถือ)
+  const [toast, setToast] = useState<Undo | null>(null);
+  const clearToast = useCallback(() => setToast(null), []);
+
   const deleteConversation = async (id: string) => {
+    const removed = await store.get(id).catch(() => null);
     await store.remove(id).catch(() => {});
     await refreshList();
     if (id === convId) newChat();
+    if (removed) {
+      setToast({
+        id: Date.now(),
+        message: "ลบแชทแล้ว",
+        undo: () => void store.save(removed).then(refreshList, () => {}),
+      });
+    }
+  };
+
+  const forgetProfile = () => {
+    const previous = profile;
+    clearProfile();
+    setProfile(emptyProfile());
+    setToast({
+      id: Date.now(),
+      message: "มดลืมสิ่งที่จำไว้แล้ว",
+      undo: () => {
+        saveProfile(previous);
+        setProfile(previous);
+      },
+    });
   };
 
   const signInGoogle = () => {
@@ -366,10 +393,7 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
       }}
       onOpen={(id) => void openConversation(id)}
       onDelete={(id) => void deleteConversation(id)}
-      onForget={() => {
-        clearProfile();
-        setProfile(emptyProfile());
-      }}
+      onForget={forgetProfile}
       onClose={onClose}
     />
   );
@@ -385,7 +409,7 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
       </a>
       {/* จอ 1024–1279 ตอนเปิดแผนที่: ซ่อน sidebar ให้แชทกว้างพอ (ไม่งั้นเหลือ ~300px) ประวัติแชทเปิดเป็น drawer แทน
           ใช้ class ไม่ใช่ isWide เพื่อให้ HTML จาก server ตรงกับหน้าจอตั้งแต่แรก */}
-      <aside className={`hidden w-[264px] shrink-0 border-r border-line ${mapOpen ? "xl:flex" : "lg:flex"}`}>{sidebar()}</aside>
+      <aside className={`hidden w-[272px] shrink-0 border-r border-line ${mapOpen ? "xl:flex" : "lg:flex"}`}>{sidebar()}</aside>
 
       {/* มือถือ (และจอกลางตอนเปิดแผนที่): ประวัติแชทเป็น drawer จากซ้าย */}
       <AnimatePresence>
@@ -421,7 +445,7 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
       <main className="flex min-w-0 flex-1 flex-col">
         <h1 className="sr-only">ทางมด — ผู้ช่วยแชทประจำแคมปัส มจธ. บางมด</h1>
         <TopBar
-          title={convId ? titleOf(thread) : "แชทใหม่"}
+          title={convId ? titleOf(thread) : null}
           mapOpen={mapOpen}
           onToggleMap={() => (mapOpen ? setMapOpen(false) : openMap(highlights))}
           onOpenHistory={() => {
@@ -437,6 +461,7 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
               chips={chips}
               pending={pending}
               compact={sheetMode && detent === "peek"}
+              inSheet={sheetMode}
               onInputFocus={() => sheetMode && detent === "peek" && setDetent("half")}
               onSend={send}
               onShowPlace={showPlace}
@@ -454,7 +479,7 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.22 }}
               style={sheetMode ? { height: Math.max(0, areaHeight - sheetPx + 16) } : undefined}
-              className="max-lg:absolute max-lg:inset-x-0 max-lg:top-0 lg:relative lg:basis-[44%] lg:border-l lg:border-line"
+              className="max-lg:absolute max-lg:inset-x-0 max-lg:top-0 lg:relative lg:min-w-[480px] lg:basis-[44%] lg:border-l lg:border-line"
             >
               <MapPanel
                 highlights={highlights}
@@ -470,6 +495,7 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
         </div>
       </main>
 
+      <UndoToast toast={toast} onDone={clearToast} />
       <CompassDialog open={compassOpen} onClose={() => setCompassOpen(false)} onDone={finishCompass} />
     </div>
     </MotionConfig>

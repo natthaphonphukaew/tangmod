@@ -1,7 +1,9 @@
 "use client";
 
-import { Brain, ChatCircleText, Compass, GoogleLogo, NotePencil, SignOut, Trash, UserCircle, X } from "@phosphor-icons/react";
+import { Brain, ClockCounterClockwise, Compass, GoogleLogo, NotePencil, SignOut, Trash, UserCircle, X } from "@phosphor-icons/react";
 import Link from "next/link";
+import type { ReactNode } from "react";
+import { AntAvatar } from "@/components/brand/AntMascot";
 import type { AuthOptions } from "@/lib/auth-options";
 import { programById } from "@/lib/data";
 import type { Profile } from "@/lib/ai/schema";
@@ -37,7 +39,10 @@ type Props = {
 
 const dayKey = (t: number) => new Date(t).toDateString();
 
-/** แถบซ้าย: แชทใหม่ + ประวัติแชท + ความจำที่โปร่งใส */
+/*
+ * แถบซ้าย: โลโก้ → เมนูหลัก → ประวัติแชท → ความจำ + บัญชี
+ * ปุ่มทุกอันสูง ≥44px บนมือถือ (40 บนคอมสำหรับแถวประวัติ) · รายการที่เปิดอยู่เป็นแคปซูลสีส้มอ่อน
+ */
 export function Sidebar({ conversations, currentId, listedAt, profile, account, onNew, onOpenCompass, onOpen, onDelete, onForget, onClose }: Props) {
   const today = dayKey(listedAt);
   const groups = [
@@ -47,119 +52,127 @@ export function Sidebar({ conversations, currentId, listedAt, profile, account, 
 
   return (
     <nav aria-label="ประวัติแชท" className="flex h-full w-full flex-col bg-paper-deep">
-      <div className="flex items-center gap-2 px-3 pt-3 pb-2">
-        <p className="flex-1 px-1 font-display text-xl text-ink">ทางมด</p>
+      <div className="flex items-center gap-3 px-4 pt-4 pb-3">
+        <AntAvatar size={40} />
+        <p className="flex-1 font-display text-[22px] leading-none text-ink">ทางมด</p>
         {onClose && (
-          <button type="button" onClick={onClose} aria-label="ปิดเมนู" autoFocus className="rounded-md p-1.5 text-ink-soft hover:bg-card hover:text-ink">
-            <X size={18} />
+          <button type="button" onClick={onClose} aria-label="ปิดเมนู" autoFocus className="grid size-11 place-items-center rounded-full text-ink-soft hover:bg-card hover:text-ink">
+            <X size={20} />
           </button>
         )}
       </div>
-      <div className="px-3">
-        <button
-          type="button"
-          onClick={onNew}
-          className="flex w-full items-center gap-2 rounded-[10px] border border-line bg-card px-3 py-2 text-sm hover:border-brand/40"
-        >
-          <NotePencil size={16} /> แชทใหม่
-        </button>
-        <button
-          type="button"
-          onClick={onOpenCompass}
-          className="mt-1.5 flex w-full items-center gap-2 rounded-[10px] px-3 py-2 text-sm text-ink-soft hover:bg-card hover:text-ink"
-        >
-          <Compass size={16} weight="duotone" className="text-brand-ink" /> เข็มทิศสาขา
-        </button>
+
+      <div className="space-y-1 px-3">
+        {/* แชทใหม่ = หน้าแรก: ไฮไลต์เมื่อยังไม่ได้เปิดแชทไหน */}
+        <NavItem icon={<NotePencil size={20} />} label="แชทใหม่" active={currentId === null} onClick={onNew} />
+        <NavItem icon={<Compass size={20} weight="duotone" />} label="เข็มทิศสาขา" onClick={onOpenCompass} />
       </div>
 
-      <div className="mt-3 min-h-0 flex-1 overflow-y-auto px-2 pb-3">
+      <div className="mt-4 min-h-0 flex-1 overflow-y-auto px-3 pb-3">
         {groups.length === 0 && (
-          <p className="px-2 py-3 text-xs text-ink-soft">
+          <p className="px-3 py-2 text-sm text-ink-soft">
             ยังไม่มีประวัติแชท คำถามที่ถามจะเก็บไว้{account.user ? "ในบัญชีของคุณ" : "ในเครื่องนี้"}
           </p>
         )}
         {groups.map((g) => (
           <section key={g.label} className="mb-3">
-            <h3 className="px-2 pb-1 text-[11px] text-ink-soft">{g.label}</h3>
-            <ul>
-              {g.items.map((c) => (
-                <li key={c.id} className="group relative">
-                  <button
-                    type="button"
-                    onClick={() => onOpen(c.id)}
-                    aria-current={c.id === currentId ? "page" : undefined}
-                    className="flex w-full items-center gap-2 rounded-[8px] px-2 py-1.5 pr-8 text-left text-sm hover:bg-card aria-[current=page]:bg-card aria-[current=page]:font-medium"
-                  >
-                    <ChatCircleText size={15} className="shrink-0 text-ink-soft" />
-                    <span className="truncate">{c.title}</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => onDelete(c.id)}
-                    aria-label={`ลบแชท ${c.title}`}
-                    className="absolute top-1/2 right-1 -translate-y-1/2 rounded p-1.5 text-ink-soft opacity-0 group-hover:opacity-100 hover:text-ink focus:opacity-100 max-lg:opacity-60"
-                  >
-                    <Trash size={14} />
-                  </button>
-                </li>
-              ))}
+            <h3 className="px-3 pb-1 text-[13px] font-semibold text-ink-soft">{g.label}</h3>
+            <ul className="space-y-0.5">
+              {g.items.map((c) => {
+                const current = c.id === currentId;
+                return (
+                  <li key={c.id} className="group relative">
+                    <button
+                      type="button"
+                      onClick={() => onOpen(c.id)}
+                      aria-current={current ? "page" : undefined}
+                      className="flex min-h-12 w-full items-center gap-3 rounded-xl px-3 pr-12 text-left text-sm text-ink hover:bg-card aria-[current=page]:bg-brand-tint aria-[current=page]:font-semibold lg:min-h-10"
+                    >
+                      <ClockCounterClockwise size={18} className={`shrink-0 ${current ? "text-brand-ink" : "text-ink-soft"}`} />
+                      <span className="truncate">{c.title}</span>
+                    </button>
+                    {/* ลบแล้วมีปุ่มเลิกทำใน toast · บนคอมโชว์ตอนชี้ */}
+                    <button
+                      type="button"
+                      onClick={() => onDelete(c.id)}
+                      aria-label={`ลบแชท ${c.title}`}
+                      className="absolute top-1/2 right-0.5 grid size-11 -translate-y-1/2 place-items-center rounded-full text-ink-soft hover:bg-paper hover:text-ink focus-visible:opacity-100 lg:size-8 lg:opacity-0 lg:group-hover:opacity-100"
+                    >
+                      <Trash size={16} />
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           </section>
         ))}
       </div>
 
-      <MemoryStrip profile={profile} onForget={onForget} />
-      <AccountBox {...account} />
+      <div className="space-y-2 border-t border-line p-3">
+        <MemoryStrip profile={profile} onForget={onForget} />
+        <AccountBox {...account} />
+      </div>
     </nav>
+  );
+}
+
+function NavItem({ icon, label, active = false, onClick }: { icon: ReactNode; label: string; active?: boolean; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-current={active ? "page" : undefined}
+      className="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-[15px] font-medium text-ink hover:bg-card aria-[current=page]:bg-brand-tint aria-[current=page]:font-semibold [&>svg]:text-brand-ink"
+    >
+      {icon}
+      {label}
+    </button>
   );
 }
 
 /** ท้ายแถบซ้าย: login ไม่บังคับ — login แล้วประวัติแชทตามไปทุกเครื่อง */
 function AccountBox({ user, loading, busy, options, onSignInGoogle, onSignInDev, onSignOut, onDeleteAccount }: AccountProps) {
-  if (loading) return <div className="h-[72px] border-t border-line" aria-hidden />;
+  if (loading) return <div className="h-[68px]" aria-hidden />;
   if (user) {
     return (
-      <div className="flex items-center gap-2.5 border-t border-line px-3 py-2.5">
+      <div className="flex items-center gap-3 rounded-[var(--radius-card)] border border-line bg-card p-2.5 shadow-[var(--shadow-card)]">
         {user.image ? (
           // รูปโปรไฟล์จาก Google (โดเมนภายนอก) ใช้ img ธรรมดา ไม่ผ่าน next/image
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={user.image} alt="" className="size-8 shrink-0 rounded-full" referrerPolicy="no-referrer" />
+          <img src={user.image} alt="" className="size-10 shrink-0 rounded-full" referrerPolicy="no-referrer" />
         ) : (
-          <UserCircle size={32} weight="duotone" className="shrink-0 text-ink-soft" />
+          <UserCircle size={40} weight="duotone" className="shrink-0 text-ink-soft" />
         )}
-        <div className="min-w-0 flex-1 leading-tight">
-          <p className="truncate text-sm">{user.name}</p>
-          <p className="truncate text-[11px] text-ink-soft">ประวัติแชทเก็บในบัญชีนี้</p>
-          <p className="mt-0.5 text-[11px]">
-            <Link href="/privacy" className="text-ink-soft underline hover:text-ink">
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-[15px] font-semibold">{user.name}</p>
+          <p className="truncate text-xs text-ink-soft">ประวัติแชทเก็บในบัญชีนี้</p>
+          <p className="text-xs">
+            <Link href="/privacy" className="inline-flex min-h-8 items-center whitespace-nowrap text-ink-soft underline hover:text-ink">
               ความเป็นส่วนตัว
             </Link>
             <span className="text-ink-soft"> · </span>
-            <button type="button" onClick={onDeleteAccount} disabled={busy} className="text-ink-soft underline hover:text-brand-ink disabled:opacity-50">
+            <button type="button" onClick={onDeleteAccount} disabled={busy} className="inline-flex min-h-8 items-center text-ink-soft underline hover:text-brand-ink disabled:opacity-50">
               ลบบัญชี
             </button>
           </p>
         </div>
-        <button type="button" onClick={onSignOut} disabled={busy} aria-label="ออกจากระบบ" title="ออกจากระบบ" className="rounded-md p-1.5 text-ink-soft hover:bg-card hover:text-ink disabled:opacity-50">
-          <SignOut size={16} />
+        <button type="button" onClick={onSignOut} disabled={busy} aria-label="ออกจากระบบ" title="ออกจากระบบ" className="grid size-10 shrink-0 place-items-center rounded-full text-ink-soft hover:bg-paper hover:text-ink disabled:opacity-50">
+          <SignOut size={18} />
         </button>
       </div>
     );
   }
   const canLogin = options.google || options.devLogin;
   return (
-    <div className="space-y-2 border-t border-line px-3 py-3">
-      {canLogin && (
-        <p className="px-1 text-[11px] leading-snug text-ink-soft">เข้าสู่ระบบเพื่อเก็บประวัติแชทไว้ใช้ได้ทุกเครื่อง (ไม่บังคับ)</p>
-      )}
+    <div className="space-y-2">
       {options.google && (
         <button
           type="button"
           onClick={onSignInGoogle}
           disabled={busy}
-          className="flex w-full items-center justify-center gap-2 rounded-[10px] border border-line bg-card px-3 py-2 text-sm hover:border-brand/40 disabled:opacity-50"
+          className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-line-strong bg-card px-4 text-sm font-medium shadow-[var(--shadow-card)] hover:border-brand/50 disabled:opacity-50"
         >
-          <GoogleLogo size={16} weight="bold" /> เข้าสู่ระบบด้วย Google
+          <GoogleLogo size={18} weight="bold" /> เข้าสู่ระบบด้วย Google
         </button>
       )}
       {options.devLogin && (
@@ -167,14 +180,14 @@ function AccountBox({ user, loading, busy, options, onSignInGoogle, onSignInDev,
           type="button"
           onClick={onSignInDev}
           disabled={busy}
-          className="flex w-full items-center justify-center gap-2 rounded-[10px] border border-dashed border-line px-3 py-1.5 text-xs text-ink-soft hover:text-ink disabled:opacity-50"
+          className="flex min-h-10 w-full items-center justify-center gap-2 rounded-full border border-dashed border-line-strong px-4 text-xs text-ink-soft hover:text-ink disabled:opacity-50"
         >
           ล็อกอินทดสอบ (เฉพาะตอน dev)
         </button>
       )}
-      <p className="px-1 text-[11px] leading-snug text-ink-soft">
-        {canLogin ? "ยังไม่ได้เข้าสู่ระบบ: " : ""}ประวัติแชทเก็บไว้ในเครื่องนี้ · อย่าพิมพ์ข้อมูลส่วนตัว ·{" "}
-        <Link href="/privacy" className="underline hover:text-ink">
+      <p className="px-1 text-xs text-ink-soft">
+        {canLogin ? "ไม่บังคับ · " : ""}ประวัติแชทเก็บไว้ในเครื่องนี้ ·{" "}
+        <Link href="/privacy" className="whitespace-nowrap underline hover:text-ink">
           ความเป็นส่วนตัว
         </Link>
       </p>
@@ -182,7 +195,7 @@ function AccountBox({ user, loading, busy, options, onSignInGoogle, onSignInDev,
   );
 }
 
-/** ความจำที่โปร่งใส: ผู้ใช้เห็นว่ามดจำอะไร และลบได้ทันที */
+/** ความจำที่โปร่งใส: ผู้ใช้เห็นว่ามดจำอะไร และลบได้ (มีปุ่มเลิกทำใน toast) */
 function MemoryStrip({ profile, onForget }: { profile: Profile; onForget: () => void }) {
   // AI มักใส่ชื่อสาขาซ้ำใน interests ("CS") จึงตัดคำที่ซ้ำกับชื่อสาขาออก
   const bits = [
@@ -193,10 +206,12 @@ function MemoryStrip({ profile, onForget }: { profile: Profile; onForget: () => 
   ];
   if (!bits.length) return null;
   return (
-    <div className="flex items-start gap-2 border-t border-line px-4 py-2.5 text-xs text-ink-soft">
-      <Brain size={14} weight="duotone" className="mt-0.5 shrink-0 text-brand-ink" />
-      <span className="min-w-0 flex-1">มดจำว่าสนใจ: {bits.join(" · ")}</span>
-      <button type="button" onClick={onForget} className="shrink-0 hover:text-ink" title="ลบความจำทั้งหมด">
+    <div className="flex items-center gap-2 rounded-xl bg-trail-tint py-0.5 pr-0.5 pl-3 text-xs text-ink-soft">
+      <Brain size={16} weight="duotone" className="shrink-0 text-brand-ink" />
+      <span className="min-w-0 flex-1 truncate" title={bits.join(" · ")}>
+        มดจำว่าสนใจ: {bits.join(" · ")}
+      </span>
+      <button type="button" onClick={onForget} className="min-h-11 min-w-11 shrink-0 rounded-full px-3 font-medium hover:bg-card hover:text-ink lg:min-h-8" title="ลบความจำทั้งหมด">
         ลืม
       </button>
     </div>

@@ -19,9 +19,15 @@ export function TimelineCard({ programIds }: { programIds: string[] }) {
     .slice(0, 6);
 
   return (
-    <article className="rounded-[var(--radius-card)] border border-line bg-card p-3.5">
-      <p className="font-display text-base">ไทม์ไลน์ TCAS70</p>
-      <p className="text-xs text-ink-soft">เข้าเรียนปีการศึกษา 2570 · เช็กประกาศทางการซ้ำทุกครั้ง</p>
+    <article className="rounded-[var(--radius-card)] border border-line-strong bg-card p-4 shadow-[var(--shadow-card)]">
+      <p className="font-display text-lg">ไทม์ไลน์ TCAS70</p>
+      <p className="text-[13px] text-ink-soft">เข้าเรียนปีการศึกษา 2570 · เช็กประกาศทางการซ้ำทุกครั้ง</p>
+      {/* ป้าย "ไม่เป็นทางการ" ซ้ำทุกแถวรก: บอกครั้งเดียวที่หัวการ์ด แถวไหนทางการค่อยติดป้าย */}
+      {events.some((e) => e.tier !== "official") && (
+        <p className="mt-2 flex items-center gap-1.5 text-[13px] text-ink-soft">
+          <TierBadge tier="student" /> บางรอบใช้ข้อมูลไม่เป็นทางการ
+        </p>
+      )}
       <ol className="mt-3 space-y-2.5">
         {events.map((e) => {
           const toStart = daysUntil(e.start, now);
@@ -36,16 +42,16 @@ export function TimelineCard({ programIds }: { programIds: string[] }) {
             <li key={e.id} className="flex gap-2.5">
               <span className={`mt-1.5 size-2 shrink-0 rounded-full ${open ? "bg-brand" : "bg-line"}`} />
               <div className="min-w-0 flex-1">
-                <p className="text-sm leading-snug">
+                <p className="text-[15px] leading-[1.55]">
                   <span className="text-ink-soft">รอบ {e.round} · </span>
                   {e.title}
                 </p>
-                <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs text-ink-soft">
+                <p className="mt-1 flex flex-wrap items-center gap-1.5 text-[13px] text-ink-soft tabular-nums">
                   {formatRange(e.start, e.end)}
-                  <span className={`rounded-full px-1.5 py-px text-[11px] ${status.cls}`}>{status.text}</span>
-                  {e.tier !== "official" && <TierBadge tier={e.tier} />}
+                  <span className={`rounded-full px-2.5 py-0.5 text-[13px] font-medium ${status.cls}`}>{status.text}</span>
+                  {e.tier === "official" && events.some((x) => x.tier !== "official") && <TierBadge tier="official" />}
                 </p>
-                {e.conflict_note && <p className="mt-0.5 text-[11px] text-warn">{e.conflict_note}</p>}
+                {e.conflict_note && <p className="mt-1 text-xs text-warn">{e.conflict_note}</p>}
               </div>
             </li>
           );

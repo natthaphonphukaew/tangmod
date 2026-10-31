@@ -29,7 +29,11 @@ export function CompareCard({ ids, onShowPlace }: { ids: string[]; onShowPlace?:
       label: "ตึก",
       cell: (p) =>
         p.place_id ? (
-          <button type="button" onClick={() => onShowPlace?.(p.place_id!)} className="font-mono text-brand-ink hover:underline">
+          <button
+            type="button"
+            onClick={() => onShowPlace?.(p.place_id!)}
+            className="inline-flex min-h-11 items-center rounded-full border border-line-strong px-3 font-mono text-[13px] text-brand-ink hover:border-brand/50 lg:min-h-8"
+          >
             {p.place_id}
           </button>
         ) : (
@@ -39,14 +43,14 @@ export function CompareCard({ ids, onShowPlace }: { ids: string[]; onShowPlace?:
   ];
 
   return (
-    <article className="overflow-hidden rounded-[var(--radius-card)] border border-line bg-card">
+    <article className="overflow-hidden rounded-[var(--radius-card)] border border-line-strong bg-card shadow-[var(--shadow-card)]">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[22rem] border-collapse text-sm">
+        <table className={`w-full border-collapse text-sm ${items.length > 2 ? "min-w-[26rem]" : ""}`}>
           <thead>
             <tr className="bg-paper">
-              <th className="w-24 px-3 py-2 text-left text-xs font-normal text-ink-soft">เทียบกัน</th>
+              <th className="w-32 px-3 py-2.5 text-left text-[13px] font-normal whitespace-nowrap text-ink-soft">เทียบกัน</th>
               {items.map((p) => (
-                <th key={p.id} scope="col" className="px-2 py-2 text-left font-display text-base font-medium">
+                <th key={p.id} scope="col" className="px-2 py-2.5 text-left font-display text-base font-medium">
                   {p.short}
                 </th>
               ))}
@@ -55,11 +59,11 @@ export function CompareCard({ ids, onShowPlace }: { ids: string[]; onShowPlace?:
           <tbody>
             {rows.map((row) => (
               <tr key={row.label} className="border-t border-line">
-                <th scope="row" className="px-3 py-1.5 text-left text-xs font-normal text-ink-soft">
+                <th scope="row" className="px-3 py-2 text-left text-[13px] font-normal whitespace-nowrap text-ink-soft">
                   {row.label}
                 </th>
                 {items.map((p) => (
-                  <td key={p.id} className="px-2 py-1.5 tabular-nums">
+                  <td key={p.id} className="px-2 py-2 tabular-nums">
                     {row.cell(p)}
                   </td>
                 ))}
@@ -68,11 +72,11 @@ export function CompareCard({ ids, onShowPlace }: { ids: string[]; onShowPlace?:
             {hasVibe &&
               VIBES.map((v) => (
                 <tr key={v.key} className="border-t border-line">
-                  <th scope="row" className="px-3 py-1.5 text-left text-xs font-normal text-ink-soft">
+                  <th scope="row" className="px-3 py-2 text-left text-[13px] font-normal whitespace-nowrap text-ink-soft">
                     {v.label}
                   </th>
                   {items.map((p) => (
-                    <td key={p.id} className="px-2 py-1.5">
+                    <td key={p.id} className="px-2 py-2">
                       {p.vibe ? <Level value={p.vibe[v.key] as number} /> : "—"}
                     </td>
                   ))}
@@ -82,7 +86,7 @@ export function CompareCard({ ids, onShowPlace }: { ids: string[]; onShowPlace?:
         </table>
       </div>
       {hasVibe && (
-        <p className="border-t border-line px-3 py-2 text-[11px] text-ink-soft">
+        <p className="border-t border-line px-3 py-2.5 text-xs text-ink-soft">
           แถบความเข้มข้น (เขียนโค้ด/คณิต/ฮาร์ดแวร์/ออกแบบ/ธุรกิจ) ทีมทางมดประเมินเองจากโครงสร้างหลักสูตร ไม่ใช่คะแนนทางการ
         </p>
       )}

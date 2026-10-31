@@ -12,7 +12,7 @@ const TIERS = {
 export function TierBadge({ tier, updatedAt }: { tier: Tier; updatedAt?: string }) {
   const { label, Icon, className } = TIERS[tier];
   return (
-    <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs ${className}`}>
+    <span className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-xs whitespace-nowrap ${className}`}>
       <Icon size={14} weight="duotone" aria-hidden />
       {label}
       {updatedAt && <span className="text-ink-soft">· {formatThaiDate(updatedAt)}</span>}

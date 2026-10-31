@@ -8,7 +8,7 @@ import { CompareCard } from "@/components/cards/CompareCard";
 import { ProgramCard } from "@/components/cards/ProgramCard";
 import { TimelineCard } from "@/components/cards/TimelineCard";
 import { TierBadge } from "@/components/ui/TierBadge";
-import { AntAvatar } from "./AntAvatar";
+import { AntAvatar } from "@/components/brand/AntMascot";
 import { useRevealText } from "./useRevealText";
 import type { ThreadItem } from "./types";
 
@@ -32,17 +32,17 @@ export function AssistantMessage({ item, onShowPlace, onRetry, onFeedback }: Pro
   return (
     // แบบแชท AI ที่คนคุ้น: คำตอบไม่มีกรอบ อ่านยาวสบายตา มีแค่ไอคอนมดนำหน้า
     <div className="flex gap-3">
-      <AntAvatar size={28} />
-      <div className="min-w-0 flex-1 space-y-3 pt-0.5">
+      <AntAvatar size={32} />
+      <div className="min-w-0 flex-1 space-y-4 pt-1">
         {item.status === "error" ? (
-          <div className="rounded-[var(--radius-card)] border border-line bg-paper p-3 text-sm">
+          <div className="rounded-[var(--radius-card)] border border-line-strong bg-card p-4 text-[15px]">
             <p>{item.error}</p>
-            <button type="button" onClick={onRetry} className="mt-2 inline-flex items-center gap-1 text-brand-ink hover:underline">
-              <ArrowClockwise size={14} /> ลองใหม่
+            <button type="button" onClick={onRetry} className="mt-2 inline-flex min-h-10 items-center gap-1.5 rounded-full bg-brand-ink px-4 text-sm font-semibold text-white hover:bg-brand-ink/90">
+              <ArrowClockwise size={16} /> ลองใหม่
             </button>
           </div>
         ) : text ? (
-          <div className="text-[15px]">
+          <div className="text-base leading-[1.7]">
             <LightMarkdown text={shown} />
             {(item.status === "streaming" || revealing) && <span className="ml-0.5 inline-block h-4 w-1.5 animate-pulse rounded-sm bg-brand align-middle" />}
           </div>
@@ -52,7 +52,7 @@ export function AssistantMessage({ item, onShowPlace, onRetry, onFeedback }: Pro
 
         {showExtras && answer && answer.places.length > 0 && (
           // รายชื่อสถานที่อยู่ในคำตอบเสมอ กดเพื่อเปิดแผนที่เองได้ แม้คำตอบนี้จะไม่ได้เปิดแผนที่ให้อัตโนมัติ
-          <ol className="divide-y divide-line overflow-hidden rounded-[var(--radius-card)] border border-line">
+          <ol className="divide-y divide-line overflow-hidden rounded-[var(--radius-card)] border border-line-strong bg-card shadow-[var(--shadow-card)]">
             {answer.places.map((p, i) => {
               const place = placeById.get(p.place_id);
               return (
@@ -60,16 +60,16 @@ export function AssistantMessage({ item, onShowPlace, onRetry, onFeedback }: Pro
                   <button
                     type="button"
                     onClick={() => onShowPlace(p.place_id)}
-                    className="group flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm hover:bg-paper"
+                    className="group flex min-h-12 w-full items-center gap-3 px-4 py-2 text-left text-sm hover:bg-paper lg:min-h-11"
                   >
-                    <span className="grid size-5 shrink-0 place-items-center rounded-full bg-brand-ink font-display text-xs text-white">{i + 1}</span>
+                    <span className="grid size-6 shrink-0 place-items-center rounded-full bg-brand-ink font-display text-[13px] text-white">{i + 1}</span>
                     <span className="min-w-0 flex-1">
-                      <span className="font-medium">{place?.short ?? place?.name_th}</span>
+                      <span className="font-semibold">{place?.short ?? place?.name_th}</span>
                       {p.place_id.length <= 3 && <span className="font-mono text-xs text-ink-soft"> {p.place_id}</span>}
                       {p.reason && <span className="text-ink-soft"> — {p.reason}</span>}
                     </span>
-                    <span className="inline-flex shrink-0 items-center gap-1 text-xs text-brand-ink opacity-80 group-hover:opacity-100">
-                      <MapPin size={14} weight="duotone" /> ดูบนแผนที่
+                    <span className="inline-flex shrink-0 items-center gap-1 text-[13px] font-medium text-brand-ink">
+                      <MapPin size={16} weight="duotone" /> <span className="max-sm:sr-only">ดูบนแผนที่</span>
                     </span>
                   </button>
                 </li>
@@ -84,42 +84,57 @@ export function AssistantMessage({ item, onShowPlace, onRetry, onFeedback }: Pro
             {card.type === "program" && <ProgramCard id={card.ids[0]} onShowPlace={onShowPlace} />}
             {card.type === "compare" && <CompareCard ids={card.ids} onShowPlace={onShowPlace} />}
             {card.type === "timeline" && <TimelineCard programIds={card.ids} />}
-            {card.type === "place" && (
-              <button type="button" onClick={() => onShowPlace(card.ids[0])} className="text-sm text-brand-ink hover:underline">
-                ดูข้อมูล {placeById.get(card.ids[0])?.name_th}
+            {card.type === "place" && !answer.places.some((p) => p.place_id === card.ids[0]) && (
+              <button
+                type="button"
+                onClick={() => onShowPlace(card.ids[0])}
+                className="inline-flex min-h-10 items-center gap-1.5 rounded-full border border-line-strong bg-card px-4 text-sm font-medium text-brand-ink hover:border-brand/50"
+              >
+                <MapPin size={16} weight="duotone" /> ดูข้อมูล {placeById.get(card.ids[0])?.name_th}
               </button>
             )}
           </Fragment>
         ))}
 
         {showExtras && answer && answer.sources.length > 0 && (
-          <ul className="flex flex-wrap gap-x-3 gap-y-1.5 text-xs">
-            {answer.sources.map((s) => (
-              <li key={s.id} className="flex items-center gap-1.5">
-                <TierBadge tier={s.tier} />
-                {s.url ? (
-                  <a href={s.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-0.5 text-ink-soft hover:text-brand-ink hover:underline">
-                    {s.title} <ArrowSquareOut size={11} />
-                  </a>
-                ) : (
-                  <span className="text-ink-soft">{s.title}</span>
-                )}
-              </li>
-            ))}
-          </ul>
+          <div className="border-t border-line pt-3">
+            <h4 className="mb-1.5 text-[13px] font-semibold text-ink-soft">แหล่งที่มา</h4>
+            <ul className="flex flex-wrap gap-2 text-[13px]">
+              {answer.sources.map((s) => (
+                <li key={s.id} className="max-w-full">
+                  {s.url ? (
+                    <a
+                      href={s.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex min-h-11 max-w-full items-center gap-2 rounded-full border border-line bg-card py-1 pr-3 pl-1 text-ink-soft hover:border-brand/50 hover:text-brand-ink lg:min-h-9"
+                    >
+                      <TierBadge tier={s.tier} />
+                      <span className="truncate">{s.title}</span> <ArrowSquareOut size={13} className="shrink-0" />
+                    </a>
+                  ) : (
+                    <span className="flex min-h-11 max-w-full items-center gap-2 rounded-full border border-line bg-card py-1 pr-3 pl-1 text-ink-soft lg:min-h-9">
+                      <TierBadge tier={s.tier} />
+                      <span className="truncate">{s.title}</span>
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
 
         {item.model?.includes("offline") && (
-          <p className="flex flex-wrap items-center gap-1.5 text-xs text-ink-soft">
-            <WifiSlash size={13} />
+          <p className="flex flex-wrap items-center gap-1.5 text-[13px] text-ink-soft">
+            <WifiSlash size={16} />
             {item.model === "offline:rate_limited"
               ? "โควตา AI วันนี้หมดแล้ว มดเลยตอบแบบออฟไลน์ (ชี้หมุดกับการ์ดข้อมูลจริงได้อย่างเดียว)"
               : item.model === "offline:busy"
                 ? "AI ตอบช้ากว่าปกติ มดเลยตอบแบบออฟไลน์ไปก่อน"
                 : "โหมดออฟไลน์: ยังไม่ได้เชื่อมต่อ AI"}
             {item.model === "offline:busy" && (
-              <button type="button" onClick={onRetry} className="inline-flex items-center gap-1 text-brand-ink hover:underline">
-                <ArrowClockwise size={13} /> ถามใหม่
+              <button type="button" onClick={onRetry} className="inline-flex min-h-10 items-center gap-1 rounded-full px-3 font-medium text-brand-ink hover:bg-brand-tint">
+                <ArrowClockwise size={16} /> ถามใหม่
               </button>
             )}
           </p>
@@ -141,16 +156,20 @@ const REASONS: [FeedbackReason, string][] = [
 /** ปุ่ม "ตอบไม่ตรง": กดแล้วเลือกเหตุผลสั้น ๆ คำถามนี้จะถูกเก็บไว้เติมข้อมูล (ไม่มีตัวตนผู้ใช้) */
 function FeedbackRow({ onSend }: { onSend: (reason: FeedbackReason) => void }) {
   const [state, setState] = useState<"idle" | "choosing" | "sent">("idle");
-  if (state === "sent") return <p className="text-xs text-ink-soft">ขอบคุณนะ มดจดไว้แล้ว จะเอาไปเติมข้อมูลให้ตอบได้ดีขึ้น</p>;
+  if (state === "sent") return <p className="text-[13px] text-ink-soft">ขอบคุณนะ มดจดไว้แล้ว จะเอาไปเติมข้อมูลให้ตอบได้ดีขึ้น</p>;
   if (state === "idle") {
     return (
-      <button type="button" onClick={() => setState("choosing")} className="inline-flex items-center gap-1 text-xs text-ink-soft hover:text-brand-ink">
-        <Flag size={13} /> ตอบไม่ตรง
+      <button
+        type="button"
+        onClick={() => setState("choosing")}
+        className="-ml-3 inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 text-[13px] text-ink-soft hover:bg-card hover:text-brand-ink lg:min-h-9"
+      >
+        <Flag size={16} /> ตอบไม่ตรง
       </button>
     );
   }
   return (
-    <div role="group" aria-label="ตอบไม่ตรงเพราะอะไร" className="flex flex-wrap items-center gap-1.5 text-xs">
+    <div role="group" aria-label="ตอบไม่ตรงเพราะอะไร" className="flex flex-wrap items-center gap-2 text-[13px]">
       <span className="text-ink-soft">ไม่ตรงเพราะ</span>
       {REASONS.map(([reason, label]) => (
         <button
@@ -160,12 +179,12 @@ function FeedbackRow({ onSend }: { onSend: (reason: FeedbackReason) => void }) {
             onSend(reason);
             setState("sent");
           }}
-          className="rounded-full border border-line bg-paper px-2.5 py-0.5 hover:border-brand/40"
+          className="min-h-10 rounded-full border border-line-strong bg-card px-3.5 hover:border-brand/50 lg:min-h-9"
         >
           {label}
         </button>
       ))}
-      <button type="button" onClick={() => setState("idle")} className="px-1 text-ink-soft hover:text-ink">
+      <button type="button" onClick={() => setState("idle")} className="min-h-10 rounded-full px-3 text-ink-soft hover:text-ink lg:min-h-9">
         ยกเลิก
       </button>
     </div>
@@ -201,10 +220,10 @@ function LightMarkdown({ text }: { text: string }) {
     } else blocks.push({ type: "p", lines: [line] });
   }
   return (
-    <div className="space-y-1.5">
+    <div className="space-y-2">
       {blocks.map((b, i) =>
         b.type === "ul" ? (
-          <ul key={i} className="list-disc space-y-0.5 pl-5">
+          <ul key={i} className="list-disc space-y-1 pl-5 marker:text-brand">
             {b.lines.map((l, j) => (
               <li key={j}>{bold(l)}</li>
             ))}

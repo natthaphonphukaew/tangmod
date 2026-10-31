@@ -21,6 +21,8 @@ type Props = {
   onSelect?: (placeId: string) => void;
   /** เปลี่ยนเมื่อขนาดกรอบแผนที่เปลี่ยน (เช่น bottom sheet บนมือถือขยับ) เพื่อซูมหาหมุดใหม่ */
   refitKey?: string;
+  /** ความสูงของสิ่งที่บังขอบล่างของแผนที่ (การ์ดสถานที่) — เลื่อนแผนที่ให้ตึกที่เลือกอยู่เหนือมัน */
+  avoidBottom?: number;
 };
 
 const [VB_W, VB_H] = mapLayout.viewBox;
@@ -36,8 +38,9 @@ const AREA_FILL: Record<MapArea["kind"], string> = {
   field: "var(--park-deep)",
 };
 
-export function CampusMap({ highlights, selectedId, onSelect, refitKey }: Props) {
+export function CampusMap({ highlights, selectedId, onSelect, refitKey, avoidBottom = 0 }: Props) {
   const zoomRef = useRef<ReactZoomPanPinchRef>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
   const uid = useId().replace(/:/g, "");
 
@@ -56,13 +59,32 @@ export function CampusMap({ highlights, selectedId, onSelect, refitKey }: Props)
     }
   }, [focusKey, refitKey, reduceMotion]);
 
+  // การ์ดสถานที่ลอยอยู่ล่างแผนที่: ถ้าบังตึกที่เลือก เลื่อนแผนที่ขึ้นให้ตึกอยู่เหนือการ์ด
+  // หน่วงไว้ให้การซูมหาหมุด (650ms) จบก่อน ไม่งั้นอ่านตำแหน่งระหว่างแอนิเมชัน
+  useEffect(() => {
+    if (!selectedId || !avoidBottom) return;
+    const timer = setTimeout(() => {
+      const ref = zoomRef.current;
+      const frame = frameRef.current?.getBoundingClientRect();
+      const target = document.getElementById(domIdOf(selectedId))?.getBoundingClientRect();
+      if (!ref || !frame || !target) return;
+      const limit = frame.bottom - avoidBottom - 24;
+      if (target.bottom <= limit) return;
+      // ref.state เป็นค่าตอนสร้าง ref ค่าปัจจุบันอยู่ที่ instance.state
+      const { positionX, positionY, scale } = ref.instance.state;
+      ref.setTransform(positionX, positionY - (target.bottom - limit), scale, reduceMotion ? 0 : 300, "easeOut");
+    }, reduceMotion ? 0 : 700);
+    return () => clearTimeout(timer);
+    // refitKey/focusKey: แผนที่ซูมหาหมุดใหม่ (เช่น sheet มือถือยุบตอนเปิดการ์ด) ต้องเลื่อนหลบการ์ดใหม่หลังซูมเสร็จ
+  }, [selectedId, avoidBottom, refitKey, focusKey, reduceMotion]);
+
   const trailPoints = highlights.map((h) => anchorOf(h.placeId)).filter((p) => p !== undefined);
   const trail = trailPath(trailPoints);
   const trailId = `trail-${uid}-${focusKey}`;
 
   return (
     // container query: มือถือแนวตั้งให้แผนที่กว้างเท่าความสูง×อัตราส่วนผัง (ปัดดูซ้ายขวาได้) แทนการย่อจนอ่านไม่ออก
-    <div className="relative h-full w-full overflow-hidden [container-type:size]" style={{ "--map-ratio": VB_W / VB_H } as CSSProperties}>
+    <div ref={frameRef} className="relative h-full w-full overflow-hidden [container-type:size]" style={{ "--map-ratio": VB_W / VB_H } as CSSProperties}>
       <TransformWrapper
         ref={zoomRef}
         minScale={1}
@@ -180,7 +202,7 @@ export function CampusMap({ highlights, selectedId, onSelect, refitKey }: Props)
         </TransformComponent>
       </TransformWrapper>
 
-      <div className="absolute top-3 right-3 flex flex-col overflow-hidden rounded-[10px] border border-line bg-card shadow-[var(--shadow-card)]">
+      <div className="absolute top-3 right-3 flex flex-col overflow-hidden rounded-[var(--radius-sm)] border border-line-strong bg-card shadow-[var(--shadow-float)]">
         <ZoomButton label="ซูมเข้า" onClick={() => zoomRef.current?.zoomIn(0.5)}>
           <Plus size={18} />
         </ZoomButton>
@@ -192,7 +214,7 @@ export function CampusMap({ highlights, selectedId, onSelect, refitKey }: Props)
         </ZoomButton>
       </div>
 
-      <div className="pointer-events-none absolute bottom-3 left-3 flex items-center gap-2 rounded-[10px] bg-card/90 px-2.5 py-1.5 text-[11px] leading-tight text-ink-soft">
+      <div className={`pointer-events-none absolute bottom-3 left-3 items-center gap-2 ${selectedId ? "hidden" : "flex"} rounded-[var(--radius-sm)] bg-card/95 px-2.5 py-1.5 text-xs text-ink-soft shadow-[var(--shadow-card)]`}>
         <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden>
           <circle cx="13" cy="13" r="12" fill="none" stroke="var(--line)" />
           <g transform={`rotate(${mapLayout.north_deg} 13 13)`}>
@@ -250,7 +272,7 @@ function MapDecor() {
         const at = a.type === "ellipse" ? [a.cx, a.cy + a.ry + 13] : a.label_at;
         if (!at) return null;
         return (
-          <text key={i} x={at[0]} y={at[1]} textAnchor="middle" fontSize={11} fill="var(--ink-soft)" className="map-label">
+          <text key={i} x={at[0]} y={at[1]} textAnchor="middle" fontSize={13} fill="var(--ink-soft)" className="map-label">
             {a.label}
           </text>
         );
@@ -259,7 +281,7 @@ function MapDecor() {
         <g key={i}>
           <path id={`road-name-${i}`} d={r.d} fill="none" stroke="none" />
           {/* ชิดครึ่งบนของถนน: ถนนประชาอุทิศอยู่ขอบล่างของผัง ครึ่งล่างถูกตัด */}
-          <text fontSize={9.5} fill="var(--ink-soft)" dy={-2.5} letterSpacing={1}>
+          <text fontSize={11} fill="var(--ink-soft)" dy={-3}>
             <textPath href={`#road-name-${i}`} startOffset="62%" textAnchor="middle">
               {r.name}
             </textPath>
@@ -315,7 +337,7 @@ function BuildingShape({
       onClick={activate}
       onKeyDown={onKeyDown}
       className={`outline-none transition-opacity duration-500 ${interactive ? "cursor-pointer [&:focus-visible>rect:nth-child(2)]:stroke-[var(--brand-ink)] [&:hover>rect:nth-child(2)]:brightness-[1.04]" : ""}`}
-      opacity={dimmed ? 0.38 : 1}
+      opacity={dimmed ? 0.55 : 1}
     >
       <title>{place?.name_th ?? b.name ?? b.id}</title>
       {/* ฐานสีเข้มเลื่อนลง = ความหนาของตึก (2.5D แบบแผนที่ท่องเที่ยว) */}
@@ -355,7 +377,7 @@ function BuildingLabel({ building: b, lit = false }: { building: MapBuilding; li
         dominantBaseline="central"
         className="font-mono"
         fontSize={place ? 15 : 12}
-        fill={lit ? "var(--ink)" : place ? "var(--brand-ink)" : "var(--ink-soft)"}
+        fill={lit ? "var(--ink)" : place ? "var(--brand-deep)" : "var(--ink-soft)"}
         {...halo}
       >
         {b.id}
@@ -393,7 +415,7 @@ function PointMarker({
       onClick={() => onSelect?.(id)}
       onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onSelect?.(id)}
       className="cursor-pointer outline-none transition-opacity duration-500 [&:focus-visible>circle:nth-of-type(1)]:stroke-[var(--brand-ink)] [&:focus-visible>circle:nth-of-type(1)]:[stroke-width:3.5]"
-      opacity={dimmed ? 0.38 : 1}
+      opacity={dimmed ? 0.55 : 1}
     >
       <title>{place.name_th}</title>
       <circle cx={x} cy={y} r={9} fill="var(--card)" stroke="var(--slate)" strokeWidth={2} />
@@ -448,7 +470,7 @@ function ZoomButton({ label, onClick, children }: { label: string; onClick: () =
       aria-label={label}
       title={label}
       onClick={onClick}
-      className="grid size-9 place-items-center text-ink-soft transition-colors hover:bg-paper hover:text-ink not-last:border-b not-last:border-line"
+      className="grid size-11 place-items-center text-ink-soft transition-colors hover:bg-paper hover:text-ink not-last:border-b not-last:border-line lg:size-10"
     >
       {children}
     </button>
