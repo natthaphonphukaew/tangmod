@@ -1,0 +1,370 @@
+[
+ {
+  "id": "dorm-oc-sabai45-water",
+  "cat": "niche",
+  "q": "มีใครอยู่หอสบาย45 แล้วน้ำไม่ไหลบ้างไหม",
+  "expect": {
+   "include": [
+    "น้ำ"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc-female-4500",
+  "cat": "niche",
+  "q": "แนะนำหอผญ แบบอยู่คนเดียว เรทไม่เกิน 4500",
+  "expect": {
+   "include": [
+    "อาลี|เดซี่|พี\\.?เจ"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc-daily",
+  "cat": "niche",
+  "q": "มีคอนแทคหอพักรายวันมั้ยคับ",
+  "expect": {
+   "include": [
+    "สบาย|วิเศษสุข|อาลี|กุลภรณ์|Heliconia"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc-3-4-people",
+  "cat": "niche",
+  "q": "มีหอไหนอยู่ได้3-4คนมั้ยคะ",
+  "expect": {
+   "include": [
+    "สวนธน|เออร์แบน|C ?Urban"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc-parque-pet",
+  "cat": "niche",
+  "q": "ปาร์คเลี้ยงแมวได้มั้ย",
+  "expect": {
+   "include": [
+    "ไม่อนุญาต|ไม่ได้|ห้าม"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc-condo-price",
+  "cat": "niche",
+  "q": "คอนโดใกล้มอ ไลบรา คิวบ์ ไพรเวซี่ ราคาประมาณเท่าไหร่",
+  "expect": {
+   "include": [
+    "6,?000|6,?500|7,?500|8,?000"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc-kulaporn",
+  "cat": "niche",
+  "q": "หอพักกุลภรณ์ราคาเท่าไหร่ มีที่จอดรถไหม",
+  "expect": {
+   "include": [
+    "4,?000",
+    "จอด"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc-suanthon",
+  "cat": "niche",
+  "q": "บ้านสวนธนค่าห้องเดือนละเท่าไหร่",
+  "expect": {
+   "include": [
+    "[789],?000"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc-fai-luang",
+  "cat": "niche",
+  "q": "มีหอไหน ไฟหลวงบ้างคะ",
+  "expect": {
+   "include": [
+    "สวนธน|ดีพร้อม|ริสกี|การไฟฟ้า"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc-erawan",
+  "cat": "unknown",
+  "q": "หอเอราวัณอยู่ตรงไหน ค่าห้องเท่าไหร่",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "dorm-oc-vacancy-now",
+  "cat": "unknown",
+  "q": "ตอนนี้ไพรเวซี่ยังมีห้องว่างไหม",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "dorm-oc-short-contract",
+  "cat": "niche",
+  "q": "แนะนำหอพักหน้ามอ ที่มีสัญญาระยะสั้น 3-6 เดือนหน่อยค่ะ",
+  "expect": {
+   "include": [
+    "6 เดือน|ถาม|ยังไม่มีข้อมูล|รายวัน"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc-no-1yr",
+  "cat": "niche",
+  "q": "มีหอไหนที่ไม่มีสัญญาขั้นต่ำ1ปีบ้างมั้ยคับ พอดีจะอยู่ช่วงฝึกงาน",
+  "expect": {
+   "include": [
+    "6 เดือน|เออร์แบน|C ?Urban|รายวัน"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc-summer-2mo",
+  "cat": "niche",
+  "q": "มีใครปล่อยเช่าหอแถวมอช่วงปิดเทอม2เดือนนี้มั้ยคะ",
+  "expect": {
+   "include": [
+    "OpenChat|กลุ่ม|รายวัน|Heliconia"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc-2br-9000",
+  "cat": "niche",
+  "q": "มีหอไหนมี2ห้องนอนราคาไม่เกิน9000บ้างครับ",
+  "expect": {
+   "include": [
+    "สวนธน|คอสโม|ปาร์ค|Parque"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc-u-residence",
+  "cat": "niche",
+  "q": "ยูเรสซิเดนหลังมอ แยกชายหญิงไหม ค่าห้องเท่าไหร่",
+  "expect": {
+   "include": [
+    "6,?100",
+    "แยก"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc-cosmo-home",
+  "cat": "niche",
+  "q": "Cosmo Home ซอย45 ค่าห้องเท่าไหร่ มีสระไหม",
+  "expect": {
+   "include": [
+    "6,?500"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc-aiun-where",
+  "cat": "niche",
+  "q": "หอพักไออุ่นอยู่ตรงไหน ดีไหม",
+  "expect": {
+   "include": [
+    "พุทธบูชา ?44"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc-gate4",
+  "cat": "niche",
+  "q": "อยู่หอพุทธบูชา44 เดินเข้ามอประตูไหน ประตู4เปิดไหม",
+  "expect": {
+   "include": [
+    "ประตู ?4"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc-erawan-review",
+  "cat": "niche",
+  "q": "รีวิวเอราวัณหน่อยได้ไหมคะ กำลังจะย้ายเข้า",
+  "expect": {
+   "include": [
+    "เฟอร์"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc-move-furniture",
+  "cat": "unknown",
+  "q": "มีใครรับขนย้ายเฟอร์นิเจอร์ไหมคะ ย้ายตู้ชิ้นเดียว",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "dorm-oc3-44garden",
+  "cat": "niche",
+  "q": "ใครอยู่ 44 การ์เด้น เพลส บ้างคะ เป็นยังไงบ้างคะ",
+  "expect": {
+   "include": [
+    "4,?[13]00|นิติ|เน็ต"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc3-deeprom",
+  "cat": "niche",
+  "q": "มีใครเคยอยู่บ้านดีพร้อมไหมคะ รีวิวหน่อยได้ไหม",
+  "expect": {
+   "include": [
+    "ลิฟต์|เก็บเสียง|5,?300"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc3-sukkhawat-c",
+  "cat": "niche",
+  "q": "มีใครเคยอยู่ Sukkhawat ตึก C มั้ยคับ รีวิวทีคับ",
+  "expect": {
+   "include": [
+    "เน็ต"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc3-pet",
+  "cat": "niche",
+  "q": "มีหอไหนที่เลี้ยงสัตว์ได้บ้างคะ",
+  "expect": {
+   "include": [
+    "ริสกี|สวนธน"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc3-suanthon-pet",
+  "cat": "niche",
+  "q": "บ้านสวนธนเลี้ยงแมวได้ไหมคะ",
+  "expect": {
+   "include": [
+    "เจ้าของห้อง"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc3-pracha40",
+  "cat": "niche",
+  "q": "มีใครอยู่หอตรงประชาอุทิศ 40 บ้างไหมคะ ขอรีวิวหน่อยค่ะ",
+  "expect": {
+   "include": [
+    "วงจันทร์|อรุณรัตน์|กรีนไลฟ์|Green Life|Space Dragon|วีรภา|บ้านเลขที่ 9"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc3-walk-4000",
+  "cat": "niche",
+  "q": "หาหอพักราคาไม่เกิน4,000บาท เดินไปมอได้ค่ะ",
+  "expect": {
+   "include": [
+    "อาลี|มายโฮม|ริสกี|วิเศษสุข|เดซี่|The Living|พี.?เจ|วงจันทร์|อรุณรัตน์|กรีนไลฟ์|สบาย"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc3-bangmodplace-mixed",
+  "cat": "niche",
+  "q": "บางมดเพลสหอรวมมั้ยคะ",
+  "expect": {
+   "include": [
+    "หญิง"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc3-cube",
+  "cat": "niche",
+  "q": "หาห้องthe cube ประมาณ 7000 ถึง 7500",
+  "expect": {
+   "include": [
+    "7,?500"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc3-makro",
+  "cat": "niche",
+  "q": "มีหออยู่ใกล้ๆเเม็คโครแนะนำมั้ยคะ ขอทางเข้าไม่เปลี่ยว ราคาไม่แรงมาก",
+  "expect": {
+   "include": [
+    "Library|ไลบรา|Cube|คิวบ์"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc3-fai-kanfaifa",
+  "cat": "niche",
+  "q": "ใครมีหอพักคิดค่าไฟตามการไฟฟ้าแนะนำมั้ยคะ",
+  "expect": {
+   "include": [
+    "สวนธน|ดีพร้อม|ริสกี"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc3-6month-intern",
+  "cat": "niche",
+  "q": "มีหอแนะนำแถวนี้ที่สามารถทำสัญญา 6 เดือนได้มั้ยคะ พอดีเทอมสองมีฝึกงานอาจจะไม่ได้อยู่บางมด",
+  "expect": {
+   "include": [
+    "6 เดือน|เออร์แบน|C ?Urban"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc3-roommate",
+  "cat": "niche",
+  "q": "หาเมทผู้หญิง บ้านมด คนล่ะ 3,500",
+  "expect": {
+   "include": [
+    "OpenChat|กลุ่ม"
+   ]
+  }
+ },
+ {
+  "id": "dorm-oc3-quiet",
+  "cat": "unknown",
+  "q": "มีใครแนะนำหอที่ไหนเก็บเสียงดี ๆ มั้ยคะ แถวหน้ามอไม่เกิน5,000จะดีมากค่ะ",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "dorm-oc3-cosmo-parking",
+  "cat": "unknown",
+  "q": "Cosmo place เสียค่าจอดรถไหมครับ",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "dorm-oc3-sportclub-brother",
+  "cat": "unknown",
+  "q": "ธนบุรีสปอร์ตคลับหอหญิงถ้าจำเป็นจิงๆน้องชายเข้าได้มั้ยคะ",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "dorm-oc3-cherboon",
+  "cat": "unknown",
+  "q": "มีใครเคยอยู่หอเฌอบุญ 2 มั้ยครับช่วยรีวิวหน่อยครับ",
+  "expect": {
+   "admits_unknown": true
+  }
+ }
+]
