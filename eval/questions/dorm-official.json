@@ -1,0 +1,137 @@
+[
+ {
+  "id": "dorm-off-pet-inside",
+  "cat": "official",
+  "q": "หอในเลี้ยงแมวได้ไหม",
+  "expect": {
+   "include": [
+    "ห้าม|ไม่อนุญาต|ไม่ได้"
+   ]
+  }
+ },
+ {
+  "id": "dorm-off-curfew",
+  "cat": "official",
+  "q": "หอในต้องกลับเข้าหอกี่โมง",
+  "expect": {
+   "include": [
+    "24|เที่ยงคืน"
+   ]
+  }
+ },
+ {
+  "id": "dorm-off-cooking",
+  "cat": "official",
+  "q": "หอในทำอาหารได้ไหม ใช้เตาไฟฟ้าได้ไหม",
+  "expect": {
+   "include": [
+    "ห้าม"
+   ]
+  }
+ },
+ {
+  "id": "dorm-off-guest",
+  "cat": "official",
+  "q": "หอในพาเพื่อนขึ้นห้องได้ไหม",
+  "expect": {
+   "include": [
+    "อนุญาต|ห้าม"
+   ]
+  }
+ },
+ {
+  "id": "dorm-off-nail",
+  "cat": "official",
+  "q": "ตอกตะปูติดผนังห้องหอในโดนปรับไหม",
+  "expect": {
+   "include": [
+    "300"
+   ]
+  }
+ },
+ {
+  "id": "dorm-off-heliconia",
+  "cat": "official",
+  "q": "Heliconia House ราคาเท่าไหร่ อยู่ตรงไหน",
+  "expect": {
+   "include": [
+    "950|1,?200",
+    "จอดรถ|ชั้น 12|ชั้น 14"
+   ]
+  }
+ },
+ {
+  "id": "dorm-off-network-soi",
+  "cat": "official",
+  "q": "หอเฌอบุญอยู่ซอยไหน เป็นหอเครือข่ายของมอไหม",
+  "expect": {
+   "include": [
+    "45"
+   ]
+  }
+ },
+ {
+  "id": "dorm-off-sportclub-soi",
+  "cat": "official",
+  "q": "ธนบุรีสปอร์ตคลับอยู่ซอยประชาอุทิศเท่าไหร่",
+  "expect": {
+   "include": [
+    "33"
+   ]
+  }
+ },
+ {
+  "id": "dorm-off-deposit",
+  "cat": "official",
+  "q": "หอในค่าประกันเท่าไหร่",
+  "expect": {
+   "include": [
+    "3,?000|5,?000"
+   ]
+  }
+ },
+ {
+  "id": "dorm-off-water",
+  "cat": "official",
+  "q": "หอในค่าน้ำหน่วยละเท่าไหร่",
+  "expect": {
+   "include": [
+    "17|ไม่คิด"
+   ]
+  }
+ },
+ {
+  "id": "dorm-off-temp-daily",
+  "cat": "official",
+  "q": "พักหอในแบบรายวันราคาเท่าไหร่",
+  "expect": {
+   "include": [
+    "300|250|200"
+   ]
+  }
+ },
+ {
+  "id": "dorm-off-parcel",
+  "cat": "unknown",
+  "q": "หอในสั่งของส่งพัสดุต้องเขียนที่อยู่ยังไง",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "dorm-off-apply-round",
+  "cat": "unknown",
+  "q": "หอในรอบหลักเปิดสมัครเมื่อไหร่ ค่ายืนยันสิทธิ์เท่าไหร่",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "dorm-off-network-price",
+  "cat": "unknown",
+  "q": "หอมายลักษณ์ค่าห้องเท่าไหร่",
+  "expect": {
+   "admits_unknown": true
+  }
+ }
+]
