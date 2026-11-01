@@ -49,11 +49,11 @@
   },
   {
     "id": "residence",
-    "label": "หอพักนักศึกษา (บางมด)",
+    "label": "สำนักงานหอพักนักศึกษา มจธ. (ดูแลเฉพาะหอในและ Heliconia House ไม่ใช่หอนอกหรือคอนโด)",
     "phone": "02-470-8460-3",
     "social": "LINE @kmutt_residence",
     "web": "https://residencehall.kmutt.ac.th",
-    "topics": ["หอพัก"],
+    "topics": ["หอใน", "หอพักนักศึกษา", "Heliconia House"],
     "source_url": "https://residencehall.kmutt.ac.th/?p=16940"
   },
   {
