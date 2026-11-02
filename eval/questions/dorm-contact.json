@@ -142,9 +142,6 @@
   "expect": {
    "include": [
     "Google Maps|แหล่งที่มา"
-   ],
-   "exclude": [
-    "8460|kmutt_residence"
    ]
   }
  },
