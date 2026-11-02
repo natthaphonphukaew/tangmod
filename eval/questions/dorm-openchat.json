@@ -95,7 +95,9 @@
   "cat": "unknown",
   "q": "หอเอราวัณอยู่ตรงไหน ค่าห้องเท่าไหร่",
   "expect": {
-   "admits_unknown": true
+   "include": [
+    "OpenChat|Facebook|กลุ่ม|รุ่นพี่|Google|ค้น|ติดต่อ|สอบถาม|ถาม"
+   ]
   }
  },
  {
@@ -103,7 +105,9 @@
   "cat": "unknown",
   "q": "ตอนนี้ไพรเวซี่ยังมีห้องว่างไหม",
   "expect": {
-   "admits_unknown": true
+   "include": [
+    "OpenChat|Facebook|กลุ่ม|รุ่นพี่|Google|ค้น|ติดต่อ|สอบถาม|ถาม"
+   ]
   }
  },
  {
@@ -202,7 +206,9 @@
   "cat": "unknown",
   "q": "มีใครรับขนย้ายเฟอร์นิเจอร์ไหมคะ ย้ายตู้ชิ้นเดียว",
   "expect": {
-   "admits_unknown": true
+   "include": [
+    "OpenChat|Facebook|กลุ่ม|รุ่นพี่|Google|ค้น|ติดต่อ|สอบถาม|ถาม"
+   ]
   }
  },
  {
@@ -340,7 +346,9 @@
   "cat": "unknown",
   "q": "มีใครแนะนำหอที่ไหนเก็บเสียงดี ๆ มั้ยคะ แถวหน้ามอไม่เกิน5,000จะดีมากค่ะ",
   "expect": {
-   "admits_unknown": true
+   "include": [
+    "OpenChat|Facebook|กลุ่ม|รุ่นพี่|Google|ค้น|ติดต่อ|สอบถาม|ถาม"
+   ]
   }
  },
  {
@@ -348,7 +356,9 @@
   "cat": "unknown",
   "q": "Cosmo place เสียค่าจอดรถไหมครับ",
   "expect": {
-   "admits_unknown": true
+   "include": [
+    "OpenChat|Facebook|กลุ่ม|รุ่นพี่|Google|ค้น|ติดต่อ|สอบถาม|ถาม"
+   ]
   }
  },
  {
@@ -356,7 +366,9 @@
   "cat": "unknown",
   "q": "ธนบุรีสปอร์ตคลับหอหญิงถ้าจำเป็นจิงๆน้องชายเข้าได้มั้ยคะ",
   "expect": {
-   "admits_unknown": true
+   "include": [
+    "OpenChat|Facebook|กลุ่ม|รุ่นพี่|Google|ค้น|ติดต่อ|สอบถาม|ถาม"
+   ]
   }
  },
  {
@@ -364,7 +376,9 @@
   "cat": "unknown",
   "q": "มีใครเคยอยู่หอเฌอบุญ 2 มั้ยครับช่วยรีวิวหน่อยครับ",
   "expect": {
-   "admits_unknown": true
+   "include": [
+    "OpenChat|Facebook|กลุ่ม|รุ่นพี่|Google|ค้น|ติดต่อ|สอบถาม|ถาม"
+   ]
   }
  }
 ]

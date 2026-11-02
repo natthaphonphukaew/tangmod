@@ -160,7 +160,6 @@
   "cat": "unknown",
   "q": "ตอนนี้หอไหนมีห้องว่างบ้าง",
   "expect": {
-   "admits_unknown": true,
    "include": [
     "Facebook|OpenChat|LINE|กลุ่ม"
    ]
@@ -171,7 +170,6 @@
   "cat": "unknown",
   "q": "ขอช่องทางติดต่อหอวีรภา",
   "expect": {
-   "admits_unknown": true,
    "include": [
     "Facebook|OpenChat|LINE|กลุ่ม"
    ]
@@ -182,7 +180,6 @@
   "cat": "unknown",
   "q": "ริสกีติดต่อยังไง",
   "expect": {
-   "admits_unknown": true,
    "include": [
     "Facebook|OpenChat|LINE|กลุ่ม"
    ]

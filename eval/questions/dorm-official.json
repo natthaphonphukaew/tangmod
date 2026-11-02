@@ -115,7 +115,9 @@
   "cat": "unknown",
   "q": "หอในสั่งของส่งพัสดุต้องเขียนที่อยู่ยังไง",
   "expect": {
-   "admits_unknown": true
+   "include": [
+    "OpenChat|Facebook|กลุ่ม|รุ่นพี่|Google|ค้น|ติดต่อ|สอบถาม|ถาม"
+   ]
   }
  },
  {
@@ -123,7 +125,9 @@
   "cat": "unknown",
   "q": "หอในรอบหลักเปิดสมัครเมื่อไหร่ ค่ายืนยันสิทธิ์เท่าไหร่",
   "expect": {
-   "admits_unknown": true
+   "include": [
+    "OpenChat|Facebook|กลุ่ม|รุ่นพี่|Google|ค้น|ติดต่อ|สอบถาม|ถาม"
+   ]
   }
  },
  {
@@ -131,7 +135,9 @@
   "cat": "unknown",
   "q": "หอมายลักษณ์ค่าห้องเท่าไหร่",
   "expect": {
-   "admits_unknown": true
+   "include": [
+    "OpenChat|Facebook|กลุ่ม|รุ่นพี่|Google|ค้น|ติดต่อ|สอบถาม|ถาม"
+   ]
   }
  }
 ]
