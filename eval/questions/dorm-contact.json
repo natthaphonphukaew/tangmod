@@ -1,0 +1,191 @@
+[
+ {
+  "id": "dorm-ct-suanthon",
+  "cat": "niche",
+  "q": "บ้านสวนธนติดต่อใครเรื่องเช่าห้อง",
+  "expect": {
+   "include": [
+    "Facebook|OpenChat|LINE|กลุ่ม"
+   ],
+   "exclude": [
+    "8460|kmutt_residence"
+   ]
+  }
+ },
+ {
+  "id": "dorm-ct-bangmodplace",
+  "cat": "niche",
+  "q": "ขอเบอร์บางมดเพลสหน่อย",
+  "expect": {
+   "include": [
+    "Google Maps|แหล่งที่มา"
+   ],
+   "exclude": [
+    "8460|kmutt_residence"
+   ]
+  }
+ },
+ {
+  "id": "dorm-ct-sabai",
+  "cat": "niche",
+  "q": "หอสบาย 45 ติดต่อยังไง ขอไลน์หน่อย",
+  "expect": {
+   "include": [
+    "Google Maps|แหล่งที่มา"
+   ],
+   "exclude": [
+    "8460|kmutt_residence"
+   ]
+  }
+ },
+ {
+  "id": "dorm-ct-garden",
+  "cat": "niche",
+  "q": "ติดต่อ 44 Garden Place ยังไง",
+  "expect": {
+   "include": [
+    "Google Maps|แหล่งที่มา"
+   ],
+   "exclude": [
+    "8460|kmutt_residence"
+   ]
+  }
+ },
+ {
+  "id": "dorm-ct-kulaporn",
+  "cat": "niche",
+  "q": "อยากเช่ากุลภรณ์ ติดต่อใคร",
+  "expect": {
+   "include": [
+    "Google Maps|แหล่งที่มา"
+   ],
+   "exclude": [
+    "8460|kmutt_residence"
+   ]
+  }
+ },
+ {
+  "id": "dorm-ct-roommate",
+  "cat": "niche",
+  "q": "หาเมทที่ไหน",
+  "expect": {
+   "include": [
+    "Facebook|OpenChat|LINE|กลุ่ม"
+   ]
+  }
+ },
+ {
+  "id": "dorm-ct-sublet",
+  "cat": "niche",
+  "q": "อยากหาห้องเช่าต่อจากรุ่นพี่ ไปถามที่ไหน",
+  "expect": {
+   "include": [
+    "Facebook|OpenChat|LINE|กลุ่ม"
+   ]
+  }
+ },
+ {
+  "id": "dorm-ct-groups",
+  "cat": "niche",
+  "q": "มีกลุ่มเฟสหรือไลน์หาหอไหม",
+  "expect": {
+   "include": [
+    "Facebook|เฟส",
+    "OpenChat|LINE|ไลน์"
+   ]
+  }
+ },
+ {
+  "id": "dorm-ct-cube",
+  "cat": "niche",
+  "q": "อยากเช่า The Cube ติดต่อใคร",
+  "expect": {
+   "include": [
+    "Facebook|OpenChat|LINE|กลุ่ม"
+   ],
+   "exclude": [
+    "8460|kmutt_residence"
+   ]
+  }
+ },
+ {
+  "id": "dorm-ct-kave",
+  "cat": "niche",
+  "q": "Kave ติดต่อนิติบุคคลยังไง",
+  "expect": {
+   "include": [
+    "Facebook|OpenChat|LINE|กลุ่ม"
+   ],
+   "exclude": [
+    "8460|kmutt_residence"
+   ]
+  }
+ },
+ {
+  "id": "dorm-ct-cherboon",
+  "cat": "niche",
+  "q": "หอเฌอบุญ ติดต่อยังไง",
+  "expect": {
+   "include": [
+    "Google Maps|แหล่งที่มา"
+   ],
+   "exclude": [
+    "แขวงมาเรียน",
+    "8460|kmutt_residence"
+   ]
+  }
+ },
+ {
+  "id": "dorm-ct-erawan",
+  "cat": "niche",
+  "q": "ขอเบอร์เอราวัณ",
+  "expect": {
+   "include": [
+    "Google Maps|แหล่งที่มา"
+   ]
+  }
+ },
+ {
+  "id": "dorm-ct-office-inside",
+  "cat": "official",
+  "q": "ขอเบอร์ติดต่อหอพัก มจธ. หน่อย",
+  "expect": {
+   "include": [
+    "8460|kmutt_residence"
+   ]
+  }
+ },
+ {
+  "id": "dorm-ct-vacancy",
+  "cat": "unknown",
+  "q": "ตอนนี้หอไหนมีห้องว่างบ้าง",
+  "expect": {
+   "admits_unknown": true,
+   "include": [
+    "Facebook|OpenChat|LINE|กลุ่ม"
+   ]
+  }
+ },
+ {
+  "id": "dorm-ct-notfound",
+  "cat": "unknown",
+  "q": "ขอช่องทางติดต่อหอวีรภา",
+  "expect": {
+   "admits_unknown": true,
+   "include": [
+    "Facebook|OpenChat|LINE|กลุ่ม"
+   ]
+  }
+ },
+ {
+  "id": "dorm-ct-riskee",
+  "cat": "unknown",
+  "q": "ริสกีติดต่อยังไง",
+  "expect": {
+   "admits_unknown": true,
+   "include": [
+    "Facebook|OpenChat|LINE|กลุ่ม"
+   ]
+  }
+ }
+]
