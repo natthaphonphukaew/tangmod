@@ -1,8 +1,8 @@
 ---
 namespace: general
-tier: student
+tier: official
 title: ชมรมและชุมชนสตาร์ทอัพของ มจธ. — KMUTT Startup Club, KMUTT Hatch, TEDxKMUTT (ช่องทางที่ทีมงานทางมดรวบรวม)
-source_url:
+source_url: https://www.facebook.com/p/KMUTT-Startup-Club-100090000707117/
 updated_at: 2026-11-03
 ---
 
