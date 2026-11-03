@@ -1,0 +1,205 @@
+[
+ {
+  "id": "su-kx-where",
+  "cat": "niche",
+  "q": "ตึก KX อยู่ในมอไหมคับ ไปยังไง",
+  "expect": {
+   "include": [
+    "วงเวียนใหญ่|กรุงธนบุรี|ไม่ได้อยู่"
+   ]
+  }
+ },
+ {
+  "id": "su-techbite",
+  "cat": "niche",
+  "q": "TechBite คืออะไร นศ.สมัครได้ป่าว",
+  "expect": {
+   "include": [
+    "KX|บ่มเพาะ"
+   ]
+  }
+ },
+ {
+  "id": "su-sit-innoventure-prize",
+  "cat": "niche",
+  "q": "SIT Innoventure ชนะแล้วได้อะไร",
+  "expect": {
+   "include": [
+    "10,?000"
+   ]
+  }
+ },
+ {
+  "id": "su-tedfund-student",
+  "cat": "niche",
+  "q": "อยากได้ทุนทำสตาร์ทอัพ TED Fund นักศึกษาขอได้ไหม",
+  "expect": {
+   "include": [
+    "150,?000|Matching|กระทรวง"
+   ]
+  }
+ },
+ {
+  "id": "su-kx-travel",
+  "cat": "niche",
+  "q": "จะไปตึก KX จากมอต้องนั่งอะไร",
+  "expect": {
+   "include": [
+    "BTS|วงเวียนใหญ่"
+   ]
+  }
+ },
+ {
+  "id": "su-bpc",
+  "cat": "niche",
+  "q": "มอมีประกวดแผนธุรกิจไหม",
+  "expect": {
+   "include": [
+    "Business Plan|Innovate to Impact|แผนธุรกิจ"
+   ]
+  }
+ },
+ {
+  "id": "su-patent-unknown",
+  "cat": "unknown",
+  "q": "อยากจดสิทธิบัตรผลงานนักศึกษา ทำยังไง",
+  "expect": {
+   "include": [
+    "ripo|RIPO"
+   ]
+  }
+ },
+ {
+  "id": "su-startup-club",
+  "cat": "niche",
+  "q": "ชมรมสตาร์ทอัพของมอสมัครยังไง มีช่องทางไหนบ้าง",
+  "expect": {
+   "include": [
+    "startup.kmutt|LINE|Facebook|Startup Club"
+   ]
+  }
+ },
+ {
+  "id": "su-hatch",
+  "cat": "niche",
+  "q": "Hatch มจธ. คืออะไร ติดต่อที่ไหน",
+  "expect": {
+   "include": [
+    "LX|พหุวิทยาการ|8391"
+   ]
+  }
+ },
+ {
+  "id": "su-ted-youth",
+  "cat": "niche",
+  "q": "TED Youth Startup x TechBite ทุนเท่าไหร่ ปิดรับเมื่อไหร่",
+  "expect": {
+   "include": [
+    "150,?000",
+    "31 ต.ค|31 ตุลาคม"
+   ]
+  }
+ },
+ {
+  "id": "su-ted-ideation",
+  "cat": "niche",
+  "q": "อยากได้ทุนไอเดียสตาร์ทอัพ 150,000 ของ TED Fund ต้องเป็นยังไง",
+  "expect": {
+   "include": [
+    "IDEATION|TED Fellow|3 คน"
+   ]
+  }
+ },
+ {
+  "id": "su-kx-coworking-channel",
+  "cat": "unknown",
+  "q": "ค่าเช่า co-working ที่ KX เท่าไหร่",
+  "expect": {
+   "include": [
+    "02-?470-?7906|contact@kxinnovation|facebook.com/kxinnovation"
+   ]
+  }
+ },
+ {
+  "id": "su-techbite-equity-channel",
+  "cat": "unknown",
+  "q": "TechBite เอาหุ้นไหม รอบหน้าเปิดเมื่อไหร่ ไปดูที่ไหน",
+  "expect": {
+   "include": [
+    "TECHBITE ?Incubator|7906|7904"
+   ]
+  }
+ },
+ {
+  "id": "sc-music",
+  "cat": "niche",
+  "q": "มีชมรมดนตรีอะไรบ้าง",
+  "expect": {
+   "include": [
+    "ดนตรีสากล|ดนตรีไทย|ประสานเสียง"
+   ]
+  }
+ },
+ {
+  "id": "sc-photo",
+  "cat": "niche",
+  "q": "อยากเข้าชมรมถ่ายรูป ติดต่อทางไหน",
+  "expect": {
+   "include": [
+    "kmuttphotoclub"
+   ]
+  }
+ },
+ {
+  "id": "sc-football",
+  "cat": "niche",
+  "q": "ชมรมฟุตบอลมอ ไอจีอะไร",
+  "expect": {
+   "include": [
+    "kmutt_football"
+   ]
+  }
+ },
+ {
+  "id": "sc-volunteer",
+  "cat": "niche",
+  "q": "อยากไปค่ายอาสา มีชมรมจิตอาสาไหม",
+  "expect": {
+   "include": [
+    "อาสาพัฒนาชนบท|Youth SA|rsa.bangmod"
+   ]
+  }
+ },
+ {
+  "id": "sc-openworld",
+  "cat": "niche",
+  "q": "เปิดโลกกิจกรรมปีนี้วันไหน ฟรีไหม",
+  "expect": {
+   "include": [
+    "14 ก.ย|14 กันยายน",
+    "ฟรี|ไม่มีค่าใช้จ่าย"
+   ]
+  }
+ },
+ {
+  "id": "sc-openworld-hours",
+  "cat": "niche",
+  "q": "งานเปิดโลกกิจกรรมได้ชั่วโมงกิจกรรมไหม",
+  "expect": {
+   "include": [
+    "ชั่วโมงกิจกรรม",
+    "แต้ม|สะสม"
+   ]
+  }
+ },
+ {
+  "id": "sc-join-unknown",
+  "cat": "unknown",
+  "q": "จะสมัครชมรมต้องทำยังไง รับสมัครเมื่อไหร่",
+  "expect": {
+   "include": [
+    "IG|Instagram|เปิดโลกกิจกรรม|8110"
+   ]
+  }
+ }
+]
