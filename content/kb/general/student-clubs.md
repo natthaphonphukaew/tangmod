@@ -21,7 +21,7 @@ updated_at: 2026-11-03
 - ชมรมเทนนิส: kmutttennis · FB kmutt tennis club
 - ชมรมฟุตบอล: kmutt_football · FB KMUTT Football · TikTok kmutt.football
 - ชมรมดาบสากล: kmutt.fencingclub
-- ชมรมกีฬา KMUTT Esports: FB kmuttesports
+- ชมรมกีฬา KMUTT Esports (อีสปอร์ต เกม): FB kmuttesports (facebook.com/kmuttesports)
 - ชมรมบริดจ์: bridgemod.kmutt
 - ชมรมสันทนาการและเชียร์: alumilize_kmutt · FB Alumilize KMUTT · TikTok alumilize_kmutt
 - ชมรมบาสเกตบอล: kmutt.basketball_club
@@ -41,8 +41,8 @@ updated_at: 2026-11-03
 ยังไม่มีข้อมูลว่ากิจกรรมของชมรมนับเป็นชั่วโมงกิจกรรมกี่ชั่วโมง ถามชมรมหรือกิจการนักศึกษา 02-470-8110 · ข้อมูลรวบรวมจากประกาศสโมสรนักศึกษา 3 พ.ย. 2569
 
 ## ชมรมดนตรี เต้น ถ่ายภาพ ร้องเพลง ศาสนา (ฝ่ายศิลปะและวัฒนธรรม)
-ชมรมฝ่ายศิลปะและวัฒนธรรม 11 ชมรม:
-- ชมรมบันเทิงและดนตรีสากล (วงดนตรี): IG entertainclub.kmutt · FB ชมรมบันเทิงและดนตรีสากล มจธ.
+ชมรมฝ่ายศิลปะและวัฒนธรรม 11 ชมรม เป็นชมรมดนตรี 3 ชมรม (บันเทิงและดนตรีสากล, ดนตรีไทย, ประสานเสียง) ส่วนชมรมเต้นและไอดอลเป็นชมรมการแสดง ไม่ใช่ชมรมดนตรี:
+- ชมรมบันเทิงและดนตรีสากล (วงดนตรี): IG entertainclub.kmutt (ชื่อผู้ใช้ไม่มี ig_ นำหน้า) · FB ชมรมบันเทิงและดนตรีสากล มจธ.
 - ชมรมดนตรีไทย: IG thaimusicclub.kmutt · TikTok thaimusicclub.kmutt · FB ชมรมดนตรีไทย มจธ.
 - ชมรมประสานเสียง (KMUTT Chorus): IG kmuttchorus.official · FB KMUTT Chorus · TikTok @kmuttchorus · อีเมลของชมรม kmuttchorusofficial@gmail.com
 - ชมรมศิลปะและการถ่ายภาพ: IG kmuttphotoclub
