@@ -39,6 +39,27 @@
   --building-persona-edge: #d99a74;
   --building-lit: #ffe39a;
 
+  /* แผนที่ภาพวาด (components/map/CampusMap.tsx) */
+  --map-bg: #f3eee3;
+  --map-ground: #eef1df;
+  --map-lawn: #d3e8b4;
+  --map-tree: #7fb35a;
+  --map-tree-light: #a8d27c;
+  --map-water: #a8d6ea;
+  --map-road: #ffffff;
+  --map-road-edge: #d8cfbf;
+  --map-footway: #e3d4b8;
+  --map-parking: #e6e0d4;
+  --map-field: #86bd6b;
+  --map-track: #de8a68;
+  --map-court: #78b3d3;
+  --map-roof: #f7f4ef;
+  --map-wall: #dcd5ca;
+  --map-wall-shade: #c8bfb2;
+  --map-roof-key: #ffe0cc;
+  --map-wall-key: #f3a57c;
+  --map-wall-key-shade: #e38b5f;
+
   --ok: #276a43; /* ≥5:1 บนพื้น ok/10 */
   --warn: #94600f; /* 5.2:1 บน card (เดิม #b7791f ได้ 3.6 ไม่ผ่าน AA) */
   --input-edge: #8f8576; /* ขอบช่องกรอก ≥3:1 ตาม WCAG 1.4.11 */

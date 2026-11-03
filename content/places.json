@@ -548,32 +548,33 @@
       "สาย 21, 75, 88",
       "สองแถวสาย 77, 88, 99"
     ],
-    "description": "รถเมล์สาย 21, 75, 88 ผ่านหน้ามหาวิทยาลัย (รุ่นพี่บอกว่าที่ผ่านจริงมีแค่ 21 กับ 75) สองแถวและรถเล็กสาย 77, 88, 99 วิ่งไปแยก กม.9 และสุขสวัสดิ์ ถ้ามาจาก BTS ให้ลงวงเวียนใหญ่ แล้วต่อสาย 21 หรือ 75",
-    "tier": "mock",
-    "source_note": "เส้นทางรถมาจากหน้าเว็บทางการ แต่ตำแหน่งป้ายบนแผนที่ยังเป็นค่าประมาณ",
+    "description": "ป้ายรถเมล์ \"มจธ.\" บน ถ.ประชาอุทิศ หน้ามหาวิทยาลัย (ตำแหน่งจาก OpenStreetMap) อีกฝั่งถนนมีป้าย \"ตรงข้าม มจธ.\" รถเมล์สาย 21 (วัดคู่สร้าง – จุฬาฯ) และ 75 (วัดพุทธบูชา – หัวลำโพง) ผ่านหน้ามหาวิทยาลัย สองแถวและรถเล็กสาย 77, 88, 99 วิ่งไปแยก กม.9 และสุขสวัสดิ์ ถ้ามาจาก BTS ให้ลงวงเวียนใหญ่ แล้วต่อสาย 21 หรือ 75",
+    "tier": "student",
     "source_url": "https://www.kmutt.ac.th/en/?p=646",
-    "updated_at": "2026-10-28"
+    "updated_at": "2026-11-03"
   },
   {
     "id": "main_gate",
-    "name_th": "ประตูหน้า (ถ.ประชาอุทิศ)",
-    "name_en": "Main gate",
+    "name_th": "ประตูหน้า (ถ.ประชาอุทิศ ตรงข้ามซอยประชาอุทิศ 45)",
+    "name_en": "Front gate (Pracha Uthit Rd.)",
     "short": "ประตูหน้า",
     "kind": "landmark",
     "aliases": [
       "ประตูหน้า",
       "ประตูใหญ่",
-      "ทางเข้า"
+      "ทางเข้า",
+      "ประตู 1",
+      "ประตูหน้ามอ"
     ],
     "tags": [
       "ทางเข้าหลัก",
-      "ร้านอาหารหน้ามอ"
+      "ใกล้ลานพระจอม",
+      "ใกล้ป้ายรถเมล์ มจธ."
     ],
-    "description": "ทางเข้าหลักของมหาวิทยาลัยฝั่งถนนประชาอุทิศ แถวนี้มีร้านอาหารหน้ามอ ที่อยู่ 126 ถ.ประชาอุทิศ แขวงบางมด เขตทุ่งครุ กรุงเทพฯ 10140",
-    "tier": "mock",
-    "source_note": "ตำแหน่งบนแผนที่เป็นค่าประมาณ ยังไม่ได้ยืนยันด้วยการเดินสำรวจ",
-    "source_url": "https://www.kmutt.ac.th/en/about-kmutt/contact-us/",
-    "updated_at": "2026-10-28"
+    "description": "ทางเข้าฝั่งถนนประชาอุทิศ ตรงปากซอยประชาอุทิศ 45 ใกล้ลานพระจอมและป้ายรถเมล์ \"มจธ.\" คนนอกที่มาติดต่อให้เข้าประตู 1 แล้วแลกบัตรที่จุดตรวจ (เว็บรับสมัครบอกให้มาทางซอยประชาอุทิศ 45 จึงน่าจะเป็นประตูนี้ ยังไม่ได้ยืนยันป้ายหน้าประตู) ที่อยู่ 126 ถ.ประชาอุทิศ แขวงบางมด เขตทุ่งครุ กรุงเทพฯ 10140",
+    "tier": "student",
+    "source_url": "https://www.openstreetmap.org/node/4200331143",
+    "updated_at": "2026-11-03"
   },
   {
     "id": "S1",
@@ -869,6 +870,130 @@
     "tier": "official",
     "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
     "conflict_note": "หน้าหลักสูตรของ มจธ. ระบุที่อยู่ GMI ว่าอาคารเรียนรวม 5 ชั้น 8 แต่ผังมหาวิทยาลัย (MapNavi) มีอาคาร N19 ชื่ออาคาร GMI ใช้ N19 ตามผัง",
+    "updated_at": "2026-11-03"
+  },
+  {
+    "id": "gate_2",
+    "name_th": "ประตู 2 (ฝั่งใต้ ใกล้คณะพลังงาน)",
+    "name_en": "Gate #2",
+    "short": "ประตู 2",
+    "kind": "landmark",
+    "aliases": [
+      "ประตู 2",
+      "Gate 2",
+      "ประตูหลัง"
+    ],
+    "tags": [],
+    "description": "ประตูด้านใต้ของมหาวิทยาลัย ใกล้ตึกคณะพลังงานสิ่งแวดล้อมและวัสดุ (S8–S9) ชื่อ \"Gate #2\" และตำแหน่งมาจาก OpenStreetMap · บล็อกนักศึกษาบอกว่ามีประตูหลังใกล้ CB3 ด้วย แต่ยังไม่รู้ว่าเป็นประตูไหน",
+    "tier": "student",
+    "source_url": "https://www.openstreetmap.org/node/4200380479",
+    "updated_at": "2026-11-03"
+  },
+  {
+    "id": "shuttle_stop",
+    "name_th": "จุดขึ้นรถ shuttle (ระหว่างวิทยาเขต)",
+    "name_en": "KMUTT Shuttle Bus stop",
+    "short": "shuttle",
+    "kind": "transport",
+    "aliases": [
+      "รถ shuttle",
+      "shuttle",
+      "รถรับส่ง",
+      "รถไปบางขุนเทียน",
+      "ป้ายรถ shuttle"
+    ],
+    "tags": [],
+    "description": "จุดจอดรถรับส่ง KMUTT Shuttle Bus ตาม OpenStreetMap อยู่หน้าตึกสำนักงานอธิการบดี (N2) ใกล้ Welcome Center (บล็อกนักศึกษาบอกว่าอยู่ตรงข้ามตึก N2 เหมือนกัน) รถไปบางขุนเทียนฟรีสำหรับนักศึกษา คนนอก 45 บาทต่อเที่ยว ติดต่อเรื่องรถ 02-470-8332",
+    "tier": "student",
+    "source_url": "https://www.openstreetmap.org/node/4348163154",
+    "updated_at": "2026-11-03"
+  },
+  {
+    "id": "seven_eleven_eng",
+    "name_th": "7-Eleven ฝั่งตึกวิศวะ",
+    "name_en": "7-Eleven (Engineering side)",
+    "short": "7-Eleven",
+    "kind": "service",
+    "aliases": [
+      "เซเว่น",
+      "7-11",
+      "7-Eleven",
+      "ร้านสะดวกซื้อ"
+    ],
+    "tags": [],
+    "description": "ร้าน 7-Eleven ในมหาวิทยาลัย อยู่ระหว่างภาควิศวกรรมเคมี (S15) กับตึกวิศววัฒนะ (S4) ตาม OpenStreetMap · ในมอมี 7-Eleven 2 แห่ง (เว็บ มจธ.)",
+    "tier": "student",
+    "source_url": "https://www.openstreetmap.org/way/1333533931",
+    "updated_at": "2026-11-03"
+  },
+  {
+    "id": "seven_eleven_dorm",
+    "name_th": "7-Eleven ฝั่งหอพัก",
+    "name_en": "7-Eleven (Dormitory side)",
+    "short": "7-Eleven",
+    "kind": "service",
+    "aliases": [
+      "เซเว่นหอ",
+      "7-11 หอ",
+      "เซเว่นใต้หอ",
+      "ร้านสะดวกซื้อหอ"
+    ],
+    "tags": [],
+    "description": "ร้าน 7-Eleven แห่งที่สองในมหาวิทยาลัย อยู่ฝั่งหอพักนักศึกษาหญิง (S6) ตาม OpenStreetMap",
+    "tier": "student",
+    "source_url": "https://www.openstreetmap.org/node/6207310420",
+    "updated_at": "2026-11-03"
+  },
+  {
+    "id": "lan_phrachom",
+    "name_th": "ลานพระจอม",
+    "name_en": "King Mongkut Monument Plaza",
+    "short": "ลานพระจอม",
+    "kind": "landmark",
+    "aliases": [
+      "ลานพระจอม",
+      "พระรูปพระจอมเกล้า",
+      "อนุสาวรีย์"
+    ],
+    "tags": [],
+    "description": "ลานพระบรมราชานุสาวรีย์พระจอมเกล้า ใกล้ประตูหน้าฝั่ง ถ.ประชาอุทิศ ด้านหลังมีสระน้ำ ชื่อและตำแหน่งจาก OpenStreetMap",
+    "tier": "student",
+    "source_url": "https://www.openstreetmap.org/node/3176409880",
+    "updated_at": "2026-11-03"
+  },
+  {
+    "id": "football_field",
+    "name_th": "สนามฟุตบอลและลู่วิ่ง",
+    "name_en": "Football field and running track",
+    "short": "สนามฟุตบอล",
+    "kind": "landmark",
+    "aliases": [
+      "สนามฟุตบอล",
+      "สนามบอล",
+      "ลู่วิ่ง",
+      "สนามกีฬา",
+      "สนามฟุตซอล"
+    ],
+    "tags": [],
+    "description": "สนามฟุตบอลกับลู่วิ่ง 4 ลู่ และสนามฟุตซอล 2 สนาม อยู่หน้าตึก 190 ปี (S14) ที่มีฟิตเนสและโรงอาหาร KFC (รูปร่างสนามจาก OpenStreetMap) เว็บ มจธ. บอกว่ามีสนามฟุตบอลและลู่วิ่ง ดูแลโดยฝ่ายกีฬา 02-470-8092",
+    "tier": "student",
+    "source_url": "https://www.kmutt.ac.th/en/?p=453",
+    "updated_at": "2026-11-03"
+  },
+  {
+    "id": "tennis_court",
+    "name_th": "สนามเทนนิส",
+    "name_en": "Tennis court",
+    "short": "เทนนิส",
+    "kind": "landmark",
+    "aliases": [
+      "สนามเทนนิส",
+      "เทนนิส"
+    ],
+    "tags": [],
+    "description": "สนามเทนนิสข้างตึก 190 ปี (S14) ตำแหน่งจาก OpenStreetMap · เว็บ มจธ. บอกว่ามีสนามเทนนิส ดูแลโดยฝ่ายกีฬา 02-470-8092",
+    "tier": "student",
+    "source_url": "https://www.openstreetmap.org/way/1333533933",
     "updated_at": "2026-11-03"
   }
 ]
