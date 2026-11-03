@@ -1,0 +1,41 @@
+[
+ {
+  "id": "gym-where",
+  "cat": "official",
+  "q": "ยิมในมออยู่ไหน",
+  "expect": {
+   "places_any": [
+    "S14"
+   ],
+   "include": [
+    "S14|190 ปี"
+   ],
+   "exclude": [
+    "ตึก SIT|N11"
+   ]
+  }
+ },
+ {
+  "id": "gym-floor",
+  "cat": "official",
+  "q": "ฟิตเนสของมหาลัยอยู่ตึกไหน ชั้นอะไร",
+  "expect": {
+   "places_any": [
+    "S14"
+   ],
+   "include": [
+    "ชั้น\\W{0,3}(ที่\\W{0,3})?1|ชั้นล่าง"
+   ]
+  }
+ },
+ {
+  "id": "gym-indoor-court",
+  "cat": "official",
+  "q": "อยากเล่นบาสในร่ม โรงยิมอยู่ตรงไหน",
+  "expect": {
+   "places_any": [
+    "S14"
+   ]
+  }
+ }
+]
