@@ -129,5 +129,77 @@
     "TECHBITE ?Incubator|7906|7904"
    ]
   }
+ },
+ {
+  "id": "sc-music",
+  "cat": "niche",
+  "q": "มีชมรมดนตรีอะไรบ้าง",
+  "expect": {
+   "include": [
+    "ดนตรีสากล|ดนตรีไทย|ประสานเสียง"
+   ]
+  }
+ },
+ {
+  "id": "sc-photo",
+  "cat": "niche",
+  "q": "อยากเข้าชมรมถ่ายรูป ติดต่อทางไหน",
+  "expect": {
+   "include": [
+    "kmuttphotoclub"
+   ]
+  }
+ },
+ {
+  "id": "sc-football",
+  "cat": "niche",
+  "q": "ชมรมฟุตบอลมอ ไอจีอะไร",
+  "expect": {
+   "include": [
+    "kmutt_football"
+   ]
+  }
+ },
+ {
+  "id": "sc-volunteer",
+  "cat": "niche",
+  "q": "อยากไปค่ายอาสา มีชมรมจิตอาสาไหม",
+  "expect": {
+   "include": [
+    "อาสาพัฒนาชนบท|Youth SA|rsa.bangmod"
+   ]
+  }
+ },
+ {
+  "id": "sc-openworld",
+  "cat": "niche",
+  "q": "เปิดโลกกิจกรรมปีนี้วันไหน ฟรีไหม",
+  "expect": {
+   "include": [
+    "14 ก.ย|14 กันยายน",
+    "ฟรี|ไม่มีค่าใช้จ่าย"
+   ]
+  }
+ },
+ {
+  "id": "sc-openworld-hours",
+  "cat": "niche",
+  "q": "งานเปิดโลกกิจกรรมได้ชั่วโมงกิจกรรมไหม",
+  "expect": {
+   "include": [
+    "ชั่วโมงกิจกรรม",
+    "แต้ม|สะสม"
+   ]
+  }
+ },
+ {
+  "id": "sc-join-unknown",
+  "cat": "unknown",
+  "q": "จะสมัครชมรมต้องทำยังไง รับสมัครเมื่อไหร่",
+  "expect": {
+   "include": [
+    "IG|Instagram|เปิดโลกกิจกรรม|8110"
+   ]
+  }
  }
 ]
