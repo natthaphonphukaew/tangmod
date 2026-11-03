@@ -59,6 +59,8 @@ const MapLayout = z.object({
   ),
   /** ประตูอื่น ๆ ในมอ (ตกแต่ง ไม่มีข้อมูลให้กด) */
   gates: z.array(XY),
+  /** กราฟทางเดิน (ถนน ทางเดิน บันได จาก OSM) สำหรับหาเส้นทางเดินจริง ดู lib/map/route.ts */
+  walk: z.object({ nodes: z.array(XY), edges: z.array(z.tuple([z.number().int(), z.number().int()])) }),
 });
 export type MapLayout = z.infer<typeof MapLayout>;
 export type MapPoint = MapLayout["points"][number];
@@ -190,26 +192,6 @@ export function googleMapsUrl(placeId: string): string | undefined {
 
 /** id ของ element ใน DOM สำหรับใช้ซูมไปหา */
 export const domIdOf = (placeId: string) => `map-${placeId}`;
-
-/**
- * เส้นรอยทางมดที่ผ่านจุดตามลำดับ: โค้งเล็กน้อยแบบ quadratic
- * ทุกช่วงโค้งไปทางเดียวกัน เพื่อให้ดูเหมือนทางเดินมากกว่าเส้นตรง
- */
-export function trailPath(points: Point[]): string {
-  if (points.length < 2) return "";
-  let d = `M${points[0].x} ${points[0].y}`;
-  for (let i = 1; i < points.length; i++) {
-    const a = points[i - 1];
-    const b = points[i];
-    const mx = (a.x + b.x) / 2;
-    const my = (a.y + b.y) / 2;
-    const dx = b.x - a.x;
-    const dy = b.y - a.y;
-    const bend = 0.18;
-    d += ` Q${(mx - dy * bend).toFixed(1)} ${(my + dx * bend).toFixed(1)} ${b.x} ${b.y}`;
-  }
-  return d;
-}
 
 /** id ของกรอบโปร่งใสรอบสถานที่ (เผื่อที่ให้หมุด) ที่ใช้เป็นเป้าตอนซูม */
 export const focusIdOf = (placeId: string) => `focus-${placeId}`;

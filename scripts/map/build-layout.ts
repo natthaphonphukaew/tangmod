@@ -24,6 +24,7 @@ type OsmEl = {
   tags?: Record<string, string>;
   geometry?: LL[];
   members?: { role: string; geometry?: LL[] }[];
+  nodes?: number[];
 };
 
 const root = path.resolve(import.meta.dirname, "../..");
@@ -173,6 +174,84 @@ for (const r of mains) if (r.name !== "ถนนประชาอุทิศ")
 const longest = mains.filter((r) => r.name).sort((a, b) => b.d.length - a.d.length)[0];
 for (const r of mains) if (r !== longest) delete r.name;
 
+// ---------- กราฟทางเดิน (ใช้หาเส้นทางเดินจริงให้รอยทางมด) ----------
+// ถนน/ทางเดินใน OSM ใช้ node ร่วมกันตรงทางแยก จึงต่อเป็นกราฟได้ตรง ๆ จากรายการ node ของแต่ละเส้น
+const WALKABLE = new Set(["service", "footway", "pedestrian", "path", "steps", "residential", "unclassified", "living_street", "secondary", "tertiary", "primary"]);
+const walkIndex = new Map<number, number>();
+const walkNodes: XY[] = [];
+const walkEdges = new Set<string>();
+const seenWalk = new Set<number>();
+for (const e of all) {
+  if (e.type !== "way" || !WALKABLE.has(e.tags?.highway ?? "") || !e.geometry || !e.nodes || seenWalk.has(e.id)) continue;
+  seenWalk.add(e.id);
+  const ids = e.nodes.map((nodeId, i) => {
+    if (!walkIndex.has(nodeId)) {
+      walkIndex.set(nodeId, walkNodes.length);
+      walkNodes.push(proj(e.geometry![i]));
+    }
+    return walkIndex.get(nodeId)!;
+  });
+  for (let i = 0; i + 1 < ids.length; i++) {
+    const [a, b] = ids[i] < ids[i + 1] ? [ids[i], ids[i + 1]] : [ids[i + 1], ids[i]];
+    if (a !== b) walkEdges.add(`${a},${b}`);
+  }
+}
+// ทางเดินบางช่วงใน OSM ไม่ได้ต่อกับถนนหลัก (เช่น ทางเดินรอบสระ): ต่อกลุ่มย่อยเข้ากลุ่มใหญ่ที่จุดใกล้สุด ถ้าห่างไม่เกิน ~20 ม.
+{
+  const adj = new Map<number, number[]>();
+  for (const k of walkEdges) {
+    const [a, b] = k.split(",").map(Number);
+    adj.set(a, [...(adj.get(a) ?? []), b]);
+    adj.set(b, [...(adj.get(b) ?? []), a]);
+  }
+  const comp = new Map<number, number>();
+  const sizes: number[] = [];
+  for (const s of adj.keys()) {
+    if (comp.has(s)) continue;
+    const id = sizes.length;
+    let n = 0;
+    const stack = [s];
+    comp.set(s, id);
+    while (stack.length) {
+      const x = stack.pop()!;
+      n++;
+      for (const y of adj.get(x) ?? []) {
+        if (comp.has(y)) continue;
+        comp.set(y, id);
+        stack.push(y);
+      }
+    }
+    sizes.push(n);
+  }
+  const main = sizes.indexOf(Math.max(...sizes));
+  const inMain = [...comp].filter(([, c]) => c === main).map(([n]) => n);
+  for (let c = 0; c < sizes.length; c++) {
+    if (c === main) continue;
+    let best = { d: Infinity, a: -1, b: -1 };
+    for (const [n, cc] of comp) {
+      if (cc !== c) continue;
+      for (const m of inMain) {
+        const d = Math.hypot(walkNodes[n][0] - walkNodes[m][0], walkNodes[n][1] - walkNodes[m][1]);
+        if (d < best.d) best = { d, a: n, b: m };
+      }
+    }
+    if (best.d <= 20 * S) walkEdges.add(best.a < best.b ? `${best.a},${best.b}` : `${best.b},${best.a}`);
+  }
+}
+// ตัด node ที่อยู่นอกแผนที่ไกล ๆ ออก แล้วจัดเลขใหม่
+const keepNode = walkNodes.map(([x, y]) => x > -60 && y > -60 && x < W + 60 && y < H + 60);
+const renumber = new Map<number, number>();
+const walk = { nodes: [] as XY[], edges: [] as [number, number][] };
+walkNodes.forEach((p, i) => {
+  if (!keepNode[i]) return;
+  renumber.set(i, walk.nodes.length);
+  walk.nodes.push(p);
+});
+for (const k of walkEdges) {
+  const [a, b] = k.split(",").map(Number);
+  if (renumber.has(a) && renumber.has(b)) walk.edges.push([renumber.get(a)!, renumber.get(b)!]);
+}
+
 const canals: { d: string; width: number }[] = [];
 for (const e of all) {
   if (e.type !== "way" || !e.tags?.waterway || !e.geometry) continue;
@@ -261,6 +340,7 @@ const layout = {
   buildings,
   points,
   gates,
+  walk,
 };
 
 // ตัวเลขยาวทำให้ไฟล์ใหญ่ เขียนแบบ 1 รายการต่อบรรทัด อ่าน diff ง่าย
@@ -268,8 +348,14 @@ const lines = (arr: unknown[]) => "[\n" + arr.map((x) => "    " + JSON.stringify
 const out =
   "{\n" +
   Object.entries(layout)
-    .map(([k, v]) => `  ${JSON.stringify(k)}: ${Array.isArray(v) && typeof v[0] === "object" ? lines(v) : JSON.stringify(v)}`)
+    .map(([k, v]) => {
+      if (k === "walk") return `  "walk": {
+    "nodes": ${JSON.stringify(walk.nodes)},
+    "edges": ${JSON.stringify(walk.edges)}
+  }`;
+      return `  ${JSON.stringify(k)}: ${Array.isArray(v) && typeof v[0] === "object" ? lines(v) : JSON.stringify(v)}`;
+    })
     .join(",\n") +
   "\n}\n";
 fs.writeFileSync(path.join(root, "content/map-layout.json"), out);
-console.log(`viewBox ${W}x${H} · ตึก ${buildings.length} · ถนน ${roads.length} · พื้นที่ ${areas.length} · จุด ${points.length} · ประตูอื่น ${gates.length}`);
+console.log(`viewBox ${W}x${H} · ตึก ${buildings.length} · ถนน ${roads.length} · พื้นที่ ${areas.length} · จุด ${points.length} · ประตูอื่น ${gates.length} · ทางเดิน ${walk.nodes.length} จุด ${walk.edges.length} ช่วง`);

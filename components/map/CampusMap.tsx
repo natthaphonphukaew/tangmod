@@ -10,6 +10,7 @@ import {
 } from "react-zoom-pan-pinch";
 import { placeById } from "@/lib/data";
 import { campusTrees } from "@/lib/map/decor";
+import { routeLength, routePath, walkingRoute } from "@/lib/map/route";
 import {
   anchorOf,
   buildingGeom,
@@ -18,7 +19,6 @@ import {
   focusBoxOf,
   focusIdOf,
   mapLayout,
-  trailPath,
   type MapArea,
   type MapBuilding,
   type MapPoint,
@@ -122,8 +122,10 @@ export function CampusMap({ highlights, selectedId, onSelect, refitKey, avoidBot
     // refitKey/focusKey: แผนที่ซูมหาหมุดใหม่ (เช่น sheet มือถือยุบตอนเปิดการ์ด) ต้องเลื่อนหลบการ์ดใหม่หลังซูมเสร็จ
   }, [selectedId, avoidBottom, refitKey, focusKey, reduceMotion]);
 
-  const trailPoints = highlights.map((h) => anchorOf(h.placeId)).filter((p) => p !== undefined);
-  const trail = trailPath(trailPoints);
+  // รอยทางมดเดินตามถนนและทางเดินจริง (lib/map/route.ts) ไม่ใช่เส้นตรงตัดตึก
+  const route = useMemo(() => walkingRoute(focusKey ? focusKey.split(",") : []), [focusKey]);
+  const trail = routePath(route);
+  const trailLen = routeLength(route);
   const trailId = `trail-${uid}-${focusKey}`;
 
   return (
@@ -172,21 +174,25 @@ export function CampusMap({ highlights, selectedId, onSelect, refitKey, avoidBot
                       stroke="white"
                       strokeWidth={18}
                       strokeLinecap="round"
+                      strokeLinejoin="round"
                       initial={{ pathLength: reduceMotion ? 1 : 0 }}
                       animate={{ pathLength: 1 }}
-                      transition={{ duration: 0.35 * trailPoints.length + 0.3, ease: "easeInOut", delay: 0.25 }}
+                      transition={{ duration: Math.min(3, 0.6 + trailLen / 400), ease: "easeInOut", delay: 0.25 }}
                     />
                   </mask>
                 </defs>
                 <path id={trailId} d={trail} fill="none" stroke="none" />
-                <g mask={`url(#${trailId}-mask)`}>
-                  <path d={trail} className="ant-march" fill="none" stroke="var(--ink)" strokeOpacity={0.55} strokeWidth={8} strokeDasharray="1 11" strokeLinecap="round" />
-                  <path d={trail} className="ant-march" fill="none" stroke="var(--trail)" strokeWidth={5} strokeDasharray="1 11" strokeLinecap="round" />
+                <g mask={`url(#${trailId}-mask)`} strokeLinejoin="round" strokeLinecap="round" fill="none">
+                  {/* แถบเส้นทางจาง ๆ ใต้รอยเท้ามด ให้เห็นแนวทางเดินชัดแบบเส้นทางใน Google Maps */}
+                  <path d={trail} stroke="var(--trail)" strokeOpacity={0.45} strokeWidth={11} />
+                  <path d={trail} className="ant-march" stroke="var(--ink)" strokeOpacity={0.55} strokeWidth={8} strokeDasharray="1 11" />
+                  <path d={trail} className="ant-march" stroke="var(--trail)" strokeWidth={5} strokeDasharray="1 11" />
                 </g>
                 {!reduceMotion && (
                   <g>
                     <Ant />
-                    <animateMotion dur={`${2.2 * trailPoints.length}s`} repeatCount="indefinite" rotate="auto" begin="1s">
+                    {/* เดินเร็วคงที่ ~60 หน่วยต่อวินาที (ประมาณ 40 ม./วิ บนแผนที่) */}
+                    <animateMotion dur={`${Math.max(3, trailLen / 60).toFixed(1)}s`} repeatCount="indefinite" rotate="auto" begin="1s">
                       <mpath href={`#${trailId}`} />
                     </animateMotion>
                   </g>

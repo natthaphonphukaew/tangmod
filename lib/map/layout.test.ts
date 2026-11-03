@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { places } from "@/lib/data";
-import { anchorOf, buildingGeom, focusBoxOf, googleMapsUrl, heightOf, mapLayout, trailPath } from "./layout";
+import { anchorOf, buildingGeom, focusBoxOf, googleMapsUrl, heightOf, mapLayout } from "./layout";
 
 describe("map layout", () => {
   it("ทุกสถานที่ใน places.json มีตำแหน่งบนแผนที่", () => {
@@ -43,13 +43,6 @@ describe("map layout", () => {
     const g = buildingGeom.get("N11")!;
     expect(g.wallsLight + g.wallsShade).not.toBe("");
     expect(g.roofs.length).toBeGreaterThan(0);
-  });
-
-  it("รอยทางมด: น้อยกว่า 2 จุดไม่ต้องวาด, 3 จุดได้ 2 ช่วงโค้ง", () => {
-    expect(trailPath([{ x: 0, y: 0 }])).toBe("");
-    const d = trailPath([{ x: 0, y: 0 }, { x: 100, y: 0 }, { x: 100, y: 100 }]);
-    expect(d.startsWith("M0 0")).toBe(true);
-    expect(d.match(/Q/g)?.length).toBe(2);
   });
 
   it("กรอบซูมครอบตัวตึกและเผื่อที่ด้านบนให้หมุด", () => {
