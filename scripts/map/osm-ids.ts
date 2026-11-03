@@ -83,3 +83,49 @@ export const POINTS: MapPointDef[] = [
   { id: "tennis_court", kind: "sport", osm: "w1333533933" },
   // ไม่ใช้จุด "สนามบาส" ของ OSM (n6110949756) เพราะตกอยู่บนตึก N6 พอดี ตำแหน่งน่าจะผิด
 ];
+
+/**
+ * หน้าตาตึก (สีผนัง หลังคา แบบหน้าต่าง ของเด่น) ดูจากรูปจริง แหล่งรูปอยู่ใน docs/research/building-looks.md
+ * ตึกที่ไม่มีรูปอ้างอิงใช้ค่ากลาง (ผนังขาวครีม หน้าต่างตาราง) ตามที่ตึกส่วนใหญ่ใน มจธ. เป็นตึกสีขาว
+ * windows: grid = หน้าต่างเป็นช่อง · band = แถบหน้าต่างยาวรอบตึก · glass = ผนังกระจก · fins = ครีบแนวตั้ง · balcony = ระเบียงห้องพัก
+ * accent: เส้นแนวตั้งเด่นบนผนัง (เสาสีส้มของ LX, ระแนงไม้ของวิศวะเคมี, แถบสีของหอพัก)
+ * deco: garden = สวนบนหลังคา · canopy = หลังคาทางเข้าเด่น
+ * roof: ตึกที่สีผนังเด่น แต้มสีหลังคาให้ใกล้สีผนัง คนดูจากมุมบนจะยังจำได้ว่าเป็นตึกแดง/ตึกกระจก
+ */
+export type BuildingStyleDef = {
+  wall: string;
+  roof: string;
+  windows: "grid" | "band" | "glass" | "fins" | "balcony";
+  glass?: string;
+  accent?: string;
+  deco?: ("garden" | "canopy")[];
+};
+
+const WHITE = { wall: "#f4f2ec", roof: "#e9e6df" };
+const CB = { ...WHITE, windows: "fins" as const };
+
+export const BUILDING_STYLE: Record<string, BuildingStyleDef> = {
+  // ตึกแดง: ผนังแดงอิฐคาดแถบขาว
+  S4: { wall: "#b9473c", roof: "#d9a99f", windows: "band" },
+  // ผนังครีม ระแนงไม้สีน้ำตาล ฐานอิฐแดง
+  S15: { wall: "#efe5d4", roof: "#e6d6bf", windows: "grid", accent: "#a8703f" },
+  // ตึกขาว หน้าต่างตาราง หลังคาทางเข้าโลหะเฉียงสีเงิน
+  N11: { ...WHITE, windows: "grid", deco: ["canopy"] },
+  // ตึกขาวกับผนังกระจกโค้งสีเขียวอมฟ้า
+  N9: { ...WHITE, roof: "#d6e8e6", windows: "glass", glass: "#4f9c9a" },
+  // ตึกขาว ด้านหน้าเป็นกระจกสีเขียวอ่อน
+  N10: { ...WHITE, roof: "#e2eee9", windows: "glass", glass: "#86b9ae" },
+  // พื้นแต่ละชั้นโค้งสีขาว เสาเฉียงสีส้ม มีสวนบนหลังคา
+  N16: { wall: "#f7f6f2", roof: "#e6e3dc", windows: "band", accent: "#f0662a", deco: ["garden"] },
+  // อาคารเรียนรวม: ตึกขาวครีบแนวตั้ง
+  N17: CB,
+  N20: CB,
+  S11: CB,
+  S12: CB,
+  S13: CB,
+  // หอพักธรรมรักษา: ผนังครีม แถบแนวตั้งสีส้มอมชมพู มีระเบียง
+  S5: { wall: "#f3e8d8", roof: "#f0d3c2", windows: "balcony", accent: "#e08e68" },
+  S6: { wall: "#f3e8d8", roof: "#f0d3c2", windows: "balcony", accent: "#e08e68" },
+  // ศูนย์กีฬาและนันทนาการ (รูปใน Commons ชื่อ Sport and Recreation Complex น่าจะเป็นตึกนี้): ขาวอมเทา แผงเทา
+  S14: { wall: "#eceae5", roof: "#dcd8d0", windows: "band", accent: "#8d949b" },
+};

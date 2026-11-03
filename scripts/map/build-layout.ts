@@ -12,7 +12,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { BUILDING_OSM, CAMPUS_WAY, EXTRA_FLOORS, POINTS, SPLITS, SYNTH_SIZE } from "./osm-ids";
+import { BUILDING_OSM, BUILDING_STYLE, CAMPUS_WAY, EXTRA_FLOORS, POINTS, SPLITS, SYNTH_SIZE, type BuildingStyleDef } from "./osm-ids";
 
 type LL = { lat: number; lon: number };
 type XY = [number, number];
@@ -291,7 +291,7 @@ for (const e of all) {
 
 // ---------- ตึก ----------
 type Poly = { pts: XY[]; floors: number };
-type Building = { id: string; polys: Poly[]; name?: string; approx?: boolean; ll?: [number, number] };
+type Building = { id: string; polys: Poly[]; name?: string; approx?: boolean; ll?: [number, number]; style?: BuildingStyleDef };
 const buildings: Building[] = [];
 const used = new Set<string>();
 const floorsOf = (el: OsmEl, fallback: number) => Number(el.tags?.["building:levels"]) || fallback;
@@ -335,6 +335,8 @@ for (const e of campus) {
   const name = e.tags.name ?? e.tags["name:en"];
   buildings.push({ id: `b${e.id}`, polys: [{ pts, floors: e.tags.building === "roof" ? 1 : floorsOf(e, 2) }], ...(name ? { name } : {}) });
 }
+
+for (const b of buildings) if (BUILDING_STYLE[b.id]) b.style = BUILDING_STYLE[b.id];
 
 const missing = Object.keys(pins).filter((c) => !buildings.some((b) => b.id === c));
 if (missing.length) throw new Error(`ตึกที่ยังไม่มีรูปร่าง: ${missing.join(", ")}`);

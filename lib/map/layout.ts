@@ -20,7 +20,19 @@ const Building = z.object({
   approx: z.boolean().optional(),
   /** หมุด Google Maps ของตึกจากผัง MapNavi */
   ll: LatLng.optional(),
+  /** หน้าตาตึกจากรูปจริง (ดู scripts/map/osm-ids.ts) ไม่มี = ใช้ค่ากลาง */
+  style: z
+    .object({
+      wall: z.string(),
+      roof: z.string(),
+      windows: z.enum(["grid", "band", "glass", "fins", "balcony"]),
+      glass: z.string().optional(),
+      accent: z.string().optional(),
+      deco: z.array(z.enum(["garden", "canopy"])).optional(),
+    })
+    .optional(),
 });
+export type BuildingStyle = NonNullable<z.infer<typeof Building>["style"]>;
 export type MapBuilding = z.infer<typeof Building>;
 
 const Area = z.object({
@@ -71,8 +83,11 @@ export const mapLayout = MapLayout.parse(layoutJson);
 export type Point = { x: number; y: number };
 type Box = { x: number; y: number; w: number; h: number };
 
+/** ความสูงของภาพตึกต่อ 1 ชั้น (หน่วย viewBox) ลายหน้าต่างใน CampusMap ใช้ค่านี้ด้วย */
+export const FLOOR = 2;
+
 /** ความสูงของภาพตึก (หน่วย viewBox) จากจำนวนชั้น — บีบไว้ ไม่งั้นตึก 15 ชั้นบังตึกข้างหลังหมด */
-export const heightOf = (floors: number) => 4 + Math.min(floors, 15) * 1.3;
+export const heightOf = (floors: number) => 4 + Math.min(floors, 15) * FLOOR;
 
 const shift = (pts: [number, number][], dy: number): [number, number][] => pts.map(([x, y]) => [x, y - dy]);
 const toPath = (pts: [number, number][]) => "M" + pts.map(([x, y]) => `${x} ${y}`).join(" L") + " Z";
@@ -119,18 +134,75 @@ export type BuildingGeom = {
   labelAt: Point;
   /** ขอบล่างของฐาน ใช้เรียงลำดับการวาด (ตึกที่อยู่ล่างวาดทีหลัง ทับตึกข้างหลัง) */
   baseY: number;
+  /** เส้นแนวตั้งบนผนังที่มองเห็น ห่างกันประมาณ STRIPE หน่วย (เสา ระแนง แถบสี) */
+  stripes: string;
+  /** เส้นแนวนอนบนผนังที่มองเห็น ทุกชั้น (ขอบพื้น แถบหน้าต่าง) */
+  ledges: string;
+  /** ผนังหน้าที่กว้างที่สุดที่มองเห็น: ใช้วางหลังคาทางเข้า */
+  front?: { a: [number, number]; c: [number, number]; h: number };
+  /** ของบนหลังคา: เครื่องแอร์และป้อมบันได วางในหลังคาปีกที่ใหญ่สุด */
+  roofItems: { x: number; y: number; w: number; h: number; kind: "ac" | "stair" }[];
+  /** จุดกลางหลังคาปีกที่ใหญ่สุดและขนาดโดยประมาณ (สำหรับสวนบนหลังคา) */
+  roofCenter: Point;
+  roofSize: number;
 };
 
 /**
  * 2.5D แบบแผนที่ภาพวาด: ยกหลังคาขึ้นตามความสูง แล้ววาดผนังเฉพาะด้านที่หันลง (ด้านที่คนดูเห็น)
  * ด้านที่หันซ้ายสว่างกว่าด้านที่หันขวาเล็กน้อย ให้ดูมีแสงเงา
  */
+const STRIPE = 4.5;
+
+function insidePoly(p: [number, number], pts: [number, number][]) {
+  let inside = false;
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+    const [xi, yi] = pts[i];
+    const [xj, yj] = pts[j];
+    if (yi > p[1] !== yj > p[1] && p[0] < ((xj - xi) * (p[1] - yi)) / (yj - yi) + xi) inside = !inside;
+  }
+  return inside;
+}
+
+/** ของบนหลังคาแบบกำหนดตายตัว: ป้อมบันได 1 อัน + แอร์ตามขนาดหลังคา ทุกชิ้นต้องอยู่ในหลังคาทั้งก้อน */
+function roofItemsOf(roof: [number, number][], at: Point): BuildingGeom["roofItems"] {
+  const b = bboxOf(roof);
+  const items: BuildingGeom["roofItems"] = [];
+  const fits = (x: number, y: number, w: number, h: number) =>
+    [[x, y], [x + w, y], [x, y + h], [x + w, y + h]].every((p) => insidePoly(p as [number, number], roof)) &&
+    items.every((o) => x + w + 1 < o.x || o.x + o.w + 1 < x || y + h + 1 < o.y || o.y + o.h + 1 < y);
+  const size = Math.min(b.w, b.h);
+  if (size < 14) return items;
+  const sw = Math.min(9, b.w * 0.22);
+  const sh = Math.min(7, b.h * 0.22);
+  // ป้อมบันไดเยื้องจากกลางหลังคา
+  for (const [dx, dy] of [[0.18, -0.15], [-0.2, 0.12], [0.1, 0.2], [0, 0]]) {
+    const x = at.x + dx * b.w - sw / 2;
+    const y = at.y + dy * b.h - sh / 2;
+    if (fits(x, y, sw, sh)) {
+      items.push({ x, y, w: sw, h: sh, kind: "stair" });
+      break;
+    }
+  }
+  const want = Math.min(6, Math.floor(size / 9));
+  const offsets = [[-0.3, -0.25], [0.3, 0.25], [-0.32, 0.22], [0.28, -0.3], [0.02, -0.33], [-0.05, 0.33], [0.36, 0.02], [-0.38, -0.02]];
+  for (const [dx, dy] of offsets) {
+    if (items.filter((i) => i.kind === "ac").length >= want) break;
+    const x = at.x + dx * b.w - 1.6;
+    const y = at.y + dy * b.h - 1.2;
+    if (fits(x, y, 3.2, 2.4)) items.push({ x, y, w: 3.2, h: 2.4, kind: "ac" });
+  }
+  return items;
+}
+
 function geomOf(b: MapBuilding): BuildingGeom {
   let light = "";
   let shade = "";
+  let stripes = "";
+  let ledges = "";
+  let front: BuildingGeom["front"];
   const roofs: string[] = [];
   const all: [number, number][] = [];
-  let best = { a: -1, at: { x: 0, y: 0 } };
+  let best = { a: -1, at: { x: 0, y: 0 }, roof: [] as [number, number][] };
   for (const poly of b.polys) {
     const h = heightOf(poly.floors);
     const pts = poly.pts;
@@ -147,14 +219,36 @@ function geomOf(b: MapBuilding): BuildingGeom {
       const quad = `M${a[0]} ${a[1]} L${c[0]} ${c[1]} L${c[0]} ${c[1] - h} L${a[0]} ${a[1] - h} Z`;
       if (nx <= 0) light += quad;
       else shade += quad;
+      const len = Math.hypot(dx, dy);
+      for (let s = STRIPE / 2; s < len - 1; s += STRIPE) {
+        const x = a[0] + (dx * s) / len;
+        const y = a[1] + (dy * s) / len;
+        stripes += `M${x.toFixed(1)} ${(y - 0.6).toFixed(1)} L${x.toFixed(1)} ${(y - h + 0.6).toFixed(1)}`;
+      }
+      for (let f = 4 + FLOOR; f < h - 0.5; f += FLOOR) ledges += `M${a[0]} ${(a[1] - f).toFixed(1)} L${c[0]} ${(c[1] - f).toFixed(1)}`;
+      if (!front || len > Math.hypot(front.c[0] - front.a[0], front.c[1] - front.a[1])) front = { a, c, h };
     }
     const roof = shift(pts, h);
     roofs.push(toPath(roof));
     all.push(...pts, ...roof);
     const a = Math.abs(area(pts));
-    if (a > best.a) best = { a, at: centroidOf(roof) };
+    if (a > best.a) best = { a, at: centroidOf(roof), roof };
   }
-  return { wallsLight: light, wallsShade: shade, roofs, box: bboxOf(all), labelAt: best.at, baseY: Math.max(...b.polys.flatMap((p) => p.pts.map((q) => q[1]))) };
+  const rb = bboxOf(best.roof);
+  return {
+    wallsLight: light,
+    wallsShade: shade,
+    roofs,
+    box: bboxOf(all),
+    labelAt: best.at,
+    baseY: Math.max(...b.polys.flatMap((p) => p.pts.map((q) => q[1]))),
+    stripes,
+    ledges,
+    front,
+    roofItems: roofItemsOf(best.roof, best.at),
+    roofCenter: best.at,
+    roofSize: Math.min(rb.w, rb.h),
+  };
 }
 
 export const buildingGeom = new Map(mapLayout.buildings.map((b) => [b.id, geomOf(b)]));
