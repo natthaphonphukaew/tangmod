@@ -1,8 +1,8 @@
 ---
 namespace: general
-tier: student
+tier: official
 title: งานเปิดโลกกิจกรรม 2569 งานรวมบูธชมรมของ มจธ. (วันที่ ใครเข้าได้ แต้มชั่วโมงกิจกรรม)
-source_url:
+source_url: https://www.instagram.com/kmuttstudentunion_official/
 updated_at: 2026-11-03
 ---
 
