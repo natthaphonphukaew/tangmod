@@ -89,8 +89,7 @@ export function CampusMap({ highlights, selectedId, onSelect, refitKey, avoidBot
     ro.observe(svg);
     return () => ro.disconnect();
   }, []);
-  // ปัดค่า scale เป็นขั้น ไม่ให้ป้ายคำนวณใหม่ทุกเฟรมระหว่างซูม
-  const px = fit * (Math.round(scale * 8) / 8);
+  const px = fit * scale;
 
   // ซูมให้เห็นทุกหมุดของคำตอบ หรือกลับไปภาพรวมเมื่อไม่มีหมุด
   useEffect(() => {
@@ -136,9 +135,13 @@ export function CampusMap({ highlights, selectedId, onSelect, refitKey, avoidBot
         maxScale={5}
         centerOnInit
         limitToBounds
-        wheel={{ step: 0.12 }}
-        doubleClick={{ mode: "zoomIn", step: 0.6 }}
-        onTransform={(_, s) => setScale(s.scale)}
+        // ไลบรารีบวก scale ทีละ step × deltaY (ล้อเมาส์หนึ่งคลิก ≈ 100) แบบเส้นตรง
+        // ให้ step แปรตาม scale ปัจจุบัน จะได้ซูมเป็นสัดส่วนคงที่ ~18% ต่อคลิกทุกระดับ เหมือน Google Maps
+        wheel={{ step: 0.0018 * scale }}
+        doubleClick={{ mode: "zoomIn", step: 0.7, animationTime: 250 }}
+        velocityAnimation={{ inertia: 0.6, animationTime: 400, animationType: "easeOut" }}
+        // ปัด scale เป็นขั้น 1/8: setState ค่าเดิมไม่ render ใหม่ แผนที่จะไม่วาดใหม่ทุกเฟรมระหว่างซูม
+        onTransform={(_, s) => setScale(Math.round(s.scale * 8) / 8)}
       >
         <TransformComponent
           wrapperStyle={{ width: "100%", height: "100%" }}
@@ -157,18 +160,7 @@ export function CampusMap({ highlights, selectedId, onSelect, refitKey, avoidBot
             <WindowPattern />
             <StaticLayers />
 
-            <g>
-              {buildingsInDrawOrder.map((b) => (
-                <BuildingShape
-                  key={b.id}
-                  building={b}
-                  dimmed={lit.size > 0 && !lit.has(b.id)}
-                  lit={lit.has(b.id)}
-                  selected={selectedId === b.id}
-                  onSelect={onSelect}
-                />
-              ))}
-            </g>
+            <Buildings lit={lit} selectedId={selectedId ?? null} onSelect={onSelect} />
 
             {trail && (
               <g key={trailId} pointerEvents="none">
@@ -239,7 +231,6 @@ export function CampusMap({ highlights, selectedId, onSelect, refitKey, avoidBot
 /** พื้น สวน สระ คลอง ถนน ต้นไม้ ประตู — ไม่เปลี่ยนตามคำตอบ วาดครั้งเดียว */
 const StaticLayers = memo(function StaticLayers() {
   const named = mapLayout.roads.filter((r) => r.name);
-  const labelled = mapLayout.areas.filter((a) => a.label && a.label_at);
   return (
     <g aria-hidden pointerEvents="none">
       {mapLayout.areas.map((a, i) => (
@@ -293,11 +284,6 @@ const StaticLayers = memo(function StaticLayers() {
         </g>
       ))}
 
-      {labelled.map((a, i) => (
-        <text key={i} x={a.label_at![0]} y={a.label_at![1]} textAnchor="middle" dominantBaseline="central" fontSize={15} fill="#2f6b52" className="map-label" paintOrder="stroke" stroke="white" strokeWidth={3} strokeOpacity={0.7}>
-          {a.label}
-        </text>
-      ))}
       {named.map((r, i) => (
         <g key={i}>
           <path id={`road-name-${i}`} d={r.d} fill="none" stroke="none" />
@@ -307,6 +293,17 @@ const StaticLayers = memo(function StaticLayers() {
             </textPath>
           </text>
         </g>
+      ))}
+    </g>
+  );
+});
+
+/** ตึกทุกหลัง แยก memo ไว้: ระหว่างซูม/เลื่อน ไม่ต้องวาดตึกใหม่ */
+const Buildings = memo(function Buildings({ lit, selectedId, onSelect }: { lit: Set<string>; selectedId: string | null; onSelect?: (id: string) => void }) {
+  return (
+    <g>
+      {buildingsInDrawOrder.map((b) => (
+        <BuildingShape key={b.id} building={b} dimmed={lit.size > 0 && !lit.has(b.id)} lit={lit.has(b.id)} selected={selectedId === b.id} onSelect={onSelect} />
       ))}
     </g>
   );
@@ -389,6 +386,7 @@ function WindowPattern() {
 }
 
 type Placed = { x: number; y: number; w: number; h: number };
+const AREA_LABELS = mapLayout.areas.flatMap((a) => (a.label && a.label_at ? [{ label: a.label, at: a.label_at }] : []));
 const overlaps = (a: Placed, b: Placed) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
 
 /**
@@ -405,7 +403,17 @@ const Labels = memo(function Labels({ px, lit, selectedId }: { px: number; lit: 
       .sort((a, b) => rank(a.id) - rank(b.id) || buildingGeom.get(b.id)!.box.w * buildingGeom.get(b.id)!.box.h - buildingGeom.get(a.id)!.box.w * buildingGeom.get(a.id)!.box.h);
     const placed: Placed[] = [];
     const out: { id: string; short?: string; x: number; y: number; w: number; h: number; strong: boolean }[] = [];
+    const areas: { text: string; x: number; y: number }[] = [];
+    const placeArea = (a: (typeof AREA_LABELS)[number]) => {
+      const wPx = a.label.length * 8 + 8;
+      const box = { x: a.at[0] - (wPx * u) / 2, y: a.at[1] - 9 * u, w: wPx * u, h: 18 * u };
+      if (placed.some((p) => overlaps(p, box))) return;
+      placed.push(box);
+      areas.push({ text: a.label, x: a.at[0], y: a.at[1] });
+    };
     for (const b of candidates) {
+      // ป้ายพื้นที่ (สระมรกต สวน) วางต่อจากตึกสำคัญ ก่อนตึกรอง
+      if (rank(b.id) >= 2 && areas.length === 0) AREA_LABELS.forEach(placeArea);
       const place = placeById.get(b.id)!;
       const at = buildingGeom.get(b.id)!.labelAt;
       const strong = rank(b.id) === 0;
@@ -419,12 +427,31 @@ const Labels = memo(function Labels({ px, lit, selectedId }: { px: number; lit: 
       placed.push(box);
       out.push({ id: b.id, short: showName ? short : undefined, ...box, strong });
     }
-    return out;
+    if (areas.length === 0) AREA_LABELS.forEach(placeArea);
+    return { out, areas };
   }, [u, px, lit, selectedId]);
 
   return (
     <g aria-hidden pointerEvents="none">
-      {items.map((l) => (
+      {items.areas.map((a) => (
+        <text
+          key={a.text}
+          x={a.x}
+          y={a.y}
+          textAnchor="middle"
+          dominantBaseline="central"
+          fontSize={13 * u}
+          fontWeight={600}
+          fill="#2f6b52"
+          paintOrder="stroke"
+          stroke="white"
+          strokeWidth={3.5 * u}
+          strokeLinejoin="round"
+        >
+          {a.text}
+        </text>
+      ))}
+      {items.out.map((l) => (
         <g key={l.id} transform={`translate(${l.x} ${l.y}) scale(${u})`}>
           <rect
             width={l.w / u}
