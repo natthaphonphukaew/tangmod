@@ -53,12 +53,6 @@
   --map-field: #86bd6b;
   --map-track: #de8a68;
   --map-court: #78b3d3;
-  --map-roof: #f7f4ef;
-  --map-wall: #dcd5ca;
-  --map-wall-shade: #c8bfb2;
-  --map-roof-key: #ffe0cc;
-  --map-wall-key: #f3a57c;
-  --map-wall-key-shade: #e38b5f;
 
   --ok: #276a43; /* ≥5:1 บนพื้น ok/10 */
   --warn: #94600f; /* 5.2:1 บน card (เดิม #b7791f ได้ 3.6 ไม่ผ่าน AA) */

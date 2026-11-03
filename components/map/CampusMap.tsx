@@ -16,10 +16,13 @@ import {
   buildingGeom,
   buildingsInDrawOrder,
   domIdOf,
+  FLOOR,
   focusBoxOf,
   focusIdOf,
   mapLayout,
   type MapArea,
+  type BuildingGeom,
+  type BuildingStyle,
   type MapBuilding,
   type MapPoint,
 } from "@/lib/map/layout";
@@ -315,6 +318,10 @@ const Buildings = memo(function Buildings({ lit, selectedId, onSelect }: { lit: 
   );
 });
 
+/** ตึกที่ไม่มีรูปอ้างอิง: ผนังขาวครีม หน้าต่างตาราง (ตึกส่วนใหญ่ใน มจธ. เป็นสีขาว) */
+const DEFAULT_STYLE: BuildingStyle = { wall: "#ede7dd", roof: "#f6f3ed", windows: "grid" };
+const OSM_ONLY_STYLE: BuildingStyle = { wall: "#e2ddd4", roof: "#efebe4", windows: "grid" };
+
 function BuildingShape({
   building: b,
   dimmed,
@@ -331,11 +338,11 @@ function BuildingShape({
   const place = placeById.get(b.id);
   const g = buildingGeom.get(b.id)!;
   const interactive = Boolean(place && onSelect);
-  const key = isKey(b.id);
-  const roof = lit ? "var(--building-lit)" : key ? "var(--map-roof-key)" : "var(--map-roof)";
-  const wall = key ? "var(--map-wall-key)" : "var(--map-wall)";
-  const wallShade = key ? "var(--map-wall-key-shade)" : "var(--map-wall-shade)";
-  const edge = key ? "var(--map-wall-key-shade)" : "var(--map-wall-shade)";
+  const style = b.style ?? (place ? DEFAULT_STYLE : OSM_ONLY_STYLE);
+  const wall = style.windows === "glass" ? (style.glass ?? style.wall) : style.wall;
+  const roof = lit ? "var(--building-lit)" : style.roof;
+  const edge = "rgba(60, 45, 30, 0.35)";
+  const deco = new Set(style.deco ?? []);
 
   const activate = () => interactive && onSelect!(b.id);
   const onKeyDown = (e: KeyboardEvent) => {
@@ -353,17 +360,26 @@ function BuildingShape({
       aria-label={interactive ? `${b.id} ${place!.name_th}` : undefined}
       onClick={activate}
       onKeyDown={onKeyDown}
-      className={`outline-none transition-opacity duration-500 ${interactive ? "cursor-pointer [&:focus-visible_.roof]:stroke-[var(--brand-ink)] [&:focus-visible_.roof]:[stroke-width:3] [&:hover_.roof]:brightness-[1.03]" : ""}`}
+      className={`outline-none transition-opacity duration-500 ${interactive ? "cursor-pointer [&:focus-visible_.roof]:stroke-[var(--brand-ink)] [&:focus-visible_.roof]:[stroke-width:3] [&:hover_.roof]:brightness-[1.04]" : ""}`}
       opacity={dimmed ? 0.6 : 1}
     >
       <title>{place ? `${b.id} ${place.name_th}` : (b.name ?? "อาคาร")}</title>
       {/* เงาที่พื้น */}
       {b.polys.map((p, i) => (
-        <path key={`s${i}`} d={"M" + p.pts.map(([x, y]) => `${x + 3} ${y + 2}`).join(" L") + " Z"} fill="var(--ink)" opacity={0.1} />
+        <path key={`s${i}`} d={"M" + p.pts.map(([x, y]) => `${x + 3} ${y + 2}`).join(" L") + " Z"} fill="var(--ink)" opacity={0.12} />
       ))}
-      <path d={g.wallsLight} fill={wall} />
-      <path d={g.wallsShade} fill={wallShade} />
-      <path d={g.wallsLight + g.wallsShade} fill="url(#map-windows)" opacity={0.55} />
+
+      {/* ผนัง: สีจริงของตึก · ด้านขวาเงาเข้มกว่า · ลายหน้าต่างตามแบบตึก */}
+      <path d={g.wallsLight + g.wallsShade} fill={wall} />
+      <path d={g.wallsLight + g.wallsShade} fill={`url(#win-${style.windows})`} />
+      <path d={g.wallsShade} fill="#2b1d12" opacity={0.14} />
+      {g.ledges && <path d={g.ledges} stroke="white" strokeOpacity={style.windows === "band" ? 0.85 : 0.35} strokeWidth={style.windows === "band" ? 0.7 : 0.35} fill="none" />}
+      {style.accent && <path d={g.stripes} stroke={style.accent} strokeWidth={style.windows === "balcony" ? 1.6 : 1} strokeLinecap="round" fill="none" />}
+      <path d={g.wallsLight + g.wallsShade} fill="none" stroke={edge} strokeWidth={0.5} />
+
+      {/* หลังคาทางเข้า (เช่น หลังคาโลหะเฉียงหน้าตึก SIT) */}
+      {deco.has("canopy") && g.front && <Canopy front={g.front} />}
+
       {g.roofs.map((d, i) => (
         <path
           key={i}
@@ -371,21 +387,101 @@ function BuildingShape({
           className="roof"
           fill={roof}
           stroke={selected ? "var(--brand-ink)" : edge}
-          strokeWidth={selected ? 3 : 1}
+          strokeWidth={selected ? 3 : 0.8}
           strokeDasharray={b.approx && !selected ? "4 3" : undefined}
           strokeLinejoin="round"
         />
+      ))}
+      {/* ขอบหลังคา (กันตก) สีอ่อน ให้หลังคาดูมีมิติ */}
+      {!lit && g.roofs.map((d, i) => <path key={`p${i}`} d={d} fill="none" stroke="white" strokeOpacity={0.55} strokeWidth={0.9} transform="translate(0.6 0.6)" pointerEvents="none" />)}
+
+      {/* ของบนหลังคา */}
+      {g.roofItems.map((it, i) =>
+        it.kind === "stair" ? (
+          <g key={i} pointerEvents="none">
+            <rect x={it.x} y={it.y} width={it.w} height={it.h} fill={style.wall} stroke={edge} strokeWidth={0.4} />
+            <rect x={it.x} y={it.y - 2} width={it.w} height={it.h} fill={lit ? "var(--building-lit)" : style.roof} stroke={edge} strokeWidth={0.4} />
+          </g>
+        ) : (
+          <g key={i} pointerEvents="none">
+            <rect x={it.x} y={it.y} width={it.w} height={it.h} rx={0.3} fill="#b9bec2" stroke="#8e959b" strokeWidth={0.3} />
+            <circle cx={it.x + it.w / 2} cy={it.y + it.h / 2} r={0.7} fill="#7d858c" />
+          </g>
+        ),
+      )}
+      {deco.has("garden") && <RoofGarden at={g.roofCenter} size={g.roofSize} />}
+    </g>
+  );
+}
+
+/** หลังคาทางเข้ายื่นออกจากผนังหน้า (ตรงกลางผนังที่กว้างที่สุด) */
+function Canopy({ front }: { front: NonNullable<BuildingGeom["front"]> }) {
+  const { a, c } = front;
+  const mx = (a[0] + c[0]) / 2;
+  const my = (a[1] + c[1]) / 2;
+  const len = Math.hypot(c[0] - a[0], c[1] - a[1]) || 1;
+  const ux = (c[0] - a[0]) / len;
+  const uy = (c[1] - a[1]) / len;
+  const w = Math.min(14, len * 0.35);
+  const lift = 3.5;
+  const pts = [
+    [mx - ux * w, my - uy * w - lift],
+    [mx + ux * w, my + uy * w - lift],
+    [mx + ux * w + 1.5, my + uy * w - lift + 5],
+    [mx - ux * w - 1.5, my - uy * w - lift + 5],
+  ];
+  return (
+    <g pointerEvents="none">
+      <line x1={mx - ux * w * 0.8} y1={my - uy * w * 0.8 + 1} x2={mx - ux * w * 0.8} y2={my - uy * w * 0.8 + 5 - lift} stroke="#8a9299" strokeWidth={0.6} />
+      <line x1={mx + ux * w * 0.8} y1={my + uy * w * 0.8 + 1} x2={mx + ux * w * 0.8} y2={my + uy * w * 0.8 + 5 - lift} stroke="#8a9299" strokeWidth={0.6} />
+      <path d={"M" + pts.map((p) => p.map((n) => n.toFixed(1)).join(" ")).join(" L") + " Z"} fill="#c8ced3" stroke="#8a9299" strokeWidth={0.5} />
+    </g>
+  );
+}
+
+/** สวนบนหลังคา: พุ่มไม้กลม ๆ */
+function RoofGarden({ at, size }: { at: { x: number; y: number }; size: number }) {
+  const r = Math.max(1.6, Math.min(3.2, size / 9));
+  const spots = [[-1.6, -0.6], [0, 0.8], [1.5, -0.4], [-0.6, 1.6], [0.9, 1.9]];
+  return (
+    <g pointerEvents="none">
+      {spots.map(([dx, dy], i) => (
+        <g key={i}>
+          <circle cx={at.x + dx * r * 1.4} cy={at.y + dy * r * 1.2} r={r} fill="var(--map-tree)" />
+          <circle cx={at.x + dx * r * 1.4 - r * 0.3} cy={at.y + dy * r * 1.2 - r * 0.3} r={r * 0.55} fill="var(--map-tree-light)" />
+        </g>
       ))}
     </g>
   );
 }
 
-/** ลายหน้าต่างบนผนังตึก */
+/** ลายหน้าต่างแต่ละแบบ วาดทับสีผนัง (หน่วยเดียวกับแผนที่: 1 ชั้น ≈ 1.3 หน่วย) */
 function WindowPattern() {
+  const glass = "#5f7f94";
+  const F = FLOOR;
   return (
     <defs>
-      <pattern id="map-windows" width={5} height={4} patternUnits="userSpaceOnUse">
-        <rect x={1} y={1} width={3} height={1.6} rx={0.4} fill="white" />
+      {/* ช่องหน้าต่างเรียงเป็นตาราง ชั้นละแถว */}
+      <pattern id="win-grid" width={3.2} height={F} patternUnits="userSpaceOnUse">
+        <rect x={0.7} y={F * 0.25} width={1.8} height={F * 0.5} rx={0.2} fill={glass} opacity={0.55} />
+      </pattern>
+      {/* แถบหน้าต่างยาวต่อเนื่องทุกชั้น */}
+      <pattern id="win-band" width={10} height={F} patternUnits="userSpaceOnUse">
+        <rect x={0} y={F * 0.28} width={10} height={F * 0.45} fill={glass} opacity={0.5} />
+      </pattern>
+      {/* ผนังกระจก: เส้นกรอบกระจกบาง ๆ */}
+      <pattern id="win-glass" width={2.4} height={F} patternUnits="userSpaceOnUse">
+        <rect x={0} y={0} width={2.4} height={F} fill="white" opacity={0.08} />
+        <path d={`M0 0 V${F} M0 ${F / 2} H2.4`} stroke="white" strokeOpacity={0.55} strokeWidth={0.25} />
+      </pattern>
+      {/* ครีบแนวตั้ง: ร่องเงาระหว่างครีบ */}
+      <pattern id="win-fins" width={2.2} height={F} patternUnits="userSpaceOnUse">
+        <rect x={0.9} y={F * 0.12} width={0.9} height={F * 0.76} fill={glass} opacity={0.45} />
+      </pattern>
+      {/* ระเบียงห้องพัก: ช่องเข้มกับราวระเบียงขาว */}
+      <pattern id="win-balcony" width={3} height={F} patternUnits="userSpaceOnUse">
+        <rect x={0.4} y={F * 0.15} width={2.2} height={F * 0.5} fill={glass} opacity={0.5} />
+        <rect x={0.2} y={F * 0.65} width={2.6} height={F * 0.2} fill="white" opacity={0.9} />
       </pattern>
     </defs>
   );
@@ -543,9 +639,10 @@ function Legend({ hidden }: { hidden: boolean }) {
       </div>
       {open && (
         <ul className="grid gap-1 pt-0.5">
-          <LegendRow swatch="var(--map-roof-key)" edge="var(--map-wall-key-shade)" label="คณะ อาหาร ที่เรียน หอพัก" />
-          <LegendRow swatch="var(--map-roof)" edge="var(--map-wall-shade)" label="อาคารอื่น" />
-          <LegendRow swatch="var(--map-roof)" edge="var(--map-wall-shade)" dashed label="ตำแหน่งโดยประมาณ" />
+          <LegendRow swatch="#b9473c" edge="#8a2f27" label="สีตึกตามรูปจริง (เช่น ตึกแดง วิศววัฒนะ)" />
+          <LegendRow swatch="#4f9c9a" edge="#3a7774" label="ผนังกระจก (FIBO หอสมุด)" />
+          <LegendRow swatch="#ede7dd" edge="#bfb4a4" label="ตึกที่ยังไม่มีรูปอ้างอิง" />
+          <LegendRow swatch="#ede7dd" edge="#bfb4a4" dashed label="ตำแหน่งโดยประมาณ" />
           <LegendRow swatch="var(--map-lawn)" label="สวน สนามหญ้า" />
           <LegendRow swatch="var(--map-water)" label="สระน้ำ คลอง" />
           <LegendRow swatch="var(--map-footway)" label="ทางเดิน" />
