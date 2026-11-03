@@ -176,13 +176,40 @@ for (const r of mains) if (r !== longest) delete r.name;
 
 // ---------- กราฟทางเดิน (ใช้หาเส้นทางเดินจริงให้รอยทางมด) ----------
 // ถนน/ทางเดินใน OSM ใช้ node ร่วมกันตรงทางแยก จึงต่อเป็นกราฟได้ตรง ๆ จากรายการ node ของแต่ละเส้น
-const WALKABLE = new Set(["service", "footway", "pedestrian", "path", "steps", "residential", "unclassified", "living_street", "secondary", "tertiary", "primary"]);
+// น้ำหนักต่อระยะทาง: ทางเดินคนถูกสุด ถนนในมอปกติ ซอยและถนนใหญ่แพงขึ้น
+// ช่วงที่อยู่นอกรั้วมหาวิทยาลัยคูณเพิ่มอีก 3 เท่า เส้นทางระหว่างตึกในมอจะไม่ออกไปเดินนอกมอ
+const WALK_COST: Record<string, number> = {
+  footway: 0.85,
+  pedestrian: 0.85,
+  path: 0.9,
+  steps: 1,
+  service: 1,
+  living_street: 1.5,
+  residential: 2,
+  unclassified: 2,
+  tertiary: 2.5,
+  secondary: 2.5,
+  primary: 2.5,
+};
+const OUTSIDE_CAMPUS = 3;
+const campusRing = ring(outerOf(osm(`w${CAMPUS_WAY}`)));
+const insideCampus = ([x, y]: XY) => {
+  let inside = false;
+  for (let i = 0, j = campusRing.length - 1; i < campusRing.length; j = i++) {
+    const [xi, yi] = campusRing[i];
+    const [xj, yj] = campusRing[j];
+    if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) inside = !inside;
+  }
+  return inside;
+};
 const walkIndex = new Map<number, number>();
 const walkNodes: XY[] = [];
-const walkEdges = new Set<string>();
+/** key "a,b" (a < b) → น้ำหนัก */
+const walkEdges = new Map<string, number>();
 const seenWalk = new Set<number>();
 for (const e of all) {
-  if (e.type !== "way" || !WALKABLE.has(e.tags?.highway ?? "") || !e.geometry || !e.nodes || seenWalk.has(e.id)) continue;
+  const typeCost = WALK_COST[e.tags?.highway ?? ""];
+  if (e.type !== "way" || !typeCost || !e.geometry || !e.nodes || seenWalk.has(e.id)) continue;
   seenWalk.add(e.id);
   const ids = e.nodes.map((nodeId, i) => {
     if (!walkIndex.has(nodeId)) {
@@ -193,13 +220,15 @@ for (const e of all) {
   });
   for (let i = 0; i + 1 < ids.length; i++) {
     const [a, b] = ids[i] < ids[i + 1] ? [ids[i], ids[i + 1]] : [ids[i + 1], ids[i]];
-    if (a !== b) walkEdges.add(`${a},${b}`);
+    if (a === b) continue;
+    const mid: XY = [(walkNodes[a][0] + walkNodes[b][0]) / 2, (walkNodes[a][1] + walkNodes[b][1]) / 2];
+    walkEdges.set(`${a},${b}`, typeCost * (insideCampus(mid) ? 1 : OUTSIDE_CAMPUS));
   }
 }
 // ทางเดินบางช่วงใน OSM ไม่ได้ต่อกับถนนหลัก (เช่น ทางเดินรอบสระ): ต่อกลุ่มย่อยเข้ากลุ่มใหญ่ที่จุดใกล้สุด ถ้าห่างไม่เกิน ~20 ม.
 {
   const adj = new Map<number, number[]>();
-  for (const k of walkEdges) {
+  for (const k of walkEdges.keys()) {
     const [a, b] = k.split(",").map(Number);
     adj.set(a, [...(adj.get(a) ?? []), b]);
     adj.set(b, [...(adj.get(b) ?? []), a]);
@@ -235,21 +264,21 @@ for (const e of all) {
         if (d < best.d) best = { d, a: n, b: m };
       }
     }
-    if (best.d <= 20 * S) walkEdges.add(best.a < best.b ? `${best.a},${best.b}` : `${best.b},${best.a}`);
+    if (best.d <= 20 * S) walkEdges.set(best.a < best.b ? `${best.a},${best.b}` : `${best.b},${best.a}`, 1);
   }
 }
 // ตัด node ที่อยู่นอกแผนที่ไกล ๆ ออก แล้วจัดเลขใหม่
 const keepNode = walkNodes.map(([x, y]) => x > -60 && y > -60 && x < W + 60 && y < H + 60);
 const renumber = new Map<number, number>();
-const walk = { nodes: [] as XY[], edges: [] as [number, number][] };
+const walk = { nodes: [] as XY[], edges: [] as [number, number, number][] };
 walkNodes.forEach((p, i) => {
   if (!keepNode[i]) return;
   renumber.set(i, walk.nodes.length);
   walk.nodes.push(p);
 });
-for (const k of walkEdges) {
+for (const [k, cost] of walkEdges) {
   const [a, b] = k.split(",").map(Number);
-  if (renumber.has(a) && renumber.has(b)) walk.edges.push([renumber.get(a)!, renumber.get(b)!]);
+  if (renumber.has(a) && renumber.has(b)) walk.edges.push([renumber.get(a)!, renumber.get(b)!, Math.round(cost * 100) / 100]);
 }
 
 const canals: { d: string; width: number }[] = [];

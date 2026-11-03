@@ -10,7 +10,8 @@ type XY = [number, number];
 type Snap = { edge: number; at: XY; t: number; dist: number };
 
 const { nodes, edges } = mapLayout.walk;
-const edgeLen = edges.map(([a, b]) => Math.hypot(nodes[a][0] - nodes[b][0], nodes[a][1] - nodes[b][1]));
+// "ความยาว" ที่ใช้หาเส้นทาง = ระยะจริง × น้ำหนักของทาง (เลือกทางเดินในมอก่อน ไม่ออกไปเดินริมถนนใหญ่)
+const edgeLen = edges.map(([a, b, cost]) => Math.hypot(nodes[a][0] - nodes[b][0], nodes[a][1] - nodes[b][1]) * cost);
 const neighbors: { to: number; w: number }[][] = nodes.map(() => []);
 edges.forEach(([a, b], i) => {
   neighbors[a].push({ to: b, w: edgeLen[i] });
