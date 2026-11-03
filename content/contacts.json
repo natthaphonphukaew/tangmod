@@ -185,5 +185,86 @@
       "ทั่วไป"
     ],
     "source_url": "https://www.kmutt.ac.th/en/about-kmutt/contact-us/"
+  },
+  {
+    "id": "science",
+    "label": "คณะวิทยาศาสตร์",
+    "phone": "02-470-8978",
+    "email": "pr_fsci@mail.kmutt.ac.th",
+    "web": "https://science.kmutt.ac.th",
+    "social": "FB fsci.kmutt",
+    "topics": ["คณะวิทย์", "คณะวิทยาศาสตร์", "เคมี", "ฟิสิกส์", "คณิตศาสตร์", "จุลชีววิทยา"],
+    "source_url": "https://www.kmutt.ac.th/education/curriculum/faculty-of-science/"
+  },
+  {
+    "id": "fiet",
+    "label": "คณะครุศาสตร์อุตสาหกรรมและเทคโนโลยี (FIET)",
+    "phone": "02-470-9500",
+    "email": "info.fiet@kmutt.ac.th",
+    "web": "https://www.fiet.kmutt.ac.th",
+    "topics": ["คณะครุ", "ครุศาสตร์", "FIET"],
+    "source_url": "https://www.kmutt.ac.th/education/curriculum/faculty-of-industrial-education-and-technology/"
+  },
+  {
+    "id": "sola",
+    "label": "คณะศิลปศาสตร์ (SoLA)",
+    "phone": "02-470-8711, 02-470-8713",
+    "web": "https://sola.pr.kmutt.ac.th",
+    "social": "FB SoLA.KMUTT",
+    "topics": ["คณะศิลปศาสตร์", "SoLA"],
+    "source_url": "https://www.kmutt.ac.th/education/curriculum/school-of-liberal-arts/"
+  },
+  {
+    "id": "seem",
+    "label": "คณะพลังงานสิ่งแวดล้อมและวัสดุ",
+    "phone": "02-470-8610, 02-470-8608",
+    "web": "https://seem.kmutt.ac.th",
+    "topics": ["คณะพลังงาน", "SEE", "SEEM"],
+    "source_url": "https://www.kmutt.ac.th/education/curriculum/school-of-energy-environment-and-materials/"
+  },
+  {
+    "id": "gmi",
+    "label": "บัณฑิตวิทยาลัยการจัดการและนวัตกรรม (GMI)",
+    "phone": "02-470-9799",
+    "email": "gmi@mail.kmutt.ac.th",
+    "web": "http://www.gmi.kmutt.ac.th",
+    "social": "LINE @gmikmutt",
+    "topics": ["GMI"],
+    "source_url": "https://www.kmutt.ac.th/education/curriculum/gmi-kmutt/"
+  },
+  {
+    "id": "jgsee",
+    "label": "บัณฑิตวิทยาลัยร่วมด้านพลังงานและสิ่งแวดล้อม (JGSEE)",
+    "phone": "02-470-8309-10",
+    "email": "academic@jgsee.kmutt.ac.th",
+    "web": "https://www.jgsee.kmutt.ac.th",
+    "topics": ["JGSEE"],
+    "source_url": "https://www.kmutt.ac.th/education/curriculum/jgsee/"
+  },
+  {
+    "id": "soad",
+    "label": "คณะสถาปัตยกรรมศาสตร์และการออกแบบ (SoA+D) มจธ. บางขุนเทียน",
+    "phone": "02-470-7887-8",
+    "email": "arc.off@kmutt.ac.th",
+    "web": "https://soad.kmutt.ac.th",
+    "social": "FB kmutt.soad",
+    "topics": ["สถาปัตย์", "คณะสถาปัตยกรรมศาสตร์และการออกแบบ", "SoA+D"],
+    "source_url": "https://www.kmutt.ac.th/education/curriculum/school-of-architecture-and-design/"
+  },
+  {
+    "id": "sbt",
+    "label": "คณะทรัพยากรชีวภาพและเทคโนโลยี มจธ. บางขุนเทียน",
+    "phone": "02-470-7703",
+    "email": "sbt@kmutt.ac.th",
+    "web": "https://sbt.kmutt.ac.th",
+    "topics": ["คณะทรัพยากรชีวภาพ", "ไบโอเทค", "SBT"],
+    "source_url": "https://www.kmutt.ac.th/education/curriculum/school-of-bioresources-and-technology/"
+  },
+  {
+    "id": "sport",
+    "label": "ฝ่ายกีฬา (ฟิตเนส โรงยิม สนามกีฬา)",
+    "phone": "02-470-8092, 02-470-8095",
+    "topics": ["ยิม", "ฟิตเนส", "สนามกีฬา", "เทนนิส"],
+    "source_url": "https://www.kmutt.ac.th/en/?p=453"
   }
 ]

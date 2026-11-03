@@ -36,7 +36,8 @@
     "aliases": [
       "ตึกวิศวะ",
       "วิศววัฒนะ",
-      "ตึกคอมวิศวะ"
+      "ตึกคอมวิศวะ",
+      "ตึกแดง"
     ],
     "tags": [
       "ภาควิศวกรรมคอมพิวเตอร์ ชั้น 10–11",
@@ -51,7 +52,7 @@
     "description": "ตึกหลักของคณะวิศวกรรมศาสตร์ ภาควิศวกรรมคอมพิวเตอร์อยู่ชั้น 10–11",
     "tier": "official",
     "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
-    "updated_at": "2026-10-28"
+    "updated_at": "2026-11-03"
   },
   {
     "id": "S14",
@@ -115,8 +116,8 @@
   },
   {
     "id": "N1",
-    "name_th": "อาคาร Welcome Center",
-    "name_en": "Welcome Center",
+    "name_th": "อาคารศูนย์ต้อนรับ (Welcome Center)",
+    "name_en": "Welcome Center Building",
     "short": "Welcome",
     "kind": "service",
     "aliases": [
@@ -131,7 +132,7 @@
     "tier": "mock",
     "source_note": "ชื่อตึกมาจาก master plan ทางการ แต่การเป็นที่ตั้งฝ่ายรับสมัครยังเป็นสมมติฐาน",
     "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
-    "updated_at": "2026-10-28"
+    "updated_at": "2026-11-03"
   },
   {
     "id": "N9",
@@ -267,7 +268,8 @@
     "kind": "faculty",
     "aliases": [
       "CB4",
-      "อาคารเรียนรวม 4"
+      "อาคารเรียนรวม 4",
+      "วิทยาลัยสหวิทยาการ"
     ],
     "tags": [
       "ภาควิศวกรรมไฟฟ้า ชั้น 4",
@@ -281,12 +283,16 @@
       {
         "floor": "9–10",
         "what": "ภาควิชาวิศวกรรมอิเล็กทรอนิกส์และโทรคมนาคม (ENE)"
+      },
+      {
+        "floor": "8",
+        "what": "วิทยาลัยสหวิทยาการ (สำนักงาน)"
       }
     ],
-    "description": "อาคารเรียนรวมที่มีภาควิศวกรรมไฟฟ้าและภาค ENE",
+    "description": "อาคารเรียนรวม 4 (CB4) มีภาควิศวกรรมไฟฟ้า ภาค ENE และสำนักงานวิทยาลัยสหวิทยาการชั้น 8",
     "tier": "official",
     "source_url": "https://ene.kmutt.ac.th/th/curriculum.php",
-    "updated_at": "2026-10-28"
+    "updated_at": "2026-11-03"
   },
   {
     "id": "S13",
@@ -296,13 +302,26 @@
     "kind": "study",
     "aliases": [
       "CB3",
-      "อาคารเรียนรวม 3"
+      "อาคารเรียนรวม 3",
+      "คณะครุ",
+      "ครุศาสตร์",
+      "คณะครุศาสตร์อุตสาหกรรมและเทคโนโลยี",
+      "FIET",
+      "ตึกครุ"
     ],
-    "tags": [],
-    "description": "อาคารเรียนรวม 3 ใช้เป็นห้องเรียนรวมของหลายคณะ",
-    "tier": "mock",
-    "source_note": "การจับคู่ CB3 = S13 อนุมานจากชื่อตึกในผังทางการ ยังต้องตรวจซ้ำ",
-    "updated_at": "2026-10-29"
+    "tags": [
+      "สำนักงานคณบดีคณะครุศาสตร์อุตสาหกรรมฯ ชั้น 2"
+    ],
+    "description": "อาคารเรียนรวม 3 (CB3) ห้องเรียนรวมของหลายคณะ และเป็นที่ตั้งสำนักงานคณบดีคณะครุศาสตร์อุตสาหกรรมและเทคโนโลยี (คณะครุ) ชั้น 2",
+    "tier": "official",
+    "updated_at": "2026-11-03",
+    "source_url": "https://www.kmutt.ac.th/education/curriculum/faculty-of-industrial-education-and-technology",
+    "floors": [
+      {
+        "floor": "2",
+        "what": "สำนักงานคณบดี คณะครุศาสตร์อุตสาหกรรมและเทคโนโลยี (FIET)"
+      }
+    ]
   },
   {
     "id": "S15",
@@ -462,15 +481,34 @@
       "เฮลิโคเนีย",
       "โรงแรมในมอ",
       "โรงแรมในมจธ",
-      "โรงแรมใน มจธ"
+      "โรงแรมใน มจธ",
+      "ไปรษณีย์",
+      "ไปรษณีย์ในมอ",
+      "ร้านหนังสือ",
+      "Book Center",
+      "ร้านสหกรณ์",
+      "ตลาดนัด"
     ],
     "tags": [
-      "จอดรถยนต์"
+      "จอดรถยนต์",
+      "ไปรษณีย์",
+      "ร้านหนังสือ",
+      "ตลาดนัดวันพุธ พฤหัส"
     ],
-    "description": "อาคารจอดรถ 14 ชั้นของมหาวิทยาลัย ชั้น 12–14 เป็น Heliconia House (โรงแรมและเซอร์วิสอพาร์ทเม้นท์ของ มจธ. ที่บางคนเรียกว่าโรงแรมในมอ)",
+    "description": "อาคารจอดรถ 14 ชั้นของมหาวิทยาลัย จอดได้ประมาณ 400 คัน ชั้นล่างมีไปรษณีย์ ร้านหนังสือ และร้านสหกรณ์ มีตลาดนัดวันพุธและพฤหัสบดีที่อาคารนี้ ชั้น 12–14 เป็น Heliconia House (โรงแรมและเซอร์วิสอพาร์ทเม้นท์ของ มจธ. ที่บางคนเรียกว่าโรงแรมในมอ)",
     "tier": "official",
-    "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
-    "updated_at": "2026-10-28"
+    "source_url": "https://www.kmutt.ac.th/en/?p=453",
+    "updated_at": "2026-11-03",
+    "floors": [
+      {
+        "floor": "1 (ชั้นล่าง)",
+        "what": "ไปรษณีย์ (จ.–ศ. 08:30–16:30), ร้านหนังสือ (จ.–ศ. 08:00–17:00 ยกเว้นวันหยุดราชการ), ร้านสหกรณ์"
+      },
+      {
+        "floor": "12–14",
+        "what": "Heliconia House"
+      }
+    ]
   },
   {
     "id": "N15",
@@ -480,15 +518,19 @@
     "kind": "faculty",
     "aliases": [
       "ศิลปศาสตร์",
-      "Liberal Arts"
+      "Liberal Arts",
+      "คณะศิลปศาสตร์",
+      "คณะศิลป์",
+      "SoLA",
+      "ตึกศิลปศาสตร์"
     ],
     "tags": [
       "สอนร่วมในหลักสูตร DSI"
     ],
-    "description": "ตึกของคณะศิลปศาสตร์ ซึ่งสอนหลักสูตร DSI ร่วมกับ SIT",
+    "description": "ตึกของคณะศิลปศาสตร์ (SoLA) สอนหลักสูตร DSI ร่วมกับ SIT",
     "tier": "official",
     "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
-    "updated_at": "2026-10-28"
+    "updated_at": "2026-11-03"
   },
   {
     "id": "bus_stop_front",
@@ -532,5 +574,301 @@
     "source_note": "ตำแหน่งบนแผนที่เป็นค่าประมาณ ยังไม่ได้ยืนยันด้วยการเดินสำรวจ",
     "source_url": "https://www.kmutt.ac.th/en/about-kmutt/contact-us/",
     "updated_at": "2026-10-28"
+  },
+  {
+    "id": "S1",
+    "name_th": "อาคารศูนย์การเรียนรู้เพื่อการค้นพบ",
+    "name_en": "Discovery Center Building",
+    "short": "Discovery",
+    "kind": "service",
+    "aliases": [
+      "Discovery Center"
+    ],
+    "tags": [],
+    "description": "อาคารศูนย์การเรียนรู้เพื่อการค้นพบ (Discovery Center)",
+    "tier": "official",
+    "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
+    "updated_at": "2026-11-03"
+  },
+  {
+    "id": "S3",
+    "name_th": "อาคารสถาบันนวัตกรรมการเรียนรู้เฉลิมพระเกียรติ 80 พรรษา มูลนิธิไทยคม",
+    "name_en": "Innovative Learning Institute of 80 Year Commemoration of King Rama IX",
+    "short": "สถาบันการเรียนรู้",
+    "kind": "study",
+    "aliases": [
+      "สถาบันการเรียนรู้",
+      "ตึกไทยคม",
+      "มูลนิธิไทยคม"
+    ],
+    "tags": [],
+    "description": "อาคารของสถาบันการเรียนรู้ (มูลนิธิไทยคม)",
+    "tier": "official",
+    "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
+    "updated_at": "2026-11-03"
+  },
+  {
+    "id": "S7",
+    "name_th": "อาคารพัฒนาเด็กเล็ก มจธ.",
+    "name_en": "KMUTT Child Development Building",
+    "short": "พัฒนาเด็กเล็ก",
+    "kind": "service",
+    "aliases": [
+      "ศูนย์พัฒนาเด็กเล็ก"
+    ],
+    "tags": [],
+    "description": "อาคารศูนย์พัฒนาเด็กเล็กของ มจธ.",
+    "tier": "official",
+    "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
+    "updated_at": "2026-11-03"
+  },
+  {
+    "id": "S8",
+    "name_th": "อาคารโรงประลองเทคโนโลยีและวัสดุ",
+    "name_en": "Technology and Materials Workshop Building",
+    "short": "โรงประลอง",
+    "kind": "faculty",
+    "aliases": [
+      "โรงประลองเทคโนโลยีและวัสดุ"
+    ],
+    "tags": [],
+    "description": "อาคารโรงประลองเทคโนโลยีและวัสดุ คณะพลังงานสิ่งแวดล้อมและวัสดุใช้อาคาร S8–S9",
+    "tier": "official",
+    "source_url": "https://www.kmutt.ac.th/education/curriculum/school-of-energy-environment-and-materials/",
+    "updated_at": "2026-11-03"
+  },
+  {
+    "id": "S9",
+    "name_th": "อาคารเรียนและปฏิบัติการคณะพลังงาน สิ่งแวดล้อมและวัสดุ",
+    "name_en": "School of Energy, Environment and Materials Building",
+    "short": "SEE",
+    "kind": "faculty",
+    "aliases": [
+      "คณะพลังงาน",
+      "คณะพลังงานสิ่งแวดล้อมและวัสดุ",
+      "SEE",
+      "SEEM",
+      "ตึกพลังงาน"
+    ],
+    "tags": [],
+    "description": "ตึกของคณะพลังงานสิ่งแวดล้อมและวัสดุ (ใช้อาคาร S8–S9) คณะนี้เปิดสอนเฉพาะปริญญาโทและเอก",
+    "tier": "official",
+    "source_url": "https://www.kmutt.ac.th/education/curriculum/school-of-energy-environment-and-materials/",
+    "updated_at": "2026-11-03"
+  },
+  {
+    "id": "S10",
+    "name_th": "อาคารสังคมสีเขียว มจธ.",
+    "name_en": "KMUTT Green Society Building",
+    "short": "Green Society",
+    "kind": "service",
+    "aliases": [
+      "Green Society",
+      "สังคมสีเขียว"
+    ],
+    "tags": [],
+    "description": "อาคารสังคมสีเขียว มจธ. (KMUTT Green Society)",
+    "tier": "official",
+    "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
+    "updated_at": "2026-11-03"
+  },
+  {
+    "id": "N2",
+    "name_th": "อาคารสำนักงานอธิการบดี",
+    "name_en": "Office of The President Building",
+    "short": "อธิการบดี",
+    "kind": "service",
+    "aliases": [
+      "ตึกอธิการบดี",
+      "สำนักงานอธิการบดี",
+      "ตึกอธิการ"
+    ],
+    "tags": [],
+    "description": "อาคารสำนักงานอธิการบดี",
+    "tier": "official",
+    "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
+    "updated_at": "2026-11-03"
+  },
+  {
+    "id": "N3",
+    "name_th": "อาคารภาควิชาเคมี",
+    "name_en": "Department of Chemistry Building",
+    "short": "เคมี",
+    "kind": "faculty",
+    "aliases": [
+      "ตึกเคมี",
+      "ภาควิชาเคมี",
+      "ภาคเคมี คณะวิทย์"
+    ],
+    "tags": [],
+    "description": "ตึกภาควิชาเคมี คณะวิทยาศาสตร์ (ไม่ใช่ภาควิศวกรรมเคมี ซึ่งอยู่ S15)",
+    "tier": "official",
+    "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
+    "updated_at": "2026-11-03"
+  },
+  {
+    "id": "N4",
+    "name_th": "อาคารภาควิชาฟิสิกส์-คณิตศาสตร์",
+    "name_en": "Department of Physics-Mathematics Building",
+    "short": "ฟิสิกส์-คณิต",
+    "kind": "faculty",
+    "aliases": [
+      "ตึกฟิสิกส์",
+      "ตึกคณิต",
+      "ภาควิชาฟิสิกส์",
+      "ภาควิชาคณิตศาสตร์"
+    ],
+    "tags": [],
+    "description": "ตึกภาควิชาฟิสิกส์และภาควิชาคณิตศาสตร์ คณะวิทยาศาสตร์",
+    "tier": "official",
+    "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
+    "updated_at": "2026-11-03"
+  },
+  {
+    "id": "N5",
+    "name_th": "อาคารศูนย์เครื่องมือวิทยาศาสตร์เพื่อมาตรฐานและอุตสาหกรรม",
+    "name_en": "Scientific Instrument Center for Standards and Industry Building",
+    "short": "ศูนย์เครื่องมือ",
+    "kind": "service",
+    "aliases": [
+      "ศูนย์เครื่องมือวิทยาศาสตร์"
+    ],
+    "tags": [],
+    "description": "อาคารศูนย์เครื่องมือวิทยาศาสตร์เพื่อมาตรฐานและอุตสาหกรรม",
+    "tier": "official",
+    "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
+    "updated_at": "2026-11-03"
+  },
+  {
+    "id": "N6",
+    "name_th": "อาคารภาควิชาจุลชีววิทยา",
+    "name_en": "Department of Microbiology Building",
+    "short": "จุลชีว",
+    "kind": "faculty",
+    "aliases": [
+      "ตึกจุลชีว",
+      "ภาควิชาจุลชีววิทยา",
+      "จุลชีววิทยา"
+    ],
+    "tags": [],
+    "description": "ตึกภาควิชาจุลชีววิทยา คณะวิทยาศาสตร์",
+    "tier": "official",
+    "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
+    "updated_at": "2026-11-03"
+  },
+  {
+    "id": "N7",
+    "name_th": "อาคารปฏิบัติการพื้นฐานทางวิทยาศาสตร์",
+    "name_en": "Fundamental Science Laboratory Building",
+    "short": "SCL",
+    "kind": "faculty",
+    "aliases": [
+      "SCL",
+      "ตึก SCL",
+      "ตึกแล็บวิทย์",
+      "ตึกวิทย์",
+      "คณะวิทย์",
+      "คณะวิทยาศาสตร์"
+    ],
+    "tags": [],
+    "description": "อาคารปฏิบัติการพื้นฐานทางวิทยาศาสตร์ (SCL) ใช้เรียนแล็บวิทย์พื้นฐาน คณะวิทยาศาสตร์มีหลายตึก ได้แก่ N3 เคมี, N4 ฟิสิกส์-คณิต, N6 จุลชีว และ N7 SCL",
+    "tier": "official",
+    "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
+    "conflict_note": "บล็อกนักศึกษาปี 2560 (more-map.blogspot.com) บอกว่าสำนักงานคณบดีคณะวิทยาศาสตร์อยู่ชั้น 1–3 ของ SCL ยังไม่ได้ยืนยันกับแหล่งทางการ",
+    "updated_at": "2026-11-03"
+  },
+  {
+    "id": "N8",
+    "name_th": "สถานีสูบน้ำ",
+    "name_en": "Water Pump Station",
+    "short": "สูบน้ำ",
+    "kind": "service",
+    "aliases": [],
+    "tags": [],
+    "description": "สถานีสูบน้ำของมหาวิทยาลัย",
+    "tier": "official",
+    "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
+    "updated_at": "2026-11-03"
+  },
+  {
+    "id": "N12",
+    "name_th": "อาคารอเนกประสงค์",
+    "name_en": "Utility Exchange Building",
+    "short": "อเนกประสงค์",
+    "kind": "service",
+    "aliases": [
+      "Utility Exchange"
+    ],
+    "tags": [],
+    "description": "อาคารอเนกประสงค์ (Utility Exchange)",
+    "tier": "official",
+    "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
+    "updated_at": "2026-11-03"
+  },
+  {
+    "id": "N13",
+    "name_th": "อาคาร Workshop & Green House",
+    "name_en": "Workshop & Green House Building",
+    "short": "Workshop",
+    "kind": "service",
+    "aliases": [
+      "Green House",
+      "กรีนเฮาส์"
+    ],
+    "tags": [],
+    "description": "อาคาร Workshop และโรงเรือน Green House",
+    "tier": "official",
+    "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
+    "updated_at": "2026-11-03"
+  },
+  {
+    "id": "N14",
+    "name_th": "อาคารไฟฟ้าแรงสูง",
+    "name_en": "Hi-Voltage Building",
+    "short": "ไฟฟ้าแรงสูง",
+    "kind": "faculty",
+    "aliases": [
+      "ตึกไฟฟ้าแรงสูง",
+      "Hi-Voltage"
+    ],
+    "tags": [],
+    "description": "อาคารไฟฟ้าแรงสูง (Hi-Voltage)",
+    "tier": "official",
+    "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
+    "updated_at": "2026-11-03"
+  },
+  {
+    "id": "N18",
+    "name_th": "อาคารปฏิบัติการทางวิศวกรรมอุตสาหการ 4",
+    "name_en": "Production Engineering Laboratory Building 4",
+    "short": "แล็บอุตสาหการ",
+    "kind": "faculty",
+    "aliases": [
+      "ตึกอุตสาหการ",
+      "แล็บอุตสาหการ"
+    ],
+    "tags": [],
+    "description": "อาคารปฏิบัติการทางวิศวกรรมอุตสาหการ 4",
+    "tier": "official",
+    "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
+    "updated_at": "2026-11-03"
+  },
+  {
+    "id": "N19",
+    "name_th": "อาคารบัณฑิตวิทยาลัยการจัดการและนวัตกรรม (GMI)",
+    "name_en": "Graduate School of Management and Innovation Building",
+    "short": "GMI",
+    "kind": "faculty",
+    "aliases": [
+      "GMI",
+      "บัณฑิตวิทยาลัยการจัดการและนวัตกรรม",
+      "ตึก GMI"
+    ],
+    "tags": [],
+    "description": "ตึกของบัณฑิตวิทยาลัยการจัดการและนวัตกรรม (GMI) เปิดสอนระดับบัณฑิตศึกษา",
+    "tier": "official",
+    "source_url": "https://bgm.kmutt.ac.th/MapNavi/MAPNAVI.html",
+    "conflict_note": "หน้าหลักสูตรของ มจธ. ระบุที่อยู่ GMI ว่าอาคารเรียนรวม 5 ชั้น 8 แต่ผังมหาวิทยาลัย (MapNavi) มีอาคาร N19 ชื่ออาคาร GMI ใช้ N19 ตามผัง",
+    "updated_at": "2026-11-03"
   }
 ]

@@ -42,10 +42,10 @@
   "expect": { "places_any": ["N17"], "show_map": true, "include": ["ชั้น\\W*3"] }
  },
  {
-  "id": "chip-study-1am",
+  "id": "chip-fiet",
   "cat": "official",
-  "q": "ตี 1 อ่านหนังสือที่ไหนได้",
-  "expect": { "include": ["24|SIT"] }
+  "q": "คณะครุอยู่ตึกไหน",
+  "expect": { "places_any": ["S13"], "include": ["CB3|S13|อาคารเรียนรวม 3"] }
  },
  {
   "id": "chip-final-exam",
@@ -56,8 +56,8 @@
  {
   "id": "chip-gym",
   "cat": "niche",
-  "q": "ยิมมอเปิดกี่โมง",
-  "expect": { "include": ["0?6[:.]00|6 โมง"] }
+  "q": "ยิมในมออยู่ไหน เปิดกี่โมง",
+  "expect": { "places_any": ["S14"], "include": ["0?6[:.]00|6 โมง", "S14|190 ปี"] }
  },
  {
   "id": "chip-student-card",
