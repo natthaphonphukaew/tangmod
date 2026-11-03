@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { places } from "@/lib/data";
+import { pointInPolygon, polylinePoints } from "./decor";
 import { mapLayout } from "./layout";
 import { routeLength, routePath, walkingRoute } from "./route";
 
@@ -23,6 +24,15 @@ describe("เส้นทางเดินของรอยทางมด", (
     const middle = route.slice(2, -2);
     expect(middle.length).toBeGreaterThan(0);
     for (const p of middle) expect(nodeKeys.has(`${p.x},${p.y}`), `${p.x},${p.y}`).toBe(true);
+  });
+
+  it("เดินระหว่างตึกในมอ ไม่ออกไปเดินนอกรั้ว (เช่น S14 ไป SIT, หอหญิงไป CB3)", () => {
+    const ground = mapLayout.areas.find((a) => a.kind === "ground")!;
+    const campus = polylinePoints(ground.d);
+    for (const ids of [["S14", "N11"], ["S6", "S13"], ["N9", "S14"]]) {
+      // เผื่อขอบ: ตัดจุดหัวท้ายที่เป็นขอบตึก
+      for (const p of walkingRoute(ids).slice(1, -1)) expect(pointInPolygon(p, campus), `${ids.join("→")} ผ่าน (${p.x},${p.y})`).toBe(true);
+    }
   });
 
   it("ผ่านหลายจุดตามลำดับ รวมจุดที่ไม่ใช่ตึก (ประตูหน้า)", () => {

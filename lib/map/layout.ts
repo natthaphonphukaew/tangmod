@@ -60,7 +60,8 @@ const MapLayout = z.object({
   /** ประตูอื่น ๆ ในมอ (ตกแต่ง ไม่มีข้อมูลให้กด) */
   gates: z.array(XY),
   /** กราฟทางเดิน (ถนน ทางเดิน บันได จาก OSM) สำหรับหาเส้นทางเดินจริง ดู lib/map/route.ts */
-  walk: z.object({ nodes: z.array(XY), edges: z.array(z.tuple([z.number().int(), z.number().int()])) }),
+  /** edges: [จุด a, จุด b, น้ำหนักต่อระยะ] ทางเดินคนถูกกว่าถนน และนอกรั้วมอแพงกว่าในมอ */
+  walk: z.object({ nodes: z.array(XY), edges: z.array(z.tuple([z.number().int(), z.number().int(), z.number().positive()])) }),
 });
 export type MapLayout = z.infer<typeof MapLayout>;
 export type MapPoint = MapLayout["points"][number];
