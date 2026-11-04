@@ -16,6 +16,8 @@
   /* ขอบการ์ดที่กดได้: --line จางเกิน (1.37:1) มองไม่ออกว่าเป็นปุ่ม */
   --line-strong: #d9c9ae;
   --brand-tint: #fde9dc;
+  /* พื้นเมนูที่เลือกอยู่/ตอนกด: brand-tint จางเกินบนพื้นกระดาษ (แทบไม่เห็น) */
+  --brand-tint-strong: #fbd2bb;
   --trail-tint: #fff4d6;
 
   --brand: #fa4616;
@@ -84,6 +86,7 @@
   --color-line-strong: var(--line-strong);
   --color-brand-tint: var(--brand-tint);
   --color-trail-tint: var(--trail-tint);
+  --color-brand-tint-strong: var(--brand-tint-strong);
   --color-sun: var(--sun);
 
   --font-sans: var(--font-anuphan), system-ui, sans-serif;

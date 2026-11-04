@@ -70,5 +70,13 @@
   "cat": "official",
   "q": "เดือนนี้มอหยุดวันไหนบ้าง",
   "expect": { "include": ["วันหยุด|ไม่มี"], "exclude": ["สิงหา|วันแม่|เมษา|มกรา"], "show_map": false }
- }
+ },
+ {"id": "chip-study-1am", "cat": "official", "q": "ตี 1 อ่านหนังสือที่ไหนได้", "expect": {"include": ["24|SIT"]}},
+ {"id": "chip-science", "cat": "official", "q": "คณะวิทย์อยู่ตึกไหน", "expect": {"places_any": ["N7", "N3", "N4", "N6"], "show_map": true}},
+ {"id": "chip-soad", "cat": "official", "q": "คณะสถาปัตย์อยู่บางมดไหม", "expect": {"include": ["บางขุนเทียน"], "show_map": false}},
+ {"id": "chip-post", "cat": "official", "q": "ไปรษณีย์ในมออยู่ไหน", "expect": {"places_any": ["S2"]}},
+ {"id": "chip-walk-kfc", "cat": "official", "q": "จากหอสมุดเดินไปโรงอาหาร KFC ยังไง", "expect": {"places_any": ["S14"], "show_map": true}},
+ {"id": "chip-shuttle", "cat": "official", "q": "รถ shuttle ไปบางขุนเทียนขึ้นตรงไหน", "expect": {"places_any": ["shuttle_stop", "N2"]}},
+ {"id": "chip-dorm-outside", "cat": "official", "q": "หาหอนอกใกล้มอได้ที่ไหน", "expect": {"include": ["Facebook|OpenChat|กลุ่ม"]}},
+ {"id": "chip-clubs", "cat": "official", "q": "ชมรมในมอมีอะไรบ้าง สมัครยังไง", "expect": {"include": ["ชมรม"]}}
 ]

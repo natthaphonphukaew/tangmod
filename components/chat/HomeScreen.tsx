@@ -1,9 +1,9 @@
 "use client";
 
-import { ArrowRight, ArrowsClockwise, CaretRight, Compass, Sparkle } from "@phosphor-icons/react";
+import { ArrowRight, CaretRight, Compass, Sparkle } from "@phosphor-icons/react";
 import { AntMascot } from "@/components/brand/AntMascot";
 import { assistant } from "@/lib/data";
-import { CHIPS_SHOWN, chipMeta, reshuffleChips, TONE_CLASS, useStarterChips } from "./starter-chips";
+import { CHIPS_SHOWN, chipMeta, TONE_CLASS, useStarterChips } from "./starter-chips";
 
 /*
  * หน้าแรกของแชทใหม่ (อิง ref ที่เจ้าของโปรเจกต์เลือก): หัวข้อสองสี + น้องมด → แบนเนอร์เข็มทิศ → การ์ดคำถามตัวอย่าง
@@ -59,14 +59,7 @@ export function HomeScreen({ onPick, onOpenCompass }: { onPick: (text: string) =
 
         <div className="mt-6 flex items-center gap-2 xl:mt-8">
           <Sparkle size={22} weight="fill" className="text-trail" />
-          <h3 className="flex-1 font-display text-lg text-ink">ลองถามดู</h3>
-          <button
-            type="button"
-            onClick={reshuffleChips}
-            className="inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 text-sm text-ink-soft hover:bg-card hover:text-ink lg:min-h-9"
-          >
-            <ArrowsClockwise size={16} /> สุ่มใหม่
-          </button>
+          <h3 className="flex-1 font-display text-lg text-ink">คำถามที่พบบ่อย</h3>
         </div>
 
         <ul className={`mt-3 grid auto-rows-fr grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3 ${chips ? "" : "invisible"}`}>
