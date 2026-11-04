@@ -77,6 +77,22 @@ function programChunk(p: Program): Chunk {
 
 const THAI_DAY: Record<string, string> = { mon: "จ.", tue: "อ.", wed: "พ.", thu: "พฤ.", fri: "ศ.", sat: "ส.", sun: "อา." };
 
+// ผู้ใช้พิมพ์ "2 ธันวา" ไม่ใช่ 2026-12-02 และโมเดลแปลงเลขเดือนผิดได้ (เคยตอบรอบ 3 ที่เป็น 2027-05 ว่า "พฤศจิกายน")
+// จึงเขียนวันที่ภาษาไทยกำกับทุกที่ แล้ววงเล็บค่า ISO ไว้ท้าย
+const thaiFormat = (opts: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat("th-TH", { ...opts, timeZone: "UTC" });
+const DAY = thaiFormat({ day: "numeric", month: "long", year: "numeric" });
+const WEEKDAY = thaiFormat({ weekday: "long", day: "numeric", month: "long", year: "numeric" });
+const asDate = (iso: string) => new Date(`${iso}T00:00:00Z`);
+
+/** "วันศุกร์ที่ 5 ธันวาคม 2569" */
+export const thaiDate = (iso: string) => WEEKDAY.format(asDate(iso));
+
+/** "7 พฤษภาคม 2570 ถึง 11 พฤษภาคม 2570 (2027-05-07 ถึง 2027-05-11)" · วันเดียวกันเขียนวันเดียว */
+export function thaiRange(start: string, end: string): string {
+  if (start === end) return `${DAY.format(asDate(start))} (${start})`;
+  return `${DAY.format(asDate(start))} ถึง ${DAY.format(asDate(end))} (${start} ถึง ${end})`;
+}
+
 function structuredChunks(): Chunk[] {
   const chunks: Chunk[] = programs.map(programChunk);
 
@@ -111,7 +127,7 @@ function structuredChunks(): Chunk[] {
       id: `tcas:${e.id}`,
       namespace: "admission",
       title: `TCAS70 รอบ ${e.round}: ${e.title}`,
-      text: `TCAS70 (เข้าเรียนปีการศึกษา 2570) รอบ ${e.round} ${e.title} วันที่ ${e.start} ถึง ${e.end}${e.program_ids.length ? ` (หลักสูตร ${e.program_ids.join(", ")})` : ""}${e.conflict_note ? `\nหมายเหตุ: ${e.conflict_note}` : ""}`,
+      text: `TCAS70 (เข้าเรียนปีการศึกษา 2570) รอบ ${e.round} ${e.title} วันที่ ${thaiRange(e.start, e.end)}${e.program_ids.length ? ` (หลักสูตร ${e.program_ids.join(", ")})` : ""}${e.conflict_note ? `\nหมายเหตุ: ${e.conflict_note}` : ""}`,
       tier: e.tier,
       source_url: e.source_url,
       updated_at: e.updated_at,
@@ -124,7 +140,7 @@ function structuredChunks(): Chunk[] {
     title: "ปฏิทินการศึกษา 2569",
     text: [
       ...calendar.terms.map(
-        (t) => `${t.label}: ${t.start} ถึง ${t.end}${t.milestones.map((m) => ` · ${m.label} ${m.start}${m.end !== m.start ? `–${m.end}` : ""}`).join("")}`,
+        (t) => `${t.label}: ${thaiRange(t.start, t.end)}${t.milestones.map((m) => ` · ${m.label} ${thaiRange(m.start, m.end)}`).join("")}`,
       ),
       ...calendar.rules,
     ].join("\n"),
@@ -133,11 +149,6 @@ function structuredChunks(): Chunk[] {
     updated_at: calendar.updated_at,
   });
 
-  // ผู้ใช้พิมพ์ "2 ธันวา" ไม่ใช่ 2026-12-02: เขียนวันที่ภาษาไทยกำกับ ไม่งั้นโมเดลเทียบวันพลาดแล้วตอบว่าวันธรรมดาเป็นวันหยุด
-  const thaiDate = (iso: string) =>
-    new Intl.DateTimeFormat("th-TH", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(
-      new Date(`${iso}T00:00:00Z`),
-    );
   chunks.push({
     id: `holidays:${holidays.year_be}`,
     namespace: "general",
