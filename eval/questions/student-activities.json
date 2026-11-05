@@ -203,22 +203,33 @@
   }
  },
  {
-  "id": "sc-petanque",
+  "id": "gym-news-channel",
   "cat": "niche",
-  "q": "มีชมรมเปตองไหม",
+  "q": "อยากติดตามข่าวยิมมอ ดูที่ไหน",
   "expect": {
    "include": [
-    "kmutt_petanque_club"
+    "fitnessclub.kmutt|8092"
    ]
   }
  },
  {
-  "id": "sc-muslim",
+  "id": "gym-rooms",
   "cat": "niche",
-  "q": "มีชมรมมุสลิมไหม ติดต่อยังไง",
+  "q": "ฟิตเนสในมอมีกี่ห้อง อยู่ชั้นไหน",
   "expect": {
    "include": [
-    "modmuslimkmutt"
+    "3 ห้อง|เพาะกาย|cardio",
+    "ชั้น 1"
+   ]
+  }
+ },
+ {
+  "id": "kmutt-community-group",
+  "cat": "niche",
+  "q": "มีกลุ่มเฟสบุ๊กของนักศึกษา มจธ. ไหม อยากถามข่าวในมอ",
+  "expect": {
+   "include": [
+    "KMUTT Community"
    ]
   }
  }
