@@ -1,0 +1,12 @@
+[
+ {
+  "id": "hb-modlink",
+  "cat": "niche",
+  "q": "แอป MOD LINK โหลดที่ไหน ล็อกอินยังไง",
+  "expect": {
+   "include": [
+    "kmutt.ac.th|อีเมล"
+   ]
+  }
+ }
+]

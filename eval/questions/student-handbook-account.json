@@ -1,0 +1,72 @@
+[
+ {
+  "id": "hb-account-first",
+  "cat": "niche",
+  "q": "ตั้งรหัสผ่านอีเมลมหาลัยครั้งแรกยังไง",
+  "expect": {
+   "include": [
+    "k-accounts|recovery|Username|กู้รหัสผ่าน"
+   ]
+  }
+ },
+ {
+  "id": "hb-account-rule",
+  "cat": "niche",
+  "q": "รหัสผ่านบัญชี kmutt ต้องยาวกี่ตัว มีอะไรบ้าง",
+  "expect": {
+   "include": [
+    "8"
+   ]
+  }
+ },
+ {
+  "id": "hb-account-forgot",
+  "cat": "niche",
+  "q": "ลืมรหัสผ่านอีเมล kmutt ทำไงดี",
+  "expect": {
+   "include": [
+    "9444|recovery"
+   ]
+  }
+ },
+ {
+  "id": "hb-card-lost",
+  "cat": "niche",
+  "q": "บัตรนักศึกษาหาย ต้องทำยังไง",
+  "expect": {
+   "include": [
+    "อายัด"
+   ]
+  }
+ },
+ {
+  "id": "hb-card-new",
+  "cat": "niche",
+  "q": "ทำบัตรนักศึกษาใหม่ต้องผ่านแอปอะไร",
+  "expect": {
+   "include": [
+    "MOD LINK"
+   ]
+  }
+ },
+ {
+  "id": "hb-card-wait",
+  "cat": "niche",
+  "q": "สมัครบัตรนักศึกษาแล้ว บัตรพลาสติกมาถึงกี่วัน",
+  "expect": {
+   "include": [
+    "7"
+   ]
+  }
+ },
+ {
+  "id": "hb-card-intl",
+  "cat": "niche",
+  "q": "นักศึกษาต่างชาติขอบัตรนักศึกษาต้องใช้อะไรบ้าง",
+  "expect": {
+   "include": [
+    "Non-ED|วีซ่า"
+   ]
+  }
+ }
+]
