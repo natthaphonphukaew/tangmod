@@ -1,0 +1,22 @@
+[
+ {
+  "id": "sc-petanque",
+  "cat": "niche",
+  "q": "มีชมรมเปตองไหม",
+  "expect": {
+   "include": [
+    "kmutt_petanque_club"
+   ]
+  }
+ },
+ {
+  "id": "sc-muslim",
+  "cat": "niche",
+  "q": "มีชมรมมุสลิมไหม ติดต่อยังไง",
+  "expect": {
+   "include": [
+    "modmuslimkmutt"
+   ]
+  }
+ }
+]
