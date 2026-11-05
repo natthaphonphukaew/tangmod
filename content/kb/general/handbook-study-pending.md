@@ -1,6 +1,6 @@
 ---
 namespace: general
-tier: student
+tier: official
 title: ติดโปร รอพินิจ พ้นสภาพ ถอนรายวิชา ลาพัก ลาออก (ยังไม่มีเกณฑ์ในระบบ)
 source_url: https://regis.kmutt.ac.th/web/%e0%b8%a3%e0%b8%b0%e0%b9%80%e0%b8%9a%e0%b8%b5%e0%b8%a2%e0%b8%9a%e0%b8%a7%e0%b9%88%e0%b8%b2%e0%b8%94%e0%b9%89%e0%b8%a7%e0%b8%a2%e0%b8%81%e0%b8%b2%e0%b8%a3%e0%b8%a8%e0%b8%b6%e0%b8%81%e0%b8%a9%e0%b8%b2/
 updated_at: 2026-11-05
