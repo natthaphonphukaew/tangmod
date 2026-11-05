@@ -203,25 +203,33 @@
   }
  },
  {
-  "id": "dorm-market-date",
+  "id": "gym-news-channel",
   "cat": "niche",
-  "q": "ตลาดนัดหอในจัดวันไหน เสียค่าล็อคเท่าไหร่",
+  "q": "อยากติดตามข่าวยิมมอ ดูที่ไหน",
   "expect": {
    "include": [
-    "18",
-    "150",
-    "250"
+    "fitnessclub.kmutt|8092"
    ]
   }
  },
  {
-  "id": "dorm-market-apply",
+  "id": "gym-rooms",
   "cat": "niche",
-  "q": "อยากขายของตลาดนัดหอใน สมัครยังไง ปิดรับเมื่อไหร่",
+  "q": "ฟิตเนสในมอมีกี่ห้อง อยู่ชั้นไหน",
   "expect": {
    "include": [
-    "10 พ.ย|10 พฤศจิกายน",
-    "Google Forms|ฟอร์ม"
+    "3 ห้อง|เพาะกาย|cardio",
+    "ชั้น 1"
+   ]
+  }
+ },
+ {
+  "id": "kmutt-community-group",
+  "cat": "niche",
+  "q": "มีกลุ่มเฟสบุ๊กของนักศึกษา มจธ. ไหม อยากถามข่าวในมอ",
+  "expect": {
+   "include": [
+    "KMUTT Community"
    ]
   }
  }
