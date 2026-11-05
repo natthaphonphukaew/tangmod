@@ -1,0 +1,203 @@
+[
+ {
+  "id": "gym-where",
+  "cat": "official",
+  "q": "ยิมในมออยู่ไหน",
+  "expect": {
+   "places_any": [
+    "S14"
+   ],
+   "include": [
+    "S14|190 ปี"
+   ],
+   "exclude": [
+    "ตึก SIT|N11"
+   ]
+  }
+ },
+ {
+  "id": "gym-floor",
+  "cat": "official",
+  "q": "ฟิตเนสของมหาลัยอยู่ตึกไหน ชั้นอะไร",
+  "expect": {
+   "places_any": [
+    "S14"
+   ],
+   "include": [
+    "ชั้น\\W{0,3}(ที่\\W{0,3})?1|ชั้นล่าง"
+   ]
+  }
+ },
+ {
+  "id": "gym-indoor-court",
+  "cat": "official",
+  "q": "อยากเล่นบาสในร่ม โรงยิมอยู่ตรงไหน",
+  "expect": {
+   "places_any": [
+    "S14"
+   ]
+  }
+ },
+ {
+  "id": "fac-science",
+  "cat": "official",
+  "q": "คณะวิทย์อยู่ตึกไหน",
+  "expect": {
+   "places_any": [
+    "N7",
+    "N3",
+    "N4",
+    "N6"
+   ],
+   "show_map": true
+  }
+ },
+ {
+  "id": "fac-fiet-floor",
+  "cat": "official",
+  "q": "สำนักงานคณบดีคณะครุศาสตร์อุตสาหกรรมอยู่ชั้นไหน",
+  "expect": {
+   "places_any": [
+    "S13"
+   ],
+   "include": [
+    "ชั้น\\W{0,3}(ที่\\W{0,3})?2"
+   ]
+  }
+ },
+ {
+  "id": "fac-sola",
+  "cat": "official",
+  "q": "คณะศิลปศาสตร์อยู่ตรงไหน",
+  "expect": {
+   "places_any": [
+    "N15"
+   ],
+   "show_map": true
+  }
+ },
+ {
+  "id": "fac-see",
+  "cat": "official",
+  "q": "คณะพลังงานสิ่งแวดล้อมและวัสดุอยู่ตึกไหน",
+  "expect": {
+   "places_any": [
+    "S9",
+    "S8"
+   ],
+   "show_map": true
+  }
+ },
+ {
+  "id": "fac-gmi",
+  "cat": "official",
+  "q": "GMI อยู่ตึกไหน",
+  "expect": {
+   "places_any": [
+    "N19",
+    "S11"
+   ],
+   "include": [
+    "N19|CB5|อาคารเรียนรวม 5"
+   ]
+  }
+ },
+ {
+  "id": "fac-soad-campus",
+  "cat": "official",
+  "q": "คณะสถาปัตย์ มจธ. อยู่บางมดไหม",
+  "expect": {
+   "include": [
+    "บางขุนเทียน"
+   ],
+   "show_map": false
+  }
+ },
+ {
+  "id": "fac-sbt-campus",
+  "cat": "official",
+  "q": "คณะทรัพยากรชีวภาพและเทคโนโลยีไปยังไง อยู่ที่ไหน",
+  "expect": {
+   "include": [
+    "บางขุนเทียน"
+   ],
+   "show_map": false
+  }
+ },
+ {
+  "id": "fac-science-programs",
+  "cat": "official",
+  "q": "คณะวิทย์ มจธ. มีสาขาอะไรบ้าง",
+  "expect": {
+   "include": [
+    "จุลชีว",
+    "สถิติ"
+   ],
+   "show_map": false
+  }
+ },
+ {
+  "id": "fac-chem-vs-cheme",
+  "cat": "official",
+  "q": "ตึกภาควิชาเคมีคณะวิทย์อยู่ไหน",
+  "expect": {
+   "places_any": [
+    "N3"
+   ]
+  }
+ },
+ {
+  "id": "post-office",
+  "cat": "official",
+  "q": "ไปรษณีย์ในมออยู่ไหน",
+  "expect": {
+   "places_any": [
+    "S2"
+   ],
+   "include": [
+    "S2|อาคารจอดรถ|ตึกจอดรถ"
+   ]
+  }
+ },
+ {
+  "id": "market-day",
+  "cat": "official",
+  "q": "ตลาดนัดในมอมีวันไหน",
+  "expect": {
+   "include": [
+    "พุธ",
+    "พฤหัส"
+   ]
+  }
+ },
+ {
+  "id": "seven-eleven",
+  "cat": "official",
+  "q": "ในมอมีเซเว่นไหม",
+  "expect": {
+   "include": [
+    "2 (แห่ง|ร้าน|สาขา)|สองแห่ง"
+   ]
+  }
+ },
+ {
+  "id": "swimming-pool",
+  "cat": "unknown",
+  "q": "มอมีสระว่ายน้ำไหม",
+  "expect": {
+   "exclude": [
+    "มีสระว่ายน้ำ(ที่|อยู่|ชั้น)"
+   ]
+  }
+ },
+ {
+  "id": "front-gate-visitor",
+  "cat": "official",
+  "q": "คนนอกจะเข้ามอต้องเข้าประตูไหน",
+  "expect": {
+   "include": [
+    "ประตู\\W{0,3}1"
+   ]
+  }
+ }
+]

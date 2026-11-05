@@ -3,71 +3,269 @@ import layoutJson from "@/content/map-layout.json";
 
 /*
  * เรขาคณิตของแผนที่ แยกจาก places.json (ซึ่งเก็บแค่ข้อเท็จจริง)
- * พิกัดเป็นหน่วยของ viewBox วางตามผังจาก master plan ทางการ (ส.ค. 2563) แบบประมาณ
- * ทิศเหนือของผังทางการชี้ไปทางขวา เราวาดตามนั้น คนที่เคยเห็นผังจะได้คุ้นตา
+ * สร้างด้วย scripts/map/build-layout.ts จาก OpenStreetMap (รูปตึก ถนน สนาม สระ) + หมุดตึกจากผัง MapNavi ของ มจธ.
+ * ฉายพิกัดจริงแบบ equirectangular ทิศเหนือขึ้นบน (ตรงกับ Google Maps) หน่วยเป็นหน่วยของ viewBox
  */
 
-const Rect = z.object({ x: z.number(), y: z.number(), w: z.number().positive(), h: z.number().positive() });
+const XY = z.tuple([z.number(), z.number()]);
+const LatLng = z.tuple([z.number(), z.number()]);
 
-const Building = Rect.extend({
+const Building = z.object({
   id: z.string(),
-  /** ชื่อสำหรับตึกที่ไม่มีใน places.json (แสดงเป็น tooltip เท่านั้น) */
+  /** ตึกหนึ่งอาจมีหลายปีก แต่ละปีกมีจำนวนชั้นของตัวเอง (ใช้กำหนดความสูงของภาพ) */
+  polys: z.array(z.object({ pts: z.array(XY).min(3), floors: z.number().int().positive() })).min(1),
+  /** ชื่อจาก OSM ของตึกที่ไม่มีใน places.json (tooltip) */
   name: z.string().optional(),
+  /** OSM ไม่มีรูปตึกนี้ วาดเป็นกล่องประมาณรอบหมุดของผังทางการ */
+  approx: z.boolean().optional(),
+  /** หมุด Google Maps ของตึกจากผัง MapNavi */
+  ll: LatLng.optional(),
+  /** หน้าตาตึกจากรูปจริง (ดู scripts/map/osm-ids.ts) ไม่มี = ใช้ค่ากลาง */
+  style: z
+    .object({
+      wall: z.string(),
+      roof: z.string(),
+      windows: z.enum(["grid", "band", "glass", "fins", "balcony"]),
+      glass: z.string().optional(),
+      accent: z.string().optional(),
+      deco: z.array(z.enum(["garden", "canopy"])).optional(),
+    })
+    .optional(),
 });
+export type BuildingStyle = NonNullable<z.infer<typeof Building>["style"]>;
 export type MapBuilding = z.infer<typeof Building>;
 
-const Area = z.discriminatedUnion("type", [
-  z.object({
-    type: z.literal("path"),
-    kind: z.enum(["ground", "park", "lawn", "water", "plaza"]),
-    d: z.string(),
-    /** ป้ายชื่อพื้นที่บนแผนที่ (เช่น "สวน") วางที่จุด label_at */
-    label: z.string().optional(),
-    label_at: z.tuple([z.number(), z.number()]).optional(),
-  }),
-  z.object({
-    type: z.literal("ellipse"),
-    kind: z.enum(["track", "field", "pond", "lawn"]),
-    cx: z.number(),
-    cy: z.number(),
-    rx: z.number(),
-    ry: z.number(),
-    label: z.string().optional(),
-  }),
-]);
+const Area = z.object({
+  kind: z.enum(["ground", "park", "lawn", "water", "parking", "track", "field", "court"]),
+  d: z.string(),
+  label: z.string().optional(),
+  label_at: XY.optional(),
+});
 export type MapArea = z.infer<typeof Area>;
 
 const MapLayout = z.object({
   viewBox: z.tuple([z.number(), z.number()]),
   reference: z.object({ title: z.string(), url: z.url(), date: z.string() }),
+  attribution: z.string(),
   north_deg: z.number(),
   areas: z.array(Area),
   roads: z.array(
     z.object({
       d: z.string(),
       width: z.number(),
-      major: z.boolean().default(false),
+      kind: z.enum(["main", "street", "service", "footway"]),
       /** ชื่อถนน (ใส่เฉพาะที่ยืนยันได้) วาดตามแนวถนน */
       name: z.string().optional(),
     }),
   ),
   canals: z.array(z.object({ d: z.string(), width: z.number() })),
   buildings: z.array(Building),
-  points: z.array(z.object({ id: z.string(), x: z.number(), y: z.number() })),
+  points: z.array(
+    z.object({
+      id: z.string(),
+      kind: z.enum(["gate", "bus", "shuttle", "shop", "landmark", "sport"]),
+      x: z.number(),
+      y: z.number(),
+      ll: LatLng,
+    }),
+  ),
+  /** ประตูอื่น ๆ ในมอ (ตกแต่ง ไม่มีข้อมูลให้กด) */
+  gates: z.array(XY),
+  /** กราฟทางเดิน (ถนน ทางเดิน บันได จาก OSM) สำหรับหาเส้นทางเดินจริง ดู lib/map/route.ts */
+  /** edges: [จุด a, จุด b, น้ำหนักต่อระยะ] ทางเดินคนถูกกว่าถนน และนอกรั้วมอแพงกว่าในมอ */
+  walk: z.object({ nodes: z.array(XY), edges: z.array(z.tuple([z.number().int(), z.number().int(), z.number().positive()])) }),
 });
 export type MapLayout = z.infer<typeof MapLayout>;
+export type MapPoint = MapLayout["points"][number];
 
 export const mapLayout = MapLayout.parse(layoutJson);
 
 export type Point = { x: number; y: number };
+type Box = { x: number; y: number; w: number; h: number };
 
-// ปักหมุดที่ขอบบนของตึก หมุดจะได้ไม่บังรหัสตึกที่อยู่กลางตึก
+/** ความสูงของภาพตึกต่อ 1 ชั้น (หน่วย viewBox) ลายหน้าต่างใน CampusMap ใช้ค่านี้ด้วย */
+export const FLOOR = 2;
+
+/** ความสูงของภาพตึก (หน่วย viewBox) จากจำนวนชั้น — บีบไว้ ไม่งั้นตึก 15 ชั้นบังตึกข้างหลังหมด */
+export const heightOf = (floors: number) => 4 + Math.min(floors, 15) * FLOOR;
+
+const shift = (pts: [number, number][], dy: number): [number, number][] => pts.map(([x, y]) => [x, y - dy]);
+const toPath = (pts: [number, number][]) => "M" + pts.map(([x, y]) => `${x} ${y}`).join(" L") + " Z";
+
+function bboxOf(pts: [number, number][]): Box {
+  const xs = pts.map((p) => p[0]);
+  const ys = pts.map((p) => p[1]);
+  const x = Math.min(...xs);
+  const y = Math.min(...ys);
+  return { x, y, w: Math.max(...xs) - x, h: Math.max(...ys) - y };
+}
+
+function area(pts: [number, number][]) {
+  let a = 0;
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) a += (pts[j][0] + pts[i][0]) * (pts[j][1] - pts[i][1]);
+  return a / 2;
+}
+
+/** จุดศูนย์ถ่วงของรูปหลายเหลี่ยม (ใช้วางป้ายกลางหลังคา) */
+function centroidOf(pts: [number, number][]): Point {
+  const a = area(pts);
+  if (Math.abs(a) < 1e-6) {
+    const b = bboxOf(pts);
+    return { x: b.x + b.w / 2, y: b.y + b.h / 2 };
+  }
+  let cx = 0;
+  let cy = 0;
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+    const f = pts[j][0] * pts[i][1] - pts[i][0] * pts[j][1];
+    cx += (pts[j][0] + pts[i][0]) * f;
+    cy += (pts[j][1] + pts[i][1]) * f;
+  }
+  return { x: cx / (6 * -a), y: cy / (6 * -a) };
+}
+
+export type BuildingGeom = {
+  /** ผนังด้านที่หันลง (หันเข้าหาคนดู) แยกตามแสง: ซ้าย/ขวา */
+  wallsLight: string;
+  wallsShade: string;
+  roofs: string[];
+  /** กรอบรวมฐานและหลังคา */
+  box: Box;
+  /** กลางหลังคาปีกที่ใหญ่สุด สำหรับป้ายชื่อ */
+  labelAt: Point;
+  /** ขอบล่างของฐาน ใช้เรียงลำดับการวาด (ตึกที่อยู่ล่างวาดทีหลัง ทับตึกข้างหลัง) */
+  baseY: number;
+  /** เส้นแนวตั้งบนผนังที่มองเห็น ห่างกันประมาณ STRIPE หน่วย (เสา ระแนง แถบสี) */
+  stripes: string;
+  /** เส้นแนวนอนบนผนังที่มองเห็น ทุกชั้น (ขอบพื้น แถบหน้าต่าง) */
+  ledges: string;
+  /** ผนังหน้าที่กว้างที่สุดที่มองเห็น: ใช้วางหลังคาทางเข้า */
+  front?: { a: [number, number]; c: [number, number]; h: number };
+  /** ของบนหลังคา: เครื่องแอร์และป้อมบันได วางในหลังคาปีกที่ใหญ่สุด */
+  roofItems: { x: number; y: number; w: number; h: number; kind: "ac" | "stair" }[];
+  /** จุดกลางหลังคาปีกที่ใหญ่สุดและขนาดโดยประมาณ (สำหรับสวนบนหลังคา) */
+  roofCenter: Point;
+  roofSize: number;
+};
+
+/**
+ * 2.5D แบบแผนที่ภาพวาด: ยกหลังคาขึ้นตามความสูง แล้ววาดผนังเฉพาะด้านที่หันลง (ด้านที่คนดูเห็น)
+ * ด้านที่หันซ้ายสว่างกว่าด้านที่หันขวาเล็กน้อย ให้ดูมีแสงเงา
+ */
+const STRIPE = 4.5;
+
+function insidePoly(p: [number, number], pts: [number, number][]) {
+  let inside = false;
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+    const [xi, yi] = pts[i];
+    const [xj, yj] = pts[j];
+    if (yi > p[1] !== yj > p[1] && p[0] < ((xj - xi) * (p[1] - yi)) / (yj - yi) + xi) inside = !inside;
+  }
+  return inside;
+}
+
+/** ของบนหลังคาแบบกำหนดตายตัว: ป้อมบันได 1 อัน + แอร์ตามขนาดหลังคา ทุกชิ้นต้องอยู่ในหลังคาทั้งก้อน */
+function roofItemsOf(roof: [number, number][], at: Point): BuildingGeom["roofItems"] {
+  const b = bboxOf(roof);
+  const items: BuildingGeom["roofItems"] = [];
+  const fits = (x: number, y: number, w: number, h: number) =>
+    [[x, y], [x + w, y], [x, y + h], [x + w, y + h]].every((p) => insidePoly(p as [number, number], roof)) &&
+    items.every((o) => x + w + 1 < o.x || o.x + o.w + 1 < x || y + h + 1 < o.y || o.y + o.h + 1 < y);
+  const size = Math.min(b.w, b.h);
+  if (size < 14) return items;
+  const sw = Math.min(9, b.w * 0.22);
+  const sh = Math.min(7, b.h * 0.22);
+  // ป้อมบันไดเยื้องจากกลางหลังคา
+  for (const [dx, dy] of [[0.18, -0.15], [-0.2, 0.12], [0.1, 0.2], [0, 0]]) {
+    const x = at.x + dx * b.w - sw / 2;
+    const y = at.y + dy * b.h - sh / 2;
+    if (fits(x, y, sw, sh)) {
+      items.push({ x, y, w: sw, h: sh, kind: "stair" });
+      break;
+    }
+  }
+  const want = Math.min(6, Math.floor(size / 9));
+  const offsets = [[-0.3, -0.25], [0.3, 0.25], [-0.32, 0.22], [0.28, -0.3], [0.02, -0.33], [-0.05, 0.33], [0.36, 0.02], [-0.38, -0.02]];
+  for (const [dx, dy] of offsets) {
+    if (items.filter((i) => i.kind === "ac").length >= want) break;
+    const x = at.x + dx * b.w - 1.6;
+    const y = at.y + dy * b.h - 1.2;
+    if (fits(x, y, 3.2, 2.4)) items.push({ x, y, w: 3.2, h: 2.4, kind: "ac" });
+  }
+  return items;
+}
+
+function geomOf(b: MapBuilding): BuildingGeom {
+  let light = "";
+  let shade = "";
+  let stripes = "";
+  let ledges = "";
+  let front: BuildingGeom["front"];
+  const roofs: string[] = [];
+  const all: [number, number][] = [];
+  let best = { a: -1, at: { x: 0, y: 0 }, roof: [] as [number, number][] };
+  for (const poly of b.polys) {
+    const h = heightOf(poly.floors);
+    const pts = poly.pts;
+    const ccw = area(pts) > 0;
+    for (let i = 0; i < pts.length; i++) {
+      const a = pts[i];
+      const c = pts[(i + 1) % pts.length];
+      const dx = c[0] - a[0];
+      const dy = c[1] - a[1];
+      // normal ด้านนอก (ทิศขึ้นกับการวนของจุด) · y ชี้ลง
+      const nx = ccw ? -dy : dy;
+      const ny = ccw ? dx : -dx;
+      if (ny <= 0) continue;
+      const quad = `M${a[0]} ${a[1]} L${c[0]} ${c[1]} L${c[0]} ${c[1] - h} L${a[0]} ${a[1] - h} Z`;
+      if (nx <= 0) light += quad;
+      else shade += quad;
+      const len = Math.hypot(dx, dy);
+      for (let s = STRIPE / 2; s < len - 1; s += STRIPE) {
+        const x = a[0] + (dx * s) / len;
+        const y = a[1] + (dy * s) / len;
+        stripes += `M${x.toFixed(1)} ${(y - 0.6).toFixed(1)} L${x.toFixed(1)} ${(y - h + 0.6).toFixed(1)}`;
+      }
+      for (let f = 4 + FLOOR; f < h - 0.5; f += FLOOR) ledges += `M${a[0]} ${(a[1] - f).toFixed(1)} L${c[0]} ${(c[1] - f).toFixed(1)}`;
+      if (!front || len > Math.hypot(front.c[0] - front.a[0], front.c[1] - front.a[1])) front = { a, c, h };
+    }
+    const roof = shift(pts, h);
+    roofs.push(toPath(roof));
+    all.push(...pts, ...roof);
+    const a = Math.abs(area(pts));
+    if (a > best.a) best = { a, at: centroidOf(roof), roof };
+  }
+  const rb = bboxOf(best.roof);
+  return {
+    wallsLight: light,
+    wallsShade: shade,
+    roofs,
+    box: bboxOf(all),
+    labelAt: best.at,
+    baseY: Math.max(...b.polys.flatMap((p) => p.pts.map((q) => q[1]))),
+    stripes,
+    ledges,
+    front,
+    roofItems: roofItemsOf(best.roof, best.at),
+    roofCenter: best.at,
+    roofSize: Math.min(rb.w, rb.h),
+  };
+}
+
+export const buildingGeom = new Map(mapLayout.buildings.map((b) => [b.id, geomOf(b)]));
+
+/** ตึกเรียงตามลำดับการวาด: ไกล (บน) ก่อน ใกล้ (ล่าง) ทีหลัง */
+export const buildingsInDrawOrder = [...mapLayout.buildings].sort((a, b) => buildingGeom.get(a.id)!.baseY - buildingGeom.get(b.id)!.baseY);
+
+// ปักหมุดกลางหลังคา เยื้องขึ้นเหนือป้ายชื่อเล็กน้อย (ตึกรูปตัว L ถ้าใช้ขอบบนของกรอบ หมุดจะลอยไปนอกตึก)
 const anchors = new Map<string, Point>([
-  ...mapLayout.buildings.map((b) => [b.id, { x: b.x + b.w / 2, y: b.y + 4 }] as const),
+  ...mapLayout.buildings.map((b) => {
+    const g = buildingGeom.get(b.id)!;
+    return [b.id, { x: g.labelAt.x, y: Math.max(g.box.y + 2, g.labelAt.y - 14) }] as const;
+  }),
   ...mapLayout.points.map((p) => [p.id, { x: p.x, y: p.y }] as const),
 ]);
 
-/** จุดปักหมุดของสถานที่บนแผนที่ (ขอบบนกลางตึก หรือตัวจุด) */
+/** จุดปักหมุดของสถานที่บนแผนที่ (ขอบบนของหลังคา หรือตัวจุด) */
 export function anchorOf(placeId: string): Point | undefined {
   return anchors.get(placeId);
 }
@@ -76,40 +274,31 @@ export function hasAnchor(placeId: string): boolean {
   return anchors.has(placeId);
 }
 
+const latLngs = new Map<string, [number, number]>([
+  ...mapLayout.buildings.flatMap((b) => (b.ll ? [[b.id, b.ll] as const] : [])),
+  ...mapLayout.points.map((p) => [p.id, p.ll] as const),
+]);
+
+/** ลิงก์เปิดตำแหน่งใน Google Maps (พิกัดจากผัง MapNavi หรือ OSM) */
+export function googleMapsUrl(placeId: string): string | undefined {
+  const ll = latLngs.get(placeId);
+  return ll && `https://www.google.com/maps/search/?api=1&query=${ll[0]},${ll[1]}`;
+}
+
 /** id ของ element ใน DOM สำหรับใช้ซูมไปหา */
 export const domIdOf = (placeId: string) => `map-${placeId}`;
-
-/**
- * เส้นรอยทางมดที่ผ่านจุดตามลำดับ: โค้งเล็กน้อยแบบ quadratic
- * ทุกช่วงโค้งไปทางเดียวกัน เพื่อให้ดูเหมือนทางเดินมากกว่าเส้นตรง
- */
-export function trailPath(points: Point[]): string {
-  if (points.length < 2) return "";
-  let d = `M${points[0].x} ${points[0].y}`;
-  for (let i = 1; i < points.length; i++) {
-    const a = points[i - 1];
-    const b = points[i];
-    const mx = (a.x + b.x) / 2;
-    const my = (a.y + b.y) / 2;
-    const dx = b.x - a.x;
-    const dy = b.y - a.y;
-    const bend = 0.18;
-    d += ` Q${(mx - dy * bend).toFixed(1)} ${(my + dx * bend).toFixed(1)} ${b.x} ${b.y}`;
-  }
-  return d;
-}
 
 /** id ของกรอบโปร่งใสรอบสถานที่ (เผื่อที่ให้หมุด) ที่ใช้เป็นเป้าตอนซูม */
 export const focusIdOf = (placeId: string) => `focus-${placeId}`;
 
-// zoomToElement ไม่มี padding ซูมไปที่ตัวตึกตรง ๆ หมุดจะชิดขอบจอ จึงขยายกรอบเอง (ด้านบนเผื่อความสูงหมุด)
-const PAD = { side: 36, top: 72, bottom: 28 };
+// zoomToElement ไม่มี padding ซูมไปที่ตัวตึกตรง ๆ หมุดจะชิดขอบจอ จึงขยายกรอบเอง (ด้านบนเผื่อความสูงหมุดและป้าย)
+const PAD = { side: 50, top: 80, bottom: 40 };
 
 /** กรอบสำหรับซูมไปหาสถานที่ หน่วยเดียวกับ viewBox */
-export function focusBoxOf(placeId: string): { x: number; y: number; w: number; h: number } | undefined {
-  const b = mapLayout.buildings.find((x) => x.id === placeId);
-  const p = b ? undefined : mapLayout.points.find((x) => x.id === placeId);
-  const r = b ?? (p && { x: p.x, y: p.y, w: 0, h: 0 });
+export function focusBoxOf(placeId: string): Box | undefined {
+  const g = buildingGeom.get(placeId);
+  const p = g ? undefined : mapLayout.points.find((x) => x.id === placeId);
+  const r = g?.box ?? (p && { x: p.x, y: p.y, w: 0, h: 0 });
   if (!r) return undefined;
   return { x: r.x - PAD.side, y: r.y - PAD.top, w: r.w + PAD.side * 2, h: r.h + PAD.top + PAD.bottom };
 }

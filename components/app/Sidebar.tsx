@@ -87,7 +87,7 @@ export function Sidebar({ conversations, currentId, listedAt, profile, account, 
                       type="button"
                       onClick={() => onOpen(c.id)}
                       aria-current={current ? "page" : undefined}
-                      className="flex min-h-12 w-full items-center gap-3 rounded-xl px-3 pr-12 text-left text-sm text-ink hover:bg-card aria-[current=page]:bg-brand-tint aria-[current=page]:font-semibold lg:min-h-10"
+                      className="flex min-h-12 w-full items-center gap-3 rounded-xl px-3 pr-12 text-left text-sm text-ink hover:bg-card aria-[current=page]:bg-brand-tint-strong aria-[current=page]:font-semibold aria-[current=page]:text-brand-deep aria-[current=page]:shadow-[inset_3px_0_0_var(--brand)] active:bg-brand-tint-strong lg:min-h-10"
                     >
                       <ClockCounterClockwise size={18} className={`shrink-0 ${current ? "text-brand-ink" : "text-ink-soft"}`} />
                       <span className="truncate">{c.title}</span>
@@ -123,7 +123,7 @@ function NavItem({ icon, label, active = false, onClick }: { icon: ReactNode; la
       type="button"
       onClick={onClick}
       aria-current={active ? "page" : undefined}
-      className="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-[15px] font-medium text-ink hover:bg-card aria-[current=page]:bg-brand-tint aria-[current=page]:font-semibold [&>svg]:text-brand-ink"
+      className="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-[15px] font-medium text-ink hover:bg-card aria-[current=page]:bg-brand-tint-strong aria-[current=page]:font-semibold aria-[current=page]:text-brand-deep aria-[current=page]:shadow-[inset_3px_0_0_var(--brand)] active:bg-brand-tint-strong [&>svg]:text-brand-ink"
     >
       {icon}
       {label}

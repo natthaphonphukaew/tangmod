@@ -58,7 +58,8 @@ lib/db/         Drizzle schema + สร้างตาราง + เชื่�
 lib/auth.ts     ตั้งค่า Better Auth · lib/history-server.ts query ประวัติแชท (ผูกกับ userId เสมอ)
 lib/ai/         schema (contract), models (Gemini/Typhoon/mock), knowledge + retrieve, prompt, validate
 lib/data/       Zod schemas + loader ของข้อมูล (schemas.ts เป็น source of truth)
-lib/map/        เรขาคณิตแผนที่ + รอยทางมด + อ่านเลขห้อง CB (rooms.ts)
+lib/map/        เรขาคณิตแผนที่ (ตึก 2.5D) + รอยทางมด + อ่านเลขห้อง CB (rooms.ts)
+scripts/map/    สร้าง content/map-layout.json จาก OpenStreetMap (ดู docs/research/osm/README.md)
 lib/client/     เรียก API, ความจำผู้ใช้, ประวัติแชท (history-store.ts: local ↔ server), auth-client
 components/     app (Sidebar, TopBar, MapPanel, bottom sheet มือถือ), chat (ChatColumn, AssistantMessage), cards (ตัวเลขจริง), map
 content/        ข้อมูลจริง: places, assistant (น้องมด), programs/, admission/, contacts, calendar, map-layout

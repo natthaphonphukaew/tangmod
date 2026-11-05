@@ -42,6 +42,38 @@
   }
  },
  {
+  "id": "route-s14-sit",
+  "cat": "map",
+  "q": "จาก s14 ไป sit ทางไหน",
+  "expect": {
+   "places_any": [
+    "N11"
+   ],
+   "show_map": true,
+   "exclude": [
+    "ประตู\\W{0,3}2",
+    "gate_2",
+    "เลี้ยว(ซ้าย|ขวา)"
+   ]
+  }
+ },
+ {
+  "id": "route-dorm-to-cb3",
+  "cat": "map",
+  "q": "เดินจากหอหญิงไป CB3 ยังไง",
+  "expect": {
+   "places_any": [
+    "S13"
+   ],
+   "show_map": true,
+   "exclude": [
+    "ประตู\\W{0,3}2",
+    "gate_2",
+    "เลี้ยว(ซ้าย|ขวา)"
+   ]
+  }
+ },
+ {
   "id": "map-kfc-from-sit",
   "cat": "map",
   "q": "จาก SIT เดินไปโรงอาหาร KFC ยังไง",

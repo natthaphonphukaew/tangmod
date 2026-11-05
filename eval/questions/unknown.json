@@ -27,14 +27,6 @@
   }
  },
  {
-  "id": "unk-7eleven",
-  "cat": "unknown",
-  "q": "ในมอมีเซเว่นไหม",
-  "expect": {
-   "admits_unknown": true
-  }
- },
- {
   "id": "unk-pool",
   "cat": "unknown",
   "q": "สระว่ายน้ำในมออยู่ตรงไหน",

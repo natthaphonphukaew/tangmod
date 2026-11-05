@@ -1,8 +1,9 @@
 "use client";
 
-import { ArrowSquareOut, ChatCircleText, X } from "@phosphor-icons/react";
+import { ArrowSquareOut, ChatCircleText, MapPin, X } from "@phosphor-icons/react";
 import { useEffect, useRef, useState } from "react";
 import { holidays, placeById } from "@/lib/data";
+import { googleMapsUrl } from "@/lib/map/layout";
 import type { Place } from "@/lib/data/schemas";
 import { holidayOn, isOpenNow } from "@/lib/time";
 import { TierBadge } from "@/components/ui/TierBadge";
@@ -29,6 +30,7 @@ export function PlaceCard({ placeId, onClose, onAsk }: Props) {
   }, [placeId]);
   if (!place) return null;
 
+  const mapsUrl = googleMapsUrl(place.id);
   const open = isOpenNow(place.hours, now);
   // วันหยุดราชการ: เวลาเปิดปกติอาจไม่ใช้ บอกตรง ๆ ดีกว่าขึ้นว่า "เปิดอยู่" ทั้งที่อาจปิด
   const holiday = open !== null ? holidayOn(now, holidays.holidays) : undefined;
@@ -91,28 +93,40 @@ export function PlaceCard({ placeId, onClose, onAsk }: Props) {
       {place.conflict_note && <p className="mt-2 text-xs text-warn">หมายเหตุ: {place.conflict_note}</p>}
       {place.tier === "mock" && place.source_note && <p className="mt-2 text-xs text-ink-soft">{place.source_note}</p>}
 
-      <footer className="mt-4 flex items-center justify-between gap-2 border-t border-line pt-3">
+      <footer className="mt-4 flex flex-wrap items-center justify-between gap-x-2 gap-y-1 border-t border-line pt-3">
         {onAsk ? (
           <button
             type="button"
             onClick={() => onAsk(place)}
-            className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-brand-ink px-4 text-sm font-semibold text-white hover:bg-brand-ink/90 lg:min-h-10"
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-brand-ink px-4 text-sm font-semibold whitespace-nowrap text-white hover:bg-brand-ink/90 lg:min-h-10"
           >
             <ChatCircleText size={18} weight="fill" /> ถามมดเรื่องที่นี่
           </button>
         ) : (
           <span />
         )}
-        {place.source_url && (
-          <a
-            href={place.source_url}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex min-h-11 items-center gap-1 rounded-full px-3 text-[13px] font-medium text-brand-ink hover:bg-brand-tint lg:min-h-9"
-          >
-            แหล่งที่มา <ArrowSquareOut size={14} />
-          </a>
-        )}
+        <div className="-mr-2 flex items-center">
+          {mapsUrl && (
+            <a
+              href={mapsUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex min-h-11 items-center gap-1 rounded-full px-2.5 text-[13px] font-medium whitespace-nowrap text-brand-ink hover:bg-brand-tint lg:min-h-9"
+            >
+              <MapPin size={14} /> Google Maps
+            </a>
+          )}
+          {place.source_url && (
+            <a
+              href={place.source_url}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex min-h-11 items-center gap-1 rounded-full px-2.5 text-[13px] font-medium whitespace-nowrap text-brand-ink hover:bg-brand-tint lg:min-h-9"
+            >
+              แหล่งที่มา <ArrowSquareOut size={14} />
+            </a>
+          )}
+        </div>
       </footer>
     </article>
   );

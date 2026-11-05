@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { Tier } from "@/lib/data/schemas";
-import { corpus, NAMESPACES, parseMarkdownKb } from "./knowledge";
+import { corpus, NAMESPACES, parseMarkdownKb, thaiRange } from "./knowledge";
 
 const KB = path.join(process.cwd(), "content", "kb");
 const kbFiles = fs
@@ -31,5 +31,18 @@ describe("ไฟล์ความรู้ content/kb", () => {
   it("id ของ chunk ไม่ซ้ำกัน", () => {
     const ids = corpus().chunks.map((c) => c.id);
     expect(ids.length).toBe(new Set(ids).size);
+  });
+});
+
+describe("วันที่ภาษาไทยใน CONTEXT", () => {
+  it("เขียนเดือนไทยและ พ.ศ. กำกับค่า ISO (กันโมเดลแปลงเลขเดือนผิด)", () => {
+    expect(thaiRange("2027-05-07", "2027-05-11")).toBe("7 พฤษภาคม 2570 ถึง 11 พฤษภาคม 2570 (2027-05-07 ถึง 2027-05-11)");
+    expect(thaiRange("2026-08-20", "2026-08-20")).toBe("20 สิงหาคม 2569 (2026-08-20)");
+  });
+
+  it("chunk รอบสมัคร TCAS และปฏิทินการศึกษามีวันที่ภาษาไทย", () => {
+    const chunks = corpus().chunks;
+    expect(chunks.find((c) => c.id === "tcas:r3-admission")!.text).toContain("7 พฤษภาคม 2570");
+    expect(chunks.find((c) => c.id === "calendar:2569")!.text).toContain("ธันวาคม 2569");
   });
 });

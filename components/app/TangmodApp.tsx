@@ -53,6 +53,15 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
   const [pending, setPending] = useState(false);
   const [profile, setProfile] = useState<Profile>(emptyProfile);
   const [mapOpen, setMapOpen] = useState(false);
+  // แผนที่เต็มจอ: ซ่อนแชทชั่วคราว (แชทยัง mount อยู่ข้างหลัง ข้อความที่พิมพ์ค้างไม่หาย)
+  const [mapFullWanted, setMapFull] = useState(false);
+  const mapFull = mapOpen && mapFullWanted;
+  useEffect(() => {
+    if (!mapFull) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMapFull(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [mapFull]);
   const [highlights, setHighlights] = useState<MapHighlight[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detent, setDetent] = useState<Detent>("half");
@@ -409,7 +418,7 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
       </a>
       {/* จอ 1024–1279 ตอนเปิดแผนที่: ซ่อน sidebar ให้แชทกว้างพอ (ไม่งั้นเหลือ ~300px) ประวัติแชทเปิดเป็น drawer แทน
           ใช้ class ไม่ใช่ isWide เพื่อให้ HTML จาก server ตรงกับหน้าจอตั้งแต่แรก */}
-      <aside className={`hidden w-[272px] shrink-0 border-r border-line ${mapOpen ? "xl:flex" : "lg:flex"}`}>{sidebar()}</aside>
+      <aside inert={mapFull} className={`hidden w-[272px] shrink-0 border-r border-line ${mapOpen ? "xl:flex" : "lg:flex"}`}>{sidebar()}</aside>
 
       {/* มือถือ (และจอกลางตอนเปิดแผนที่): ประวัติแชทเป็น drawer จากซ้าย */}
       <AnimatePresence>
@@ -444,17 +453,24 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
 
       <main className="flex min-w-0 flex-1 flex-col">
         <h1 className="sr-only">ทางมด — ผู้ช่วยแชทประจำแคมปัส มจธ. บางมด</h1>
+        <div inert={mapFull} className="contents">
         <TopBar
           title={convId ? titleOf(thread) : null}
           mapOpen={mapOpen}
-          onToggleMap={() => (mapOpen ? setMapOpen(false) : openMap(highlights))}
+          onToggleMap={() => {
+            setMapFull(false);
+            if (mapOpen) setMapOpen(false);
+            else openMap(highlights);
+          }}
           onOpenHistory={() => {
             drawerOpener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
             setDrawerOpen(true);
           }}
           onNew={newChat}
         />
+        </div>
         <div ref={areaRef} className="relative flex min-h-0 flex-1">
+          <div inert={mapFull} className="contents">
           <BottomSheet mode={sheetMode ? "sheet" : "full"} detent={detent} onDetentChange={setDetent} areaHeight={areaHeight}>
             <ChatColumn
               thread={thread}
@@ -471,6 +487,7 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
               onCompassMap={(results) => openMap(compassHighlights(results))}
             />
           </BottomSheet>
+          </div>
 
           {mapOpen && (
             <motion.div
@@ -478,17 +495,29 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
               initial={{ opacity: 0, x: isDesktop ? 24 : 0 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.22 }}
-              style={sheetMode ? { height: Math.max(0, areaHeight - sheetPx + 16) } : undefined}
-              className="max-lg:absolute max-lg:inset-x-0 max-lg:top-0 lg:relative lg:min-w-[480px] lg:basis-[44%] lg:border-l lg:border-line"
+              style={sheetMode && !mapFull ? { height: Math.max(0, areaHeight - sheetPx + 16) } : undefined}
+              className={
+                mapFull
+                  ? "fixed inset-0 z-30"
+                  : "max-lg:absolute max-lg:inset-x-0 max-lg:top-0 lg:relative lg:min-w-[480px] lg:basis-[44%] lg:border-l lg:border-line"
+              }
             >
               <MapPanel
                 highlights={highlights}
                 selectedId={selectedId}
                 onSelect={selectPlaceOnMap}
                 onCloseCard={() => setSelectedId(null)}
-                onAskPlace={askAboutPlace}
-                onClose={() => setMapOpen(false)}
-                refitKey={isMobile ? mapDetent : "desktop"}
+                onAskPlace={(place) => {
+                  setMapFull(false);
+                  askAboutPlace(place);
+                }}
+                onClose={() => {
+                  setMapFull(false);
+                  setMapOpen(false);
+                }}
+                refitKey={`${isMobile ? mapDetent : "desktop"}${mapFull ? "-full" : ""}`}
+                full={mapFull}
+                onToggleFull={() => setMapFull((v) => !v)}
               />
             </motion.div>
           )}
