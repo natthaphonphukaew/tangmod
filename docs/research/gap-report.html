@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ทางมดเทียบ AI ทั่วไป</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* รายงานผลวัด: อ่านไล่จากสรุป → ข้อค้นพบ → ตารางรายข้อ → สิ่งที่ควรทำ · สีส้มตาม CI มจธ. ใช้เป็นตัวเน้นอย่างเดียว */
+  --bg: #f6f5f2;
+  --surface: #ffffff;
+  --ink: #1f2328;
+  --muted: #5d6470;
+  --line: #e2dfd8;
+  --accent: #c2410c;
+  --ok: #1e7a46;
+  --ok-bg: #e4f3ea;
+  --warn: #8a5a00;
+  --warn-bg: #fff2d6;
+  --bad: #b42318;
+  --bad-bg: #fde8e6;
+  --gap: #3d5a80;
+  --gap-bg: #e6eef8;
+  --none: #6b6f76;
+  --none-bg: #eeeeec;
+  --font-display: "Bai Jamjuree", "IBM Plex Sans Thai", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans Thai", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #16181c; --surface: #1f2228; --ink: #e9e7e2; --muted: #a3a8b1; --line: #33373f; --accent: #fb8a4a;
+    --ok: #6fd39a; --ok-bg: #173826; --warn: #f2c25b; --warn-bg: #3a2e12; --bad: #ff8f84; --bad-bg: #401c19;
+    --gap: #9cbbe6; --gap-bg: #1d2a3b; --none: #a3a8b1; --none-bg: #2a2d33;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #16181c; --surface: #1f2228; --ink: #e9e7e2; --muted: #a3a8b1; --line: #33373f; --accent: #fb8a4a;
+  --ok: #6fd39a; --ok-bg: #173826; --warn: #f2c25b; --warn-bg: #3a2e12; --bad: #ff8f84; --bad-bg: #401c19;
+  --gap: #9cbbe6; --gap-bg: #1d2a3b; --none: #a3a8b1; --none-bg: #2a2d33;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.65 var(--font-body); }
+main { max-width: 1080px; margin: 0 auto; padding: 40px 20px 72px; display: grid; gap: 40px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; line-height: 1.3; margin: 0; }
+h1 { font-size: 2rem; }
+h2 { font-size: 1.35rem; }
+h3 { font-size: 1.05rem; }
+p { margin: 0; max-width: 68ch; }
+.lede { color: var(--muted); }
+header { display: grid; gap: 10px; }
+.meta { font-size: .9rem; color: var(--muted); }
+section { display: grid; gap: 16px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; display: grid; gap: 8px; align-content: start; }
+.tile h3 { font-size: 1rem; }
+.bar { display: flex; height: 10px; border-radius: 99px; overflow: hidden; background: var(--none-bg); }
+.bar span { display: block; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.legend i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 5px; vertical-align: 1px; }
+.findings { display: grid; gap: 12px; }
+.finding { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 10px; padding: 14px 18px; display: grid; gap: 6px; }
+.quote { font-size: .92rem; color: var(--muted); }
+.quote b { color: var(--ink); font-weight: 600; }
+.table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+table { border-collapse: collapse; width: 100%; min-width: 820px; font-size: .9rem; }
+th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+th { font-weight: 600; color: var(--muted); font-size: .82rem; background: var(--surface); position: sticky; top: 0; }
+tr.group td { background: var(--bg); font-weight: 600; font-size: .85rem; color: var(--accent); padding-top: 14px; }
+td.q { width: 26%; }
+.chip { display: inline-block; font-size: .78rem; font-weight: 600; padding: 1px 9px; border-radius: 99px; white-space: nowrap; margin-bottom: 3px; }
+.ok { color: var(--ok); background: var(--ok-bg); }
+.warn { color: var(--warn); background: var(--warn-bg); }
+.bad { color: var(--bad); background: var(--bad-bg); }
+.gap { color: var(--gap); background: var(--gap-bg); }
+.none { color: var(--none); background: var(--none-bg); }
+.note { display: block; color: var(--muted); font-size: .84rem; }
+ol.todo { margin: 0; padding-left: 1.3em; display: grid; gap: 12px; max-width: 76ch; }
+ol.todo li::marker { color: var(--accent); font-weight: 600; }
+.who { font-size: .82rem; color: var(--muted); }
+.method { font-size: .92rem; color: var(--muted); display: grid; gap: 8px; }
+a { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 480px) { h1 { font-size: 1.6rem; } main { padding: 28px 16px 56px; gap: 32px; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>ทางมดเทียบ AI ทั่วไป</h1>
+    <p class="lede">คำถามที่ AI ทั่วไปน่าจะตอบได้ 32 ข้อ ถามทางมดตัวจริง เทียบกับโมเดลเปล่าที่ไม่มีข้อมูลประกอบ เพื่อดูว่าช่องว่างอยู่ตรงไหน และควรแก้ตรงไหนก่อน</p>
+    <p class="meta">วัดเมื่อ 5 พ.ย. 2569 · โมเดลหลักของทางมดคือ MiniMax-m3 · โมเดลเปล่าที่ใช้เทียบคือ MiniMax-m3 และ Gemini 3.5 Flash / Flash Lite</p>
+  </header>
+
+  <section aria-labelledby="sum">
+    <h2 id="sum">สรุป</h2>
+    <div class="tiles">
+      <div class="tile">
+        <h3>ทางมด (32 ข้อ)</h3>
+        <div class="bar" aria-hidden="true"><span style="width:53.1%;background:var(--ok)"></span><span style="width:18.75%;background:var(--bad)"></span><span style="width:18.75%;background:var(--gap)"></span><span style="width:9.4%;background:var(--none)"></span></div>
+        <div class="legend"><span><i style="background:var(--ok)"></i>ถูกหรือใช้ได้ 17</span><span><i style="background:var(--bad)"></i>ผิดหรือแต่ง 6</span><span><i style="background:var(--gap)"></i>บอกว่าไม่มีข้อมูล 6</span><span><i style="background:var(--none)"></i>ไม่ได้ตอบ (โควตา) 3</span></div>
+        <p class="note">เรื่องที่มีในข้อมูล ตอบถูกและแม่นกว่าทุกตัว แต่ยังมีคำตอบผิดหลุดมา 6 ข้อ</p>
+      </div>
+      <div class="tile">
+        <h3>MiniMax-m3 เปล่า (32 ข้อ)</h3>
+        <div class="bar" aria-hidden="true"><span style="width:25%;background:var(--ok)"></span><span style="width:75%;background:var(--bad)"></span></div>
+        <div class="legend"><span><i style="background:var(--ok)"></i>ใช้ได้ 8</span><span><i style="background:var(--bad)"></i>ผิดหรือแต่ง 24</span></div>
+        <p class="note">ไม่รู้จัก มจธ. เลย สับสนกับมหิดล จุฬาฯ และ มทร. ใช้ได้แค่ความรู้ทั่วไปที่ไม่ผูกกับ มจธ.</p>
+      </div>
+      <div class="tile">
+        <h3>Gemini เปล่า (19 ข้อที่ตอบได้)</h3>
+        <div class="bar" aria-hidden="true"><span style="width:63.2%;background:var(--ok)"></span><span style="width:10.5%;background:var(--warn)"></span><span style="width:26.3%;background:var(--bad)"></span></div>
+        <div class="legend"><span><i style="background:var(--ok)"></i>ถูกหรือใช้ได้ 12</span><span><i style="background:var(--warn)"></i>ถูกบางส่วน 2</span><span><i style="background:var(--bad)"></i>ผิดหรือแต่ง 5</span></div>
+        <p class="note">รู้เรื่องพื้นฐาน มจธ. จริง แต่ตัวเลข อันดับ ค่าเทอม และคำขวัญ แต่งขึ้นเอง · อีก 13 ข้อตอบไม่ได้เพราะโควตาหมด</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="find">
+    <h2 id="find">ข้อค้นพบ</h2>
+    <div class="findings">
+      <div class="finding">
+        <h3>1. ช่องว่างไม่ได้มาจากกติกาที่ให้ตอบจากข้อมูลเท่านั้น แต่มาจากโมเดลหลักไม่รู้จัก มจธ.</h3>
+        <p>ถาม MiniMax-m3 แบบไม่มีข้อมูลประกอบ ข้อเท็จจริงเฉพาะ มจธ. ผิดแทบทุกข้อ ถ้าปลดกติกาให้ทางมดตอบจากความรู้ของโมเดลเอง จะได้คำตอบผิดมากขึ้น ไม่ใช่ตอบได้มากขึ้น</p>
+        <p class="quote">ถามว่า "มจธ. ย่อมาจากอะไร" ตอบว่า <b>"มหาชนบดี"</b> · "TCAS คืออะไร" ตอบว่า <b>ข้อสอบเข้ามหาวิทยาลัยของจีน</b> · "FIBO เรียนอะไร" ตอบว่า <b>โรงเรียนธุรกิจที่ปารีส</b> · "ถ้าติด F ต้องทำยังไง" ตอบเรื่อง <b>โรคพิษสุนัขบ้า</b></p>
+      </div>
+      <div class="finding">
+        <h3>2. เรื่องที่ไม่มีในข้อมูล ทางมดยังแต่งคำตอบหลุดออกมา 6 ข้อ ซึ่งแย่กว่าบอกว่าไม่รู้</h3>
+        <p>กติกาให้ตอบจากข้อมูลเท่านั้นกันได้ไม่หมด เมื่อข้อมูลที่ค้นเจอไม่ตรงคำถาม โมเดลจะเติมจากความรู้ที่ผิดของตัวเอง</p>
+        <p class="quote">"มจธ. ย่อมาจากอะไร": <b>"เป็นมหาวิทยาลัยเทคโนโลยีของมหาวิทยาลัยมหิดล"</b> · "ทำไมเรียกบางมด": <b>"มหาวิทยาลัยมหิดลล้านพระยา"</b> · "สีประจำมหาวิทยาลัย": <b>"สีแดง"</b> (ที่ถูกคือแสด-เหลือง) · "TGAT คืออะไร": บอกว่าสอบคณิต วิทย์ อังกฤษ (ไม่ถูก)</p>
+      </div>
+      <div class="finding">
+        <h3>3. AI ทั่วไปที่ "ตอบได้" ไม่ได้แปลว่าตอบถูก</h3>
+        <p>Gemini ตอบเรื่องพื้นฐานถูก เช่น ชื่อเต็ม ปีก่อตั้ง สีประจำ ที่มาชื่อบางมด และอธิบาย TCAS กับ GPAX ได้ดี แต่ข้อที่เป็นตัวเลขหรือรายละเอียดเฉพาะ แต่งขึ้นอย่างมั่นใจ ส่วนที่เป็นจุดแข็งของทางมดก็คือเรื่องเหล่านี้</p>
+        <p class="quote">อันดับ QS: Gemini ตอบ <b>551–560</b> ทางมดตอบ <b>901–950</b> (ตรงกับข้อมูลที่มีแหล่ง) · ค่าเทอมวิศวะเครื่องกล: Gemini ตอบ <b>20,000–25,000 บาทต่อเทอม</b> ทางมดตอบ <b>14,500 + 650 บาทต่อหน่วยกิต</b> ตามตารางของ มจธ. · คำขวัญ: Gemini แต่งเป็น <b>"สู้งาน A + B"</b> · ต้นไม้ประจำมหาวิทยาลัย: Gemini Flash ตอบธรรมรักษา (ถูก) แต่ Flash Lite ตอบประดู่แดง</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="todo">
+    <h2 id="todo">สิ่งที่ควรทำ เรียงตามความคุ้ม</h2>
+    <ol class="todo">
+      <li><b>เติม KB ข้อมูลพื้นฐาน มจธ.</b> ชื่อเต็มและชื่อย่อ ที่มาชื่อบางมด สีแสด-เหลือง ต้นธรรมรักษา ปรัชญาและวิสัยทัศน์ทางการ ความต่างของ มจธ. กับ สจล. และ มจพ. รวมถึงอันดับในประเทศ ทำง่ายที่สุด และปิดข้อที่ผิดอยู่ตอนนี้ได้เกือบหมด <span class="who">ฝั่งข้อมูล</span></li>
+      <li><b>กันชื่อมหาวิทยาลัยอื่นโผล่มาเอง</b> ถ้าผู้ใช้ไม่ได้พูดถึงมหาวิทยาลัยอื่น แต่คำตอบมีคำว่า มหิดล จุฬาฯ หรือ มทร. ให้ตัวตรวจคำตอบจับไว้ แล้วตอบใหม่หรือบอกว่าไม่มีข้อมูล จับข้อผิดที่ร้ายที่สุดในชุดนี้ได้ 2 ข้อ <span class="who">prompt / validate (ไฟล์ที่ใช้ร่วมกัน)</span></li>
+      <li><b>เติม KB ระเบียบการเรียนและคำศัพท์สมัครเรียน</b> ได้แก่ ติด F แล้วต้องลงซ้ำยังไง เกณฑ์เกียรตินิยม จากงานทะเบียน และ TGAT/TPAT จาก myTCAS · ข้อเหล่านี้ทางมดตอบว่าไม่มีข้อมูล หรือตอบผิด <span class="who">ฝั่งข้อมูล</span></li>
+      <li><b>ชั้น "ความรู้ทั่วไป" ใช้ได้กับ Gemini เท่านั้น</b> คำถามแนวคิดที่ไม่ผูกตัวเลขของ มจธ. (จุลชีวจบไปทำอะไร โน้ตบุ๊กสเปกไหน) ให้ตอบจากความรู้โมเดลได้ แต่ต้องขึ้นป้ายว่ายังไม่ยืนยัน และห้ามให้ MiniMax-m3 ตอบชั้นนี้ ต้องส่งให้ Gemini ซึ่งเจอโควตาหมดบ่อย จึงควรทำหลังข้อ 1–3</li>
+      <li><b>ค้นเว็บทางการตอนถาม</b> พักไว้ก่อน ข้อ 1–3 น่าจะปิดช่องว่างส่วนใหญ่ได้โดยไม่ต้องเพิ่มต้นทุนและความช้า</li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="detail">
+    <h2 id="detail">ผลรายข้อ</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th scope="col">คำถาม</th><th scope="col">ทางมด</th><th scope="col">MiniMax-m3 เปล่า</th><th scope="col">Gemini เปล่า</th></tr></thead>
+        <tbody>
+          <tr class="group"><td colspan="4">ความรู้ทั่วไป มจธ.</td></tr>
+          <tr><td class="q">มจธ. ย่อมาจากอะไร</td><td><span class="chip bad">ผิด</span><span class="note">ตอบถูกแต่เติมว่าเป็นของมหิดล</span></td><td><span class="chip bad">ผิด</span><span class="note">"มหาชนบดี"</span></td><td><span class="chip ok">ถูก</span></td></tr>
+          <tr><td class="q">มจธ. ก่อตั้งปีไหน</td><td><span class="chip ok">ถูก</span><span class="note">4 ก.พ. 2503</span></td><td><span class="chip bad">ผิด</span><span class="note">2518</span></td><td><span class="chip ok">ถูก</span></td></tr>
+          <tr><td class="q">สีประจำมหาวิทยาลัย</td><td><span class="chip bad">ผิด</span><span class="note">สีแดง</span></td><td><span class="chip bad">ผิด</span><span class="note">สีแดง ของมหิดล</span></td><td><span class="chip ok">ถูก</span><span class="note">แสด-เหลือง (Flash) · Lite ตอบแค่แสด</span></td></tr>
+          <tr><td class="q">ต้นไม้ประจำมหาวิทยาลัย</td><td><span class="chip gap">ไม่มีข้อมูล</span></td><td><span class="chip bad">ผิด</span><span class="note">ต้นโพธิ์</span></td><td><span class="chip warn">ไม่ตรงกัน</span><span class="note">Flash: ธรรมรักษา (ถูก) · Lite: ประดู่แดง</span></td></tr>
+          <tr><td class="q">มีกี่วิทยาเขต อยู่ที่ไหน</td><td><span class="chip ok">ถูก</span><span class="note">บางมด บางขุนเทียน ราชบุรี</span></td><td><span class="chip bad">ผิด</span><span class="note">บางนา อยุธยา</span></td><td><span class="chip warn">บางส่วน</span><span class="note">นับ 4 แห่ง รวม CMMT ยังไม่ได้ตรวจ</span></td></tr>
+          <tr><td class="q">ทำไมเรียกว่าบางมด</td><td><span class="chip bad">ผิด</span><span class="note">"มหาวิทยาลัยมหิดลล้านพระยา"</span></td><td><span class="chip bad">ผิด</span><span class="note">โยงกับโรงพยาบาลจุฬาฯ</span></td><td><span class="chip ok">ถูก</span><span class="note">ตั้งอยู่แขวงบางมด</span></td></tr>
+          <tr><td class="q">มหาวิทยาลัยรัฐหรือเอกชน ในกำกับรัฐคืออะไร</td><td><span class="chip ok">ถูก</span></td><td><span class="chip bad">ผิด</span><span class="note">บอกว่าเป็น มทร.</span></td><td><span class="chip ok">ถูก</span></td></tr>
+          <tr><td class="q">ปรัชญาหรือคติพจน์</td><td><span class="chip gap">ไม่มีข้อมูล</span></td><td><span class="chip bad">ผิด</span></td><td><span class="chip bad">แต่ง</span><span class="note">"สู้งาน A + B"</span></td></tr>
+          <tr><td class="q">ลาดกระบัง พระนครเหนือ ธนบุรี ต่างกันยังไง</td><td><span class="chip bad">ผิด</span><span class="note">บอกว่าพระนครเหนืออยู่พิษณุโลก</span></td><td><span class="chip bad">ผิด</span></td><td><span class="chip none">โควตาหมด</span></td></tr>
+          <tr><td class="q">ศิษย์เก่าที่มีชื่อเสียง</td><td><span class="chip gap">ไม่มีข้อมูล</span></td><td><span class="chip bad">ผิด</span><span class="note">แต่งชื่อคน</span></td><td><span class="chip none">โควตาหมด</span></td></tr>
+          <tr class="group"><td colspan="4">เนื้อหาสาขาและอาชีพ</td></tr>
+          <tr><td class="q">วิศวะไฟฟ้าเรียนอะไร จบไปทำอะไร</td><td><span class="chip none">ไม่ได้ตอบ</span><span class="note">โควตาหมด</span></td><td><span class="chip ok">ใช้ได้</span><span class="note">ความรู้ทั่วไป</span></td><td><span class="chip none">โควตาหมด</span></td></tr>
+          <tr><td class="q">วิศวะเคมีกับเคมีคณะวิทย์ต่างกันยังไง</td><td><span class="chip none">ไม่ได้ตอบ</span><span class="note">โควตาหมด</span></td><td><span class="chip ok">ใช้ได้</span></td><td><span class="chip ok">ใช้ได้</span></td></tr>
+          <tr><td class="q">วิศวะโยธาเรียนหนักไหม</td><td><span class="chip ok">ใช้ได้</span><span class="note">มีหน่วยกิตจริง 148</span></td><td><span class="chip ok">ใช้ได้</span></td><td><span class="chip none">โควตาหมด</span></td></tr>
+          <tr><td class="q">FIBO เรียนอะไร</td><td><span class="chip ok">ถูก</span></td><td><span class="chip bad">ผิด</span><span class="note">โรงเรียนธุรกิจปารีส</span></td><td><span class="chip ok">ถูก</span></td></tr>
+          <tr><td class="q">จุลชีววิทยาจบไปทำอะไร</td><td><span class="chip gap">ไม่มีข้อมูล</span><span class="note">ให้เบอร์คณะแทน</span></td><td><span class="chip ok">ใช้ได้</span></td><td><span class="chip none">โควตาหมด</span></td></tr>
+          <tr><td class="q">สถิติฯ คณะวิทย์ กับ DSI ต่างกันยังไง</td><td><span class="chip ok">ถูก</span></td><td><span class="chip warn">บางส่วน</span><span class="note">ชื่อ DSI ผิด</span></td><td><span class="chip warn">บางส่วน</span><span class="note">ชื่อ DSI ผิด</span></td></tr>
+          <tr><td class="q">จบครุศาสตร์อุตสาหกรรมต้องเป็นครูไหม</td><td><span class="chip ok">ใช้ได้</span></td><td><span class="chip ok">ใช้ได้</span></td><td><span class="chip none">โควตาหมด</span></td></tr>
+          <tr><td class="q">ภาคฤดูร้อนคืออะไร</td><td><span class="chip ok">ถูก</span><span class="note">มีวันที่จากปฏิทิน</span></td><td><span class="chip bad">ผิด</span><span class="note">ตอบเรื่องหน้าร้อนไปทะเล</span></td><td><span class="chip none">โควตาหมด</span></td></tr>
+          <tr class="group"><td colspan="4">การสมัครทั่วไป</td></tr>
+          <tr><td class="q">TCAS คืออะไร มีกี่รอบ</td><td><span class="chip ok">ถูก</span></td><td><span class="chip bad">ผิด</span><span class="note">ข้อสอบจีน</span></td><td><span class="chip ok">ถูก</span></td></tr>
+          <tr><td class="q">GPAX คิดยังไง</td><td><span class="chip ok">ถูก</span></td><td><span class="chip ok">ใช้ได้</span></td><td><span class="chip ok">ถูก</span></td></tr>
+          <tr><td class="q">portfolio วิศวะควรใส่อะไร</td><td><span class="chip ok">ใช้ได้</span></td><td><span class="chip bad">ผิด</span><span class="note">ตอบแบบ portfolio สมัครงาน</span></td><td><span class="chip none">โควตาหมด</span></td></tr>
+          <tr><td class="q">TGAT TPAT คืออะไร</td><td><span class="chip bad">ผิดบางส่วน</span><span class="note">บอกว่า TGAT สอบคณิต วิทย์ อังกฤษ</span></td><td><span class="chip bad">ผิด</span></td><td><span class="chip none">โควตาหมด</span></td></tr>
+          <tr class="group"><td colspan="4">ชีวิตนักศึกษาทั่วไป</td></tr>
+          <tr><td class="q">ต้องมีโน้ตบุ๊กไหม สเปกไหน</td><td><span class="chip gap">ไม่มีข้อมูล</span></td><td><span class="chip ok">ใช้ได้</span><span class="note">คำแนะนำทั่วไป</span></td><td><span class="chip none">โควตาหมด</span></td></tr>
+          <tr><td class="q">ใช้ภาษาอังกฤษเยอะไหม</td><td><span class="chip ok">ใช้ได้</span><span class="note">ตอบได้เฉพาะ SIT</span></td><td><span class="chip ok">ใช้ได้</span></td><td><span class="chip warn">บางส่วน</span><span class="note">พูดถึง SIIT ซึ่งเป็นของธรรมศาสตร์</span></td></tr>
+          <tr><td class="q">ชีวิตปี 1 มีรับน้องไหม</td><td><span class="chip ok">ใช้ได้</span><span class="note">ตอบอ้อมไปเรื่อง SIT</span></td><td><span class="chip bad">ผิด</span><span class="note">คิดว่าเป็นจุฬาฯ</span></td><td><span class="chip ok">ใช้ได้</span><span class="note">ยังไม่ได้ตรวจชื่อกิจกรรม</span></td></tr>
+          <tr><td class="q">มีแลกเปลี่ยนต่างประเทศไหม</td><td><span class="chip bad">ผิดบางส่วน</span><span class="note">เอาโครงการ 3+1 Seneca มาตอบว่าเป็นแลกเปลี่ยน</span></td><td><span class="chip warn">บางส่วน</span><span class="note">ชื่อมหาวิทยาลัยผิด</span></td><td><span class="chip ok">ใช้ได้</span></td></tr>
+          <tr><td class="q">เกรดเท่าไหร่ได้เกียรตินิยม</td><td><span class="chip gap">ไม่มีข้อมูล</span></td><td><span class="chip bad">ผิด</span><span class="note">ตอบเกณฑ์มัธยม</span></td><td><span class="chip none">โควตาหมด</span></td></tr>
+          <tr><td class="q">ติด F ต้องทำยังไง</td><td><span class="chip none">ไม่ได้ตอบ</span><span class="note">โควตาหมด</span></td><td><span class="chip bad">ผิด</span><span class="note">ตอบเรื่องโรคพิษสุนัขบ้า</span></td><td><span class="chip ok">ใช้ได้</span></td></tr>
+          <tr class="group"><td colspan="4">ข้อเท็จจริงที่ AI มักแต่ง</td></tr>
+          <tr><td class="q">อยู่อันดับเท่าไหร่</td><td><span class="chip ok">ถูก</span><span class="note">QS 901–950, THE 801–1000</span></td><td><span class="chip bad">ผิด</span><span class="note">ตอบอันดับจุฬาฯ</span></td><td><span class="chip bad">แต่ง</span><span class="note">QS 551–560</span></td></tr>
+          <tr><td class="q">ค่าเทอมวิศวะเครื่องกล</td><td><span class="chip ok">ถูก</span><span class="note">14,500 + 650/นก.</span></td><td><span class="chip bad">ผิด</span><span class="note">150,000–200,000 ต่อเทอม</span></td><td><span class="chip bad">แต่ง</span><span class="note">20,000–25,000 ต่อเทอม</span></td></tr>
+          <tr><td class="q">มีโครงการช้างเผือกไหม</td><td><span class="chip ok">ถูก</span><span class="note">ไม่มี</span></td><td><span class="chip bad">ผิด</span><span class="note">บอกว่ามี</span></td><td><span class="chip none">โควตาหมด</span></td></tr>
+          <tr><td class="q">ห้องสมุดเปิดกี่โมง</td><td><span class="chip ok">ถูก</span><span class="note">ตามเว็บหอสมุด</span></td><td><span class="chip bad">ผิด</span><span class="note">08:00–22:00</span></td><td><span class="chip none">โควตาหมด</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section aria-labelledby="method">
+    <h2 id="method">วิธีวัดและข้อจำกัด</h2>
+    <div class="method">
+      <p>ถามคำถามเดียวกันสามแบบ: ทางมดตัวจริง (ค้นข้อมูล + prompt + ตัวตรวจคำตอบ), MiniMax-m3 เปล่า และ Gemini เปล่า โมเดลเปล่าใช้ system prompt สั้น ๆ ว่าเป็นผู้ช่วย AI ทั่วไป เหมือนพิมพ์ถามแชท AI ปกติ สคริปต์อยู่ที่ <code>scripts/gap-compare.ts</code> รันซ้ำได้หลังแก้</p>
+      <p>Gemini 3.5 Flash ตอบได้แค่ 4 ข้อแรกก่อนโควตาหมด ที่เหลือใช้ Flash Lite และยังโควตาหมดอีก 13 ข้อ ทางมดเองตอบแบบออฟไลน์ 3 ข้อเพราะโควตาเหมือนกัน ผล Gemini จึงเป็นตัวอย่าง ไม่ใช่ตัวเลขที่สรุปได้แน่น</p>
+      <p>ตัดสินถูกผิดด้วยมือ เทียบกับข้อมูลในโปรเจกต์ที่มีแหล่ง และค้นเพิ่มสำหรับสีกับต้นไม้ประจำมหาวิทยาลัย (<a href="https://www.sanook.com/campus/921421/">Sanook Campus</a>, <a href="https://www.kmutt.ac.th/wp-content/uploads/2025/04/Good-University-Report-2024-New.pdf">Good University Report ของ มจธ.</a>) ข้อที่ระบุว่า "ใช้ได้" คือไม่มีข้อเท็จจริงผิด แต่ยังไม่ได้ตรวจทุกประโยค</p>
+    </div>
+  </section>
+</main>
+</body>
+</html>
