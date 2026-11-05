@@ -55,9 +55,9 @@
  },
  {
   "id": "oc-withdraw",
-  "cat": "unknown",
+  "cat": "official",
   "q": "มอเราเปิดให้ถอนรายวิชาวันไหน",
-  "expect": { "admits_unknown": true, "include": ["ทะเบียน|8354|regis"] }
+  "expect": { "include": ["13 (พ\\.?ย|พฤศจิกา)|2026-11-13"] }
  },
  {
   "id": "oc-room-cb2201",
