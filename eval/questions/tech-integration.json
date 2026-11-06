@@ -1,0 +1,12 @@
+[
+ {
+  "id": "techint-what",
+  "cat": "niche",
+  "q": "มีเว็บรวมแอปช่วยเรียนของมอไหม ทำพรีเซนต์",
+  "expect": {
+   "include": [
+    "Tech Integration|techintegration"
+   ]
+  }
+ }
+]
