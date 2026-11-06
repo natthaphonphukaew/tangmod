@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { buildSystemPrompt, admissionNow, schemaInstructions } from "./prompt";
 import { offlineAnswer } from "./mock-model";
 import { ChatAnswer, emptyProfile } from "./schema";
-import { cleanMessage, salvageAnswer, validateAnswer } from "./validate";
+import { cleanMessage, salvageAnswer, stripUnsupportedUniversities, validateAnswer } from "./validate";
 
 const base: ChatAnswer = {
   message: "ดูที่ https://evil.example ได้เลย",
@@ -120,5 +120,36 @@ describe("prompt", () => {
     for (const section of ["# กติกา", "# PLACES", "# PROGRAMS", "# NOW", "# CONTEXT"]) expect(p).toContain(section);
     expect(p).toContain("น้องมด");
     expect(p).not.toContain("handoff");
+  });
+});
+
+describe("ชื่อมหาวิทยาลัยอื่นที่โผล่มาเอง", () => {
+  it("ตัดท่อนที่แต่งว่า มจธ. เป็นของมหิดล แล้วลดความมั่นใจ (เคสจริงจากการวัด)", () => {
+    const v = validateAnswer(
+      { ...base, message: "มจธ. ย่อมาจาก **มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าธนบุรี** ครับ เป็นมหาวิทยาลัยเทคโนโลยีของมหาวิทยาลัยมหิดล" },
+      "มจธ. ย่อมาจากอะไร",
+    );
+    expect(v.message).not.toMatch(/มหิดล/);
+    expect(v.message).toContain("มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าธนบุรี");
+    expect(v.confidence).toBe("low");
+  });
+
+  it("ผู้ใช้พูดถึงเอง หรือมีใน CONTEXT ใช้ได้ตามปกติ", () => {
+    const msg = "มจธ. กับลาดกระบังเป็นคนละมหาวิทยาลัยกันครับ";
+    expect(validateAnswer({ ...base, message: msg }, "มจธ. ต่างจากลาดกระบังยังไง").message).toBe(msg);
+    const fromContext = validateAnswer({ ...base, message: msg }, "สามพระจอมคืออะไร", "สจล. อยู่ลาดกระบัง");
+    expect(fromContext.message).toBe(msg);
+    expect(fromContext.confidence).toBe("high");
+  });
+
+  it("ไม่จับคำที่แค่คล้าย เช่น ราชวิทยาลัยจุฬาภรณ์", () => {
+    const msg = "หลักสูตรวิทยาศาสตร์ข้อมูลสุขภาพสอนร่วมกับราชวิทยาลัยจุฬาภรณ์";
+    expect(stripUnsupportedUniversities(msg, "")).toEqual({ message: msg, stripped: false });
+  });
+
+  it("ตัดแล้วไม่เหลืออะไร ให้บอกว่ายังไม่มีข้อมูล", () => {
+    const r = stripUnsupportedUniversities("มหาวิทยาลัยมหิดลล้านพระยา", "");
+    expect(r.stripped).toBe(true);
+    expect(r.message).toMatch(/ยังไม่มีข้อมูล/);
   });
 });

@@ -58,6 +58,8 @@ export async function POST(req: Request) {
       const send = (event: StreamEvent) => controller.enqueue(encoder.encode(`${JSON.stringify(event)}\n`));
       let lastError: unknown;
 
+      // ข้อความ CONTEXT ทั้งหมด ใช้ตรวจว่าชื่อมหาวิทยาลัยอื่นในคำตอบมีที่มาไหม (validate.ts)
+      const contextText = retrieved.chunks.map((c) => `${c.title}\n${c.text}`).join("\n");
       const candidates = chatModels();
       for (const [i, candidate] of candidates.entries()) {
         let emitted = false;
@@ -102,7 +104,7 @@ export async function POST(req: Request) {
             emitted = true;
             send({ type: "partial", data: lastPartial });
           }
-          const answer = validateAnswer(await result.output, message);
+          const answer = validateAnswer(await result.output, message, contextText);
           send({ type: "final", data: answer, model: candidate.id });
           const usage = await result.usage;
           log({ model: candidate.id, map: answer.show_map, confidence: answer.confidence, ms: Date.now() - startedAt, tokens: { in: usage.inputTokens, out: usage.outputTokens, think: usage.outputTokenDetails?.reasoningTokens }, context: retrieved.chunks.map((c) => c.id) });
@@ -117,7 +119,7 @@ export async function POST(req: Request) {
           if (emitted) {
             const salvaged = salvageAnswer(lastPartial);
             if (salvaged) {
-              const answer = validateAnswer(salvaged, message);
+              const answer = validateAnswer(salvaged, message, contextText);
               send({ type: "final", data: answer, model: candidate.id });
               log({ model: candidate.id, salvaged: true, confidence: answer.confidence, ms: Date.now() - startedAt });
               if (answer.confidence === "low") await recordUnanswered({ question: message, answer, model: candidate.id });
