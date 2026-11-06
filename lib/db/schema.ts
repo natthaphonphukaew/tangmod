@@ -111,4 +111,14 @@ export const feedback = pgTable(
   (t) => [index("feedback_created_idx").on(t.createdAt)],
 );
 
-export const schema = { user, session, account, verification, conversation, rateLimit, feedback };
+/** ตารางเรียนส่วนตัว (1 คน 1 ตาราง) ของผู้ใช้ที่ login · ไม่ login เก็บใน localStorage */
+export const timetable = pgTable("timetable", {
+  userId: text("user_id")
+    .primaryKey()
+    .references(() => user.id, { onDelete: "cascade" }),
+  /** Timetable จาก lib/timetable/schema.ts */
+  data: jsonb("data").notNull(),
+  updatedAt: bigint("updated_at", { mode: "number" }).notNull(),
+});
+
+export const schema = { user, session, account, verification, conversation, rateLimit, feedback, timetable };

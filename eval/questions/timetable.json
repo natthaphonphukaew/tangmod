@@ -1,0 +1,55 @@
+[
+ {
+  "id": "tt-wednesday",
+  "cat": "official",
+  "q": "วันพุธเรียนอะไรบ้าง ห้องไหน",
+  "timetable": "timetable-dsi3",
+  "expect": {
+   "include": [
+    "DSI122",
+    "DSI210",
+    "CB2306"
+   ]
+  }
+ },
+ {
+  "id": "tt-saturday",
+  "cat": "official",
+  "q": "วันเสาร์มีเรียนไหม",
+  "timetable": "timetable-dsi3",
+  "expect": {
+   "include": [
+    "DSI121",
+    "08[.:]00"
+   ]
+  }
+ },
+ {
+  "id": "tt-room-map",
+  "cat": "map",
+  "q": "วันอังคารเช้าเรียนห้องไหน ไปยังไง",
+  "timetable": "timetable-dsi3",
+  "expect": {
+   "include": [
+    "CB2504"
+   ],
+   "places_any": [
+    "N17"
+   ],
+   "show_map": true
+  }
+ },
+ {
+  "id": "tt-none",
+  "cat": "official",
+  "q": "พรุ่งนี้ฉันเรียนอะไรบ้าง",
+  "expect": {
+   "include": [
+    "ปฏิทิน|ตารางเรียน"
+   ],
+   "exclude": [
+    "DSI"
+   ]
+  }
+ }
+]

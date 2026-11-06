@@ -3,8 +3,11 @@
 import { CalendarDots, CaretRight } from "@phosphor-icons/react";
 import Link from "next/link";
 import { KIND_LABEL, dayStatus, upcoming, type DayStatus } from "@/lib/calendar/events";
+import { classesOn } from "@/lib/calendar/classes";
+import { useTimetable } from "@/lib/client/timetable-store";
 import { useToday } from "@/lib/client/use-today";
 import { daysUntil, formatRange } from "@/lib/format";
+import { ClassList } from "./ClassList";
 import { KIND_STYLE } from "./kind-style";
 
 /*
@@ -34,6 +37,7 @@ function when(start: string, end: string, now: Date): string {
 
 export function TodayCard() {
   const today = useToday();
+  const { timetable } = useTimetable();
   // ตอน render ฝั่ง server ยังไม่รู้วันนี้: เว้นที่ไว้ขนาดเท่าการ์ดจริง หน้าจะได้ไม่กระโดด
   if (!today) return <div aria-hidden className="mt-6 h-[188px] rounded-[var(--radius-card)] border border-line bg-card/60 xl:mt-8" />;
   const status = dayStatus(today);
@@ -46,6 +50,7 @@ export function TodayCard() {
         <h3 className="font-display text-lg text-ink">วันนี้ {todayTitle(today)}</h3>
         <span className={`rounded-full px-2.5 py-0.5 text-[13px] font-medium ${TONE[status.tone]}`}>{status.text}</span>
       </div>
+      {timetable && <TodayClasses classes={classesOn(today, timetable)} />}
       {next.length > 0 && (
         <ul className="mt-3 space-y-1.5">
           {next.map((e) => (
@@ -67,5 +72,14 @@ export function TodayCard() {
         ดูปฏิทินทั้งปี <CaretRight size={16} weight="bold" />
       </Link>
     </section>
+  );
+}
+
+function TodayClasses({ classes }: { classes: ReturnType<typeof classesOn> }) {
+  return (
+    <div className="mt-3 rounded-xl bg-paper p-3">
+      <p className="text-[13px] font-semibold text-ink">คาบเรียนวันนี้</p>
+      {classes.slots.length || classes.note ? <ClassList day={classes} compact /> : <p className="text-sm text-ink-soft">วันนี้ไม่มีคาบตามตารางของคุณ</p>}
+    </div>
   );
 }

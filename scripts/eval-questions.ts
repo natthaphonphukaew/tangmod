@@ -29,6 +29,8 @@ export const Question = z
     id: z.string().regex(/^[a-z0-9][a-z0-9-]*$/, "id ใช้ a-z 0-9 และ - เท่านั้น"),
     cat: z.enum(["official", "niche", "unknown", "out_of_scope", "map"]),
     q: z.string().min(1),
+    /** ชื่อไฟล์ใน eval/fixtures (ไม่ต้องใส่ .json) ส่งไปเป็นตารางเรียนของผู้ใช้ */
+    timetable: z.string().regex(/^[a-z0-9-]+$/).optional(),
     expect: Expect,
   })
   .strict();

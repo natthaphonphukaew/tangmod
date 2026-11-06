@@ -44,7 +44,7 @@ export async function POST(req: Request) {
   const previousUserMessage = [...history].reverse().find((t) => t.role === "user")?.text;
 
   const retrieved = retrieve({ message, previousUserMessage });
-  const system = buildSystemPrompt({ profile: body.profile, chunks: retrieved.chunks, now: new Date() });
+  const system = buildSystemPrompt({ profile: body.profile, chunks: retrieved.chunks, now: new Date(), timetable: body.timetable });
   const messages = [
     ...history.map((t) => ({ role: t.role, content: scrubPII(t.text) })),
     { role: "user" as const, content: message },
