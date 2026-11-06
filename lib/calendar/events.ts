@@ -1,5 +1,6 @@
 import { academicEvents, admissionEvents, calendar, holidays } from "@/lib/data";
 import type { AcademicEventKind, Day, Tier } from "@/lib/data/schemas";
+import { daysUntil } from "@/lib/format";
 
 /*
  * ปฏิทินนักศึกษา: รวมวันสำคัญจาก 4 แหล่งเป็นรายการเดียว
@@ -105,6 +106,17 @@ export function monthGrid(year: number, month: number): (string | null)[][] {
   return Array.from({ length: cells.length / 7 }, (_, i) => cells.slice(i * 7, i * 7 + 7));
 }
 
+/** ช่องของตารางเดือนแบบเต็มสัปดาห์ (เริ่มวันจันทร์) รวมวันของเดือนก่อน/ถัดไปที่อยู่ในสัปดาห์เดียวกัน */
+export function monthCells(year: number, month: number): { iso: string; inMonth: boolean }[] {
+  const first = isoOf(year, month, 1);
+  const lead = (new Date(Date.UTC(year, month - 1, 1)).getUTCDay() + 6) % 7;
+  const total = Math.ceil((lead + daysInMonth(year, month)) / 7) * 7;
+  return Array.from({ length: total }, (_, i) => {
+    const iso = addDays(first, i - lead);
+    return { iso, inMonth: iso.slice(0, 7) === first.slice(0, 7) };
+  });
+}
+
 /** เดือนของปีการศึกษา: ตั้งแต่เดือนที่ภาคแรกเปิดถึงเดือนที่ภาคสุดท้ายปิด */
 export function academicMonths(): { year: number; month: number }[] {
   const [sy, sm] = calendar.terms[0].start.split("-").map(Number);
@@ -144,4 +156,13 @@ export function dayStatus(iso: string, events = allEvents()): DayStatus {
   const day = dayOf(iso);
   if (day === "sat" || day === "sun") return { tone: "weekend", text: "วันหยุดสุดสัปดาห์", termId: term.id };
   return { tone: "class", text: `เรียนปกติ ${term.label}`, termId: term.id };
+}
+
+/** "อีก 5 วัน" / "พรุ่งนี้" / "เหลือ 7 วัน" / "วันสุดท้ายวันนี้" เทียบกับเวลา now */
+export function whenLabel(start: string, end: string, now: Date): string {
+  const toStart = daysUntil(start, now);
+  if (toStart > 0) return toStart === 1 ? "พรุ่งนี้" : `อีก ${toStart} วัน`;
+  const toEnd = daysUntil(end, now);
+  if (toEnd === 0) return "วันสุดท้ายวันนี้";
+  return start === end ? "วันนี้" : `เหลือ ${toEnd} วัน`;
 }

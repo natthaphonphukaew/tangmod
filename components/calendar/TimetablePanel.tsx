@@ -111,7 +111,7 @@ export function TimetablePanel({ today }: { today: string | null }) {
       <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" id="timetable-file" onChange={(e) => onFile(e.target.files?.[0])} />
       <label
         htmlFor="timetable-file"
-        className={`inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-brand px-4 text-sm font-semibold text-white hover:bg-brand-ink ${busy ? "pointer-events-none opacity-60" : ""}`}
+        className={`inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-brand-ink px-4 text-sm font-semibold text-white hover:bg-brand-deep ${busy ? "pointer-events-none opacity-60" : ""}`}
       >
         {busy === "reading" ? <CircleNotch size={18} className="animate-spin" /> : <ImageSquare size={18} weight="bold" />}
         {busy === "reading" ? "มดกำลังอ่านตาราง…" : timetable ? "อัปรูปใหม่" : "อัปรูปตารางเรียน"}
@@ -120,7 +120,7 @@ export function TimetablePanel({ today }: { today: string | null }) {
   );
 
   return (
-    <section aria-label="ตารางเรียนของฉัน" className="rounded-[var(--radius-card)] border border-line bg-card p-3 shadow-[var(--shadow-card)] sm:p-4">
+    <section aria-label="ตารางเรียนของฉัน" className="rounded-[24px] border border-line bg-card p-4 shadow-[var(--shadow-card)] sm:p-5">
       <h2 className="font-display text-lg text-ink">ตารางเรียนของฉัน</h2>
       {!ready ? (
         <div className="mt-2 h-24 animate-pulse rounded-xl bg-paper" aria-hidden />
@@ -336,7 +336,7 @@ function Editor({
         <Plus size={16} weight="bold" /> เพิ่มคาบ
       </button>
       <div className="mt-3 flex gap-2">
-        <button type="button" onClick={onSave} disabled={!!busy} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-brand px-5 text-sm font-semibold text-white hover:bg-brand-ink disabled:opacity-60">
+        <button type="button" onClick={onSave} disabled={!!busy} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-brand-ink px-5 text-sm font-semibold text-white hover:bg-brand-deep disabled:opacity-60">
           {busy === "saving" && <CircleNotch size={18} className="animate-spin" />} บันทึก
         </button>
         <button type="button" onClick={onCancel} className="inline-flex min-h-11 items-center rounded-full border border-line-strong px-4 text-sm font-semibold text-ink hover:bg-paper">

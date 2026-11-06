@@ -27,6 +27,9 @@ import { BottomSheet, detentHeight, useElementHeight, useIsDesktop, useIsWide, t
 import { MapPanel } from "./MapPanel";
 import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
+import { CalendarScreen } from "@/components/calendar/CalendarScreen";
+import { navigate } from "@/lib/client/nav";
+import { usePathname } from "next/navigation";
 import { useTimetable } from "@/lib/client/timetable-store";
 
 /*
@@ -41,6 +44,12 @@ const nextId = () => `m${Date.now().toString(36)}${++seq}`;
 const toHighlights = (answer: ValidatedAnswer): MapHighlight[] => answer.places.map((p, n) => ({ placeId: p.place_id, n: n + 1 }));
 
 export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
+  // แชทกับปฏิทินอยู่ในแอปเดียวกัน (แถบซ้ายไม่หาย) เลือกหน้าจาก path ซึ่งเปลี่ยนด้วย navigate() แบบไม่โหลดใหม่
+  const view: "chat" | "calendar" = usePathname() === "/calendar" ? "calendar" : "chat";
+  // สลับหน้าด้วย pushState ไม่ได้โหลดหน้าใหม่ ชื่อแท็บจึงต้องเปลี่ยนเอง
+  useEffect(() => {
+    document.title = view === "calendar" ? "ปฏิทินนักศึกษา · ทางมด" : "ทางมด · ถามน้องมดได้ทุกเรื่องในบางมด";
+  }, [view]);
   const session = authClient.useSession();
   // ตารางเรียนจากหน้าปฏิทิน ส่งไปกับคำถาม มดจะตอบ "พรุ่งนี้เรียนอะไร" ได้
   const { timetable } = useTimetable();
@@ -398,12 +407,24 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
         onSignOut: () => void signOut(),
         onDeleteAccount: () => void deleteAccount(),
       }}
-      onNew={newChat}
+      view={view}
+      onNew={() => {
+        navigate("/");
+        newChat();
+      }}
       onOpenCompass={() => {
         setDrawerOpen(false);
+        navigate("/");
         setCompassOpen(true);
       }}
-      onOpen={(id) => void openConversation(id)}
+      onOpenCalendar={() => {
+        setDrawerOpen(false);
+        navigate("/calendar");
+      }}
+      onOpen={(id) => {
+        navigate("/");
+        void openConversation(id);
+      }}
       onDelete={(id) => void deleteConversation(id)}
       onForget={forgetProfile}
       onClose={onClose}
@@ -421,17 +442,17 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
       </a>
       {/* จอ 1024–1279 ตอนเปิดแผนที่: ซ่อน sidebar ให้แชทกว้างพอ (ไม่งั้นเหลือ ~300px) ประวัติแชทเปิดเป็น drawer แทน
           ใช้ class ไม่ใช่ isWide เพื่อให้ HTML จาก server ตรงกับหน้าจอตั้งแต่แรก */}
-      <aside inert={mapFull} className={`hidden w-[272px] shrink-0 border-r border-line ${mapOpen ? "xl:flex" : "lg:flex"}`}>{sidebar()}</aside>
+      <aside inert={mapFull} className={`hidden w-[272px] shrink-0 border-r border-line ${mapOpen && view === "chat" ? "xl:flex" : "lg:flex"}`}>{sidebar()}</aside>
 
       {/* มือถือ (และจอกลางตอนเปิดแผนที่): ประวัติแชทเป็น drawer จากซ้าย */}
       <AnimatePresence>
-        {drawerOpen && (isMobile || (mapOpen && !isWide)) && (
+        {drawerOpen && (isMobile || (mapOpen && view === "chat" && !isWide)) && (
           <motion.div
             ref={drawerRef}
-            className={`fixed inset-0 z-40 ${mapOpen ? "xl:hidden" : "lg:hidden"}`}
+            className={`fixed inset-0 z-40 ${mapOpen && view === "chat" ? "xl:hidden" : "lg:hidden"}`}
             role="dialog"
             aria-modal="true"
-            aria-label="ประวัติแชท"
+            aria-label="เมนู"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -455,11 +476,14 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
       </AnimatePresence>
 
       <main className="flex min-w-0 flex-1 flex-col">
-        <h1 className="sr-only">ทางมด — ผู้ช่วยแชทประจำแคมปัส มจธ. บางมด</h1>
-        <div inert={mapFull} className="contents">
+        {/* หน้าปฏิทินมี h1 ของตัวเอง */}
+        {view === "chat" && <h1 className="sr-only">ทางมด — ผู้ช่วยแชทประจำแคมปัส มจธ. บางมด</h1>}
+        {/* หน้าปฏิทินบนจอใหญ่ไม่ต้องมีแถบบน (หัวหน้ามี breadcrumb และชื่อหน้าแล้ว) มือถือยังต้องใช้ปุ่มเมนู */}
+        <div inert={mapFull} className={view === "calendar" ? "contents lg:hidden" : "contents"}>
         <TopBar
-          title={convId ? titleOf(thread) : null}
-          mapOpen={mapOpen}
+          title={view === "calendar" ? "ปฏิทินนักศึกษา" : convId ? titleOf(thread) : null}
+          mapOpen={mapOpen && view === "chat"}
+          showMap={view === "chat"}
           onToggleMap={() => {
             setMapFull(false);
             if (mapOpen) setMapOpen(false);
@@ -469,10 +493,19 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
             drawerOpener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
             setDrawerOpen(true);
           }}
-          onNew={newChat}
+          onNew={() => {
+            navigate("/");
+            newChat();
+          }}
         />
         </div>
-        <div ref={areaRef} className="relative flex min-h-0 flex-1">
+        {view === "calendar" && (
+          <div className="min-h-0 flex-1 overflow-y-auto">
+            <CalendarScreen />
+          </div>
+        )}
+        {/* หน้าปฏิทิน: ซ่อนแชทไว้แต่ไม่ถอดออก ข้อความที่พิมพ์ค้างและแผนที่ยังอยู่เมื่อกลับมา */}
+        <div ref={areaRef} className={`relative min-h-0 flex-1 ${view === "calendar" ? "hidden" : "flex"}`}>
           <div inert={mapFull} className="contents">
           <BottomSheet mode={sheetMode ? "sheet" : "full"} detent={detent} onDetentChange={setDetent} areaHeight={areaHeight}>
             <ChatColumn

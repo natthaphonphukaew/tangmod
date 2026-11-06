@@ -28,8 +28,11 @@ type Props = {
   listedAt: number;
   profile: Profile;
   account: AccountProps;
+  /** หน้าที่เปิดอยู่: แชท หรือ ปฏิทิน (ไฮไลต์เมนู) */
+  view: "chat" | "calendar";
   onNew: () => void;
   onOpenCompass: () => void;
+  onOpenCalendar: () => void;
   onOpen: (id: string) => void;
   onDelete: (id: string) => void;
   onForget: () => void;
@@ -43,7 +46,7 @@ const dayKey = (t: number) => new Date(t).toDateString();
  * แถบซ้าย: โลโก้ → เมนูหลัก → ประวัติแชท → ความจำ + บัญชี
  * ปุ่มทุกอันสูง ≥44px บนมือถือ (40 บนคอมสำหรับแถวประวัติ) · รายการที่เปิดอยู่เป็นแคปซูลสีส้มอ่อน
  */
-export function Sidebar({ conversations, currentId, listedAt, profile, account, onNew, onOpenCompass, onOpen, onDelete, onForget, onClose }: Props) {
+export function Sidebar({ conversations, currentId, listedAt, profile, account, view, onNew, onOpenCompass, onOpenCalendar, onOpen, onDelete, onForget, onClose }: Props) {
   const today = dayKey(listedAt);
   const groups = [
     { label: "วันนี้", items: conversations.filter((c) => dayKey(c.updatedAt) === today) },
@@ -51,7 +54,7 @@ export function Sidebar({ conversations, currentId, listedAt, profile, account, 
   ].filter((g) => g.items.length);
 
   return (
-    <nav aria-label="ประวัติแชท" className="flex h-full w-full flex-col bg-paper-deep">
+    <nav aria-label="เมนูหลัก" className="flex h-full w-full flex-col bg-paper-deep">
       <div className="flex items-center gap-3 px-4 pt-4 pb-3">
         <AntAvatar size={40} />
         <p className="flex-1 font-display text-[22px] leading-none text-ink">ทางมด</p>
@@ -64,9 +67,9 @@ export function Sidebar({ conversations, currentId, listedAt, profile, account, 
 
       <div className="space-y-1 px-3">
         {/* แชทใหม่ = หน้าแรก: ไฮไลต์เมื่อยังไม่ได้เปิดแชทไหน */}
-        <NavItem icon={<NotePencil size={20} />} label="แชทใหม่" active={currentId === null} onClick={onNew} />
+        <NavItem icon={<NotePencil size={20} />} label="แชทใหม่" active={view === "chat" && currentId === null} onClick={onNew} />
         <NavItem icon={<Compass size={20} weight="duotone" />} label="เข็มทิศสาขา" onClick={onOpenCompass} />
-        <NavItem icon={<CalendarDots size={20} weight="duotone" />} label="ปฏิทินนักศึกษา" href="/calendar" />
+        <NavItem icon={<CalendarDots size={20} weight="duotone" />} label="ปฏิทินนักศึกษา" active={view === "calendar"} onClick={onOpenCalendar} />
       </div>
 
       <div className="mt-4 min-h-0 flex-1 overflow-y-auto px-3 pb-3">
@@ -81,7 +84,7 @@ export function Sidebar({ conversations, currentId, listedAt, profile, account, 
             <h3 className="px-3 pb-1 text-[13px] font-semibold text-ink-soft">{g.label}</h3>
             <ul className="space-y-0.5">
               {g.items.map((c) => {
-                const current = c.id === currentId;
+                const current = view === "chat" && c.id === currentId;
                 return (
                   <li key={c.id} className="group relative">
                     <button
@@ -121,15 +124,7 @@ export function Sidebar({ conversations, currentId, listedAt, profile, account, 
 const NAV_CLASS =
   "flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-[15px] font-medium text-ink hover:bg-card aria-[current=page]:bg-brand-tint-strong aria-[current=page]:font-semibold aria-[current=page]:text-brand-deep aria-[current=page]:shadow-[inset_3px_0_0_var(--brand)] active:bg-brand-tint-strong [&>svg]:text-brand-ink";
 
-/** เมนูซ้าย: onClick = เปิดอะไรในหน้าแชท · href = ไปอีกหน้า (เช่น ปฏิทิน) */
-function NavItem({ icon, label, active = false, onClick, href }: { icon: ReactNode; label: string; active?: boolean } & ({ onClick: () => void; href?: never } | { href: string; onClick?: never })) {
-  if (href)
-    return (
-      <Link href={href} className={NAV_CLASS}>
-        {icon}
-        {label}
-      </Link>
-    );
+function NavItem({ icon, label, active = false, onClick }: { icon: ReactNode; label: string; active?: boolean; onClick: () => void }) {
   return (
     <button type="button" onClick={onClick} aria-current={active ? "page" : undefined} className={NAV_CLASS}>
       {icon}
