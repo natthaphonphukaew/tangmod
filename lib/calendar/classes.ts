@@ -1,6 +1,6 @@
 import { calendar, places } from "@/lib/data";
 import { findRooms } from "@/lib/map/rooms";
-import type { Timetable, TimetableEntry } from "@/lib/timetable/schema";
+import { roomOn, timesOverlap, type Timetable, type TimetableEntry } from "@/lib/timetable/schema";
 import { allEvents, dayOf, dayStatus, type DayStatus } from "./events";
 
 /*
@@ -9,12 +9,25 @@ import { allEvents, dayOf, dayStatus, type DayStatus } from "./events";
  *   ช่วงสอบกลางภาค/ปลายภาค → คาบปกติงด (ปฏิทินบอกว่างดการสอนปกติ)
  *   วันเสาร์เรียนชดเชย      → มีคาบของวันที่ปฏิทินบอกว่าชดเชยให้ (ถ้าไม่บอก ให้ถามอาจารย์)
  *   นอกช่วงภาคของตาราง      → ไม่มีคาบ
+ * ทุกคาบมีห้องที่ใช้จริงในวันนั้น (room) และรายชื่อวิชาที่เวลาชน (conflicts) ถ้ามี
  */
 
-export type ClassSlot = { entry: TimetableEntry; cancelled?: string; makeup?: boolean };
+export type ClassSlot = { entry: TimetableEntry; room?: string; cancelled?: string; makeup?: boolean; conflicts?: string[] };
 export type ClassDay = { status: DayStatus; slots: ClassSlot[]; note?: string };
 
 export function classesOn(iso: string, timetable: Timetable | null | undefined, events = allEvents()): ClassDay {
+  const day = rawClassesOn(iso, timetable, events);
+  const slots = day.slots.map((s) => ({ ...s, room: roomOn(s.entry, iso) }));
+  // เวลาชน: เทียบเฉพาะคาบที่ไม่งด (เช่น เสาร์ชดเชยที่ทับคาบเสาร์ของตัวเอง)
+  for (const s of slots) {
+    if (s.cancelled) continue;
+    const clash = slots.filter((o) => o !== s && !o.cancelled && timesOverlap(s.entry, o.entry)).map((o) => o.entry.code);
+    if (clash.length) s.conflicts = clash;
+  }
+  return { ...day, slots };
+}
+
+function rawClassesOn(iso: string, timetable: Timetable | null | undefined, events: ReturnType<typeof allEvents>): ClassDay {
   const status = dayStatus(iso, events);
   const term = timetable && calendar.terms.find((t) => t.id === timetable.term_id);
   if (!timetable || !term || iso < term.start || iso > term.end) return { status, slots: [] };

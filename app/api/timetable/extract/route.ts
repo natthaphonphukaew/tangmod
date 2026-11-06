@@ -24,7 +24,8 @@ export async function POST(req: Request) {
   }
 
   try {
-    const result = await extractTimetable(new Uint8Array(await file.arrayBuffer()), file.type);
+    const termId = form?.get("term_id");
+    const result = await extractTimetable(new Uint8Array(await file.arrayBuffer()), file.type, typeof termId === "string" ? termId : undefined);
     return Response.json(result);
   } catch (err) {
     const message =

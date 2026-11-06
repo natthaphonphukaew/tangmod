@@ -51,5 +51,16 @@
     "DSI"
    ]
   }
+ },
+ {
+  "id": "tt-room-change",
+  "cat": "official",
+  "q": "วิชา DSI111 ตอนนี้เรียนห้องไหน",
+  "timetable": "timetable-dsi3",
+  "expect": {
+   "include": [
+    "LX11"
+   ]
+  }
  }
 ]

@@ -69,7 +69,7 @@ export function CalendarScreen() {
     });
 
   // ปัดซ้ายขวาบนมือถือเพื่อเปลี่ยนเดือน
-  const touchX = useRef<number | null>(null);
+  const touch = useRef<{ x: number; y: number } | null>(null);
 
   return (
     <main className="min-h-svh bg-paper">
@@ -107,12 +107,14 @@ export function CalendarScreen() {
           <section
             aria-label={`ปฏิทินเดือน${monthTitle(year, month)}`}
             className="rounded-[var(--radius-card)] border border-line bg-card p-3 shadow-[var(--shadow-card)] sm:p-4"
-            onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
+            onTouchStart={(e) => (touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY })}
             onTouchEnd={(e) => {
-              if (touchX.current === null) return;
-              const dx = e.changedTouches[0].clientX - touchX.current;
-              touchX.current = null;
-              if (Math.abs(dx) > 60) go(dx < 0 ? 1 : -1);
+              if (!touch.current) return;
+              const dx = e.changedTouches[0].clientX - touch.current.x;
+              const dy = e.changedTouches[0].clientY - touch.current.y;
+              touch.current = null;
+              // นับเฉพาะปัดแนวนอนชัด ๆ เลื่อนหน้าขึ้นลงแล้วนิ้วเอียงจะได้ไม่เปลี่ยนเดือนเอง
+              if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) go(dx < 0 ? 1 : -1);
             }}
           >
             <div className="flex items-center gap-2">
@@ -220,7 +222,8 @@ function DayCell({
   const status = dayStatus(iso);
   const events = all.filter((e) => showInCell(e, iso));
   const kinds = [...new Set(events.map((e) => e.kind))];
-  const classText = live ? ` · เรียน ${live} คาบ` : off ? ` · งดเรียน ${off} คาบ` : "";
+  const clash = classes.slots.some((s) => s.conflicts);
+  const classText = (live ? ` · เรียน ${live} คาบ` : off ? ` · งดเรียน ${off} คาบ` : "") + (clash ? " · มีคาบเวลาชน" : "");
   const label = `${dayTitle(iso)}${classText}${all.length ? ` · ${all.map((e) => e.title).join(", ")}` : ""}`;
   return (
     <button
@@ -251,9 +254,12 @@ function DayCell({
         ))}
         {events.length > 2 && <span className="block px-1 text-left text-[11px] text-ink-soft">+{events.length - 2} รายการ</span>}
       </span>
-      {/* คาบเรียนของฉัน: เส้นใต้สีส้ม = มีเรียน · เส้นประเทา = คาบงด */}
+      {/* คาบเรียนของฉัน: เส้นใต้สีส้ม = มีเรียน · สีแดงชมพู = มีคาบเวลาชน · เส้นประเทา = คาบงด */}
       {(live > 0 || off > 0) && (
-        <span aria-hidden className={`mt-auto block h-1 w-5 rounded-full sm:w-full ${live ? "bg-brand/70" : "border-t-2 border-dashed border-slate"}`} />
+        <span
+          aria-hidden
+          className={`mt-auto block h-1 w-5 rounded-full sm:w-full ${clash ? "bg-[#d6336c]" : live ? "bg-brand/70" : "border-t-2 border-dashed border-slate"}`}
+        />
       )}
     </button>
   );
