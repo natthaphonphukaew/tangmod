@@ -8,8 +8,10 @@ import tcas70Json from "@/content/admission/tcas70.json";
 import contactsJson from "@/content/contacts.json";
 import calendarJson from "@/content/calendar.json";
 import holidaysJson from "@/content/holidays.json";
+import academicEventsJson from "@/content/academic-events-2569.json";
 import {
   AcademicCalendar,
+  AcademicEvents,
   AdmissionEvent,
   Contact,
   Assistant,
@@ -28,6 +30,7 @@ export const admissionEvents = z.array(AdmissionEvent).parse(tcas70Json);
 export const contacts = z.array(Contact).parse(contactsJson);
 export const calendar = AcademicCalendar.parse(calendarJson);
 export const holidays = Holidays.parse(holidaysJson);
+export const academicEvents = AcademicEvents.parse(academicEventsJson);
 
 const byId = <T extends { id: string }>(items: T[]) =>
   new Map(items.map((item) => [item.id, item]));
@@ -49,6 +52,7 @@ export function findIntegrityProblems(): string[] {
   dupes("place", places.map((p) => p.id));
   dupes("program", programs.map((p) => p.id));
   dupes("admission", admissionEvents.map((e) => e.id));
+  dupes("academic event", academicEvents.events.map((e) => e.id));
 
   for (const program of programs) {
     if (program.place_id && !placeById.has(program.place_id))
@@ -61,6 +65,12 @@ export function findIntegrityProblems(): string[] {
     for (const id of event.program_ids) {
       if (!programById.has(id)) problems.push(`admission ${event.id}: ไม่มี program "${id}"`);
     }
+  }
+  const termIds = new Set(calendar.terms.map((t) => t.id));
+  for (const event of academicEvents.events) {
+    if (event.start > event.end) problems.push(`academic event ${event.id}: start หลัง end`);
+    if (event.term_id && !termIds.has(event.term_id)) problems.push(`academic event ${event.id}: ไม่มีภาค "${event.term_id}"`);
+    if (event.follows_day && event.kind !== "makeup") problems.push(`academic event ${event.id}: follows_day ใช้กับวันเรียนชดเชยเท่านั้น`);
   }
   return problems;
 }
