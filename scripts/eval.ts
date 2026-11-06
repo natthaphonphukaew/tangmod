@@ -10,6 +10,7 @@
  *
  * ผลละเอียดเขียนไว้ที่ eval/results/<เวลา>.json (ไม่ขึ้น git)
  */
+import { readFileSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { emptyProfile, type StreamEvent, type ValidatedAnswer } from "@/lib/ai/schema";
@@ -49,7 +50,8 @@ function check(e: Expect, a: ValidatedAnswer): string[] {
 }
 
 async function ask(q: Question, i: number) {
-  const body = { history: [], message: q.q, profile: emptyProfile() };
+  const timetable = q.timetable ? JSON.parse(readFileSync(path.join(process.cwd(), "eval", "fixtures", `${q.timetable}.json`), "utf8")) : undefined;
+  const body = { history: [], message: q.q, profile: emptyProfile(), timetable };
   const started = Date.now();
   // ip ไม่ซ้ำกันต่อข้อ จะได้ไม่ชน rate limit ของ route
   const res = await POST(

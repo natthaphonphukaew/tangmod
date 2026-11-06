@@ -1,5 +1,10 @@
 import { z } from "zod";
 import { admissionEvents, assistant, calendar, holidays, places, programs } from "@/lib/data";
+import { addDays, dayOf } from "@/lib/calendar/events";
+import { classesOn, roomPlaceId, type ClassDay } from "@/lib/calendar/classes";
+import { findRooms } from "@/lib/map/rooms";
+import { DAY_TH, sortEntries, type Timetable, type TimetableEntry } from "@/lib/timetable/schema";
+import { bangkokDate } from "@/lib/time";
 import type { Chunk } from "./knowledge";
 import type { Profile } from "./schema";
 
@@ -73,8 +78,8 @@ export function schemaInstructions(schema: z.ZodType) {
 ${JSON.stringify(z.toJSONSchema(schema))}`;
 }
 
-export function buildSystemPrompt(opts: { profile: Profile; chunks: Chunk[]; now: Date }) {
-  const { profile, chunks, now } = opts;
+export function buildSystemPrompt(opts: { profile: Profile; chunks: Chunk[]; now: Date; timetable?: Timetable }) {
+  const { profile, chunks, now, timetable } = opts;
   // ถามหอวิทยาเขตบางขุนเทียน/ราชบุรี (ตัวค้นแนบช่องทางติดต่อของวิทยาเขตนั้นมา) ซึ่งไม่มีในแผนที่:
   // ตัดตึกหอบางมดออกจากรายชื่อ ไม่งั้นโมเดลปักหมุดหอธรรมรักษาแทน
   const otherCampus = chunks.some((c) => c.id === "contact:residence_bkt" || c.id === "contact:residence_ratchaburi");
@@ -103,6 +108,7 @@ export function buildSystemPrompt(opts: { profile: Profile; chunks: Chunk[]; now
    - หอใน และ Heliconia House: ติดต่อสำนักงานหอพัก มจธ. LINE @kmutt_residence (contact:residence) Heliconia ติดต่อแผนกต้อนรับ
    ใช้ id เหล่านี้ได้เฉพาะเมื่อมีอยู่ใน CONTEXT
 16. แผนที่มีแค่วิทยาเขตบางมด หอพักธรรมรักษา 1 และ 2 (S5, S6) คือหอในบางมดเท่านั้น ถ้าถามเรื่องวิทยาเขตบางขุนเทียนหรือราชบุรี (รวมหอใน) ให้ places เป็น [] และ show_map เป็น false ห้ามใช้ S5 หรือ S6 แทน ส่วน Heliconia House อยู่ชั้น 12–14 ของอาคารจอดรถ (S2) ปักหมุดได้
+18. ถามเรื่องตารางเรียนของตัวเอง (วันนี้ พรุ่งนี้ วันพุธ เรียนอะไร กี่โมง ห้องไหน คาบไหนงด): ตอบจาก MY TIMETABLE เท่านั้น บอกเวลา รหัสวิชา ห้อง และตึก ถ้าคาบงดให้บอกเหตุผลที่เขียนไว้ ถ้าถามว่าเรียนที่ไหนหรือไปห้องเรียนยังไง ใส่ places เป็นรหัสตึกของห้องที่เขียนใน MY TIMETABLE และตั้ง show_map เป็น true ถ้าไม่มีหัวข้อ MY TIMETABLE แปลว่าผู้ใช้ยังไม่ได้บันทึกตาราง ให้บอกว่าเพิ่มตารางเรียนได้ที่เมนู "ปฏิทินนักศึกษา" (อัปรูปตารางหรือกรอกเอง) ห้ามเดาตารางเรียน
 17. ถามทาง "จาก A ไป B" หรือ "เดินไป B ยังไง": ใส่ places แค่ต้นทางแล้วตามด้วยปลายทาง (ถ้าไม่บอกต้นทาง ใส่แค่ปลายทาง) ห้ามเติมตึก ประตู หรือจุดผ่านที่ผู้ใช้ไม่ได้ถาม แอปจะวาดรอยทางมดตามทางเดินจริงในมอให้เอง ในข้อความห้ามแต่งเส้นทาง (เช่น ออกประตูไหน เลี้ยวซ้ายขวา ผ่านตึกอะไร เดินกี่นาที) เพราะไม่มีข้อมูลทางเดินเป็นข้อความ ให้บอกว่าทั้งสองที่อยู่ตรงไหน แล้วชวนดูเส้นทางบนแผนที่
 
 # บทบาทของคุณ
@@ -123,9 +129,43 @@ ${calendar.rules.join("\n")}
 รอบรับสมัคร TCAS70:
 ${admissionNow(now).join("\n") || "ไม่มีรอบที่เปิดหรือกำลังจะเปิดใน 60 วัน"}
 
-# USER PROFILE (สิ่งที่รู้เกี่ยวกับผู้ใช้)
+${timetable ? timetableSection(timetable, now) : ""}# USER PROFILE (สิ่งที่รู้เกี่ยวกับผู้ใช้)
 บทบาทที่เดา: ${profile.role_guess} · สนใจ: ${profile.interests.join(", ") || "-"} · กำลังดูสาขา: ${profile.considering_programs.join(", ") || "-"} · แวะตึกแล้ว: ${profile.visited_places.join(", ") || "-"}
 
 # CONTEXT
 ${chunks.map((c) => `[${c.id}] (tier=${c.tier}, อัปเดต ${c.updated_at}) ${c.title}\n${c.text}`).join("\n\n")}`;
+}
+
+/** ห้องเรียน → ข้อความบอกตึก (และชั้น ถ้าเป็นห้อง CB) ให้โมเดลใช้ปักหมุดได้ */
+function roomText(room: string | undefined): string {
+  if (!room) return "ไม่ระบุห้อง";
+  const cb = findRooms(room)[0];
+  const placeId = cb?.placeId ?? roomPlaceId(room);
+  const place = placeId ? places.find((p) => p.id === placeId) : undefined;
+  if (!place) return `ห้อง ${room}`;
+  return `ห้อง ${room} (${place.name_th} รหัสตึก ${place.id}${cb ? ` ชั้น ${cb.floor}` : ""})`;
+}
+
+const entryText = (e: TimetableEntry) => `${e.start}–${e.end} ${e.code}${e.name ? ` ${e.name}` : ""} ${roomText(e.room)}${e.note ? ` หมายเหตุ: ${e.note}` : ""}`;
+
+function classDayText(label: string, iso: string, day: ClassDay): string {
+  const head = `${label} ${DAY_TH[dayOf(iso)]} ${iso} (${day.status.text})`;
+  if (!day.slots.length) return `${head}: ไม่มีคาบ${day.note ? ` · ${day.note}` : ""}`;
+  const lines = day.slots.map((s) => `  - ${entryText(s.entry)}${s.cancelled ? ` → งด (${s.cancelled})` : ""}${s.makeup ? " → เรียนชดเชย" : ""}`);
+  return [head + (day.note ? ` · ${day.note}` : ""), ...lines].join("\n");
+}
+
+/** ตารางเรียนที่ผู้ใช้บันทึกเอง: ทั้งสัปดาห์ + วันนี้และพรุ่งนี้ที่คิดวันหยุด ช่วงสอบ และวันเรียนชดเชยแล้ว */
+function timetableSection(timetable: Timetable, now: Date): string {
+  const today = bangkokDate(now);
+  const tomorrow = addDays(today, 1);
+  const term = calendar.terms.find((t) => t.id === timetable.term_id);
+  const week = sortEntries(timetable.entries).map((e) => `- ${DAY_TH[e.day]} ${entryText(e)}`);
+  return `# MY TIMETABLE (ตารางเรียนที่ผู้ใช้บันทึกไว้เอง ${term?.label ?? timetable.term_id} ${term ? `เรียน ${term.start} ถึง ${term.end}` : ""})
+ทุกสัปดาห์:
+${week.join("\n")}
+${classDayText("วันนี้", today, classesOn(today, timetable))}
+${classDayText("พรุ่งนี้", tomorrow, classesOn(tomorrow, timetable))}
+
+`;
 }

@@ -16,9 +16,13 @@ import {
   type CalendarEvent,
   type CalendarKind,
 } from "@/lib/calendar/events";
+import { classesOn, type ClassDay } from "@/lib/calendar/classes";
+import { useTimetable } from "@/lib/client/timetable-store";
 import { useToday } from "@/lib/client/use-today";
 import { formatRange } from "@/lib/format";
+import { ClassList } from "./ClassList";
 import { KIND_STYLE } from "./kind-style";
+import { TimetablePanel } from "./TimetablePanel";
 
 /*
  * หน้าปฏิทินนักศึกษา: ตารางรายเดือน (เริ่มวันจันทร์) + ภาพรวมทั้งปี + รายการวันสำคัญของเดือน
@@ -40,6 +44,7 @@ const indexOfMonth = (iso: string | null) => (iso ? MONTHS.findIndex((m) => iso.
 
 export function CalendarScreen() {
   const today = useToday();
+  const { timetable } = useTimetable();
   const [chosenMonth, setChosenMonth] = useState<number | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   // รับสมัคร TCAS เป็นเรื่องของคนจะเข้ามหาลัย ซ่อนไว้ก่อน กดตัวกรองเพื่อดูได้
@@ -150,6 +155,7 @@ export function CalendarScreen() {
                       key={iso}
                       iso={iso}
                       events={eventsOn(iso, events)}
+                      classes={classesOn(iso, timetable)}
                       today={iso === today}
                       selected={iso === day}
                       onSelect={() => setSelected(iso === day ? null : iso)}
@@ -160,10 +166,11 @@ export function CalendarScreen() {
                 )}
             </div>
 
-            {day && <DayDetail iso={day} events={eventsOn(day, events)} />}
+            {day && <DayDetail iso={day} events={eventsOn(day, events)} classes={classesOn(day, timetable)} />}
           </section>
 
           <aside className="space-y-5">
+            <TimetablePanel today={today} />
             <YearOverview current={monthIdx} today={today} events={events} onPick={(i) => {
                 setChosenMonth(i);
                 setSelected(null);
@@ -193,11 +200,28 @@ const LONG_DAYS = 7;
 const spanDays = (e: CalendarEvent) => (Date.parse(e.end) - Date.parse(e.start)) / 86_400_000 + 1;
 const showInCell = (e: CalendarEvent, iso: string) => spanDays(e) <= LONG_DAYS || iso === e.start || iso === e.end;
 
-function DayCell({ iso, events: all, today, selected, onSelect }: { iso: string; events: CalendarEvent[]; today: boolean; selected: boolean; onSelect: () => void }) {
+function DayCell({
+  iso,
+  events: all,
+  classes,
+  today,
+  selected,
+  onSelect,
+}: {
+  iso: string;
+  events: CalendarEvent[];
+  classes: ClassDay;
+  today: boolean;
+  selected: boolean;
+  onSelect: () => void;
+}) {
+  const live = classes.slots.filter((s) => !s.cancelled).length;
+  const off = classes.slots.length - live;
   const status = dayStatus(iso);
   const events = all.filter((e) => showInCell(e, iso));
   const kinds = [...new Set(events.map((e) => e.kind))];
-  const label = `${dayTitle(iso)}${all.length ? ` · ${all.map((e) => e.title).join(", ")}` : ""}`;
+  const classText = live ? ` · เรียน ${live} คาบ` : off ? ` · งดเรียน ${off} คาบ` : "";
+  const label = `${dayTitle(iso)}${classText}${all.length ? ` · ${all.map((e) => e.title).join(", ")}` : ""}`;
   return (
     <button
       type="button"
@@ -227,16 +251,21 @@ function DayCell({ iso, events: all, today, selected, onSelect }: { iso: string;
         ))}
         {events.length > 2 && <span className="block px-1 text-left text-[11px] text-ink-soft">+{events.length - 2} รายการ</span>}
       </span>
+      {/* คาบเรียนของฉัน: เส้นใต้สีส้ม = มีเรียน · เส้นประเทา = คาบงด */}
+      {(live > 0 || off > 0) && (
+        <span aria-hidden className={`mt-auto block h-1 w-5 rounded-full sm:w-full ${live ? "bg-brand/70" : "border-t-2 border-dashed border-slate"}`} />
+      )}
     </button>
   );
 }
 
-function DayDetail({ iso, events }: { iso: string; events: CalendarEvent[] }) {
+function DayDetail({ iso, events, classes }: { iso: string; events: CalendarEvent[]; classes: ClassDay }) {
   const status = dayStatus(iso);
   return (
     <div className="mt-4 rounded-xl border border-line bg-paper p-3">
       <p className="font-semibold text-ink">{dayTitle(iso)}</p>
       <p className="text-sm text-ink-soft">{status.text}</p>
+      <ClassList day={classes} />
       {events.length > 0 && (
         <ul className="mt-2 space-y-2">
           {events.map((e) => (

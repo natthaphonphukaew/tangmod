@@ -73,4 +73,9 @@ export const MIGRATIONS: string[] = [
     "card_ids" jsonb NOT NULL
   )`,
   `CREATE INDEX IF NOT EXISTS "feedback_created_idx" ON "feedback" ("created_at")`,
+  `CREATE TABLE IF NOT EXISTS "timetable" (
+    "user_id" text PRIMARY KEY REFERENCES "user"("id") ON DELETE CASCADE,
+    "data" jsonb NOT NULL,
+    "updated_at" bigint NOT NULL
+  )`,
 ];

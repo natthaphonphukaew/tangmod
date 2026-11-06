@@ -1,0 +1,66 @@
+{
+ "v": 1,
+ "term_id": "1-2569",
+ "updated_at": 0,
+ "entries": [
+  {
+   "code": "LNG323",
+   "day": "tue",
+   "start": "09:30",
+   "end": "12:30",
+   "room": "CB2504"
+  },
+  {
+   "code": "DSI209",
+   "day": "tue",
+   "start": "13:30",
+   "end": "16:30",
+   "room": "CB2304"
+  },
+  {
+   "code": "DSI122",
+   "day": "wed",
+   "start": "09:00",
+   "end": "10:30",
+   "room": "CB2306"
+  },
+  {
+   "code": "DSI210",
+   "day": "wed",
+   "start": "13:30",
+   "end": "16:30",
+   "room": "CB2308"
+  },
+  {
+   "code": "DSI121",
+   "name": "Data Analytic",
+   "day": "thu",
+   "start": "13:30",
+   "end": "16:30",
+   "room": "CB2312"
+  },
+  {
+   "code": "DSI122",
+   "day": "fri",
+   "start": "10:30",
+   "end": "12:00",
+   "room": "CB2306"
+  },
+  {
+   "code": "DSI111",
+   "day": "fri",
+   "start": "13:30",
+   "end": "16:30",
+   "room": "LX11/1-2",
+   "note": "สัปดาห์ที่ 1–8 เรียนห้อง CB2308 ตั้งแต่ 2 ต.ค. 2569 เรียน LX11/1-2"
+  },
+  {
+   "code": "DSI121",
+   "name": "Start-up",
+   "day": "sat",
+   "start": "08:00",
+   "end": "11:00",
+   "room": "CB2312"
+  }
+ ]
+}

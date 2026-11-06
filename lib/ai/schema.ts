@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Timetable } from "@/lib/timetable/schema";
 
 /*
  * LLM Response Contract v3 (ดูสเปกหัวข้อ 6) — น้องมดตัวเดียว ไม่มี handoff · แผนที่โชว์เฉพาะเมื่อ show_map
@@ -65,6 +66,8 @@ export const ChatRequest = z.object({
   history: z.array(ChatTurn).max(16),
   message: z.string().min(1).max(500),
   profile: Profile,
+  /** ตารางเรียนที่ผู้ใช้บันทึกไว้ (หน้าปฏิทิน) ใช้ตอบ "พรุ่งนี้เรียนอะไร" · ไม่มีก็ได้ */
+  timetable: Timetable.optional(),
 });
 export type ChatRequest = z.infer<typeof ChatRequest>;
 

@@ -27,6 +27,7 @@ import { BottomSheet, detentHeight, useElementHeight, useIsDesktop, useIsWide, t
 import { MapPanel } from "./MapPanel";
 import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
+import { useTimetable } from "@/lib/client/timetable-store";
 
 /*
  * ทางมด v3: แชทก่อน แผนที่เป็นตัวช่วย
@@ -41,6 +42,8 @@ const toHighlights = (answer: ValidatedAnswer): MapHighlight[] => answer.places.
 
 export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
   const session = authClient.useSession();
+  // ตารางเรียนจากหน้าปฏิทิน ส่งไปกับคำถาม มดจะตอบ "พรุ่งนี้เรียนอะไร" ได้
+  const { timetable } = useTimetable();
   const user = session.data?.user ?? null;
   const userId = user?.id ?? null;
   // login แล้วเก็บในบัญชี (ทุกเครื่อง) · ยังไม่ login เก็บในเครื่องนี้
@@ -190,7 +193,7 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
 
     try {
       await streamChat(
-        { history, message: text, profile },
+        { history, message: text, profile, timetable: timetable ?? undefined },
         (event) => {
           if (event.type === "partial") patch({ partial: event.data });
           else if (event.type === "reset") patch({ partial: undefined });
