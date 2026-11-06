@@ -74,6 +74,9 @@ export type MapPointDef = { id: string; kind: "gate" | "bus" | "shuttle" | "shop
 export const POINTS: MapPointDef[] = [
   { id: "main_gate", kind: "gate", osm: "n4200331143" },
   { id: "gate_2", kind: "gate", osm: "n4200380479" },
+  // ประตูฝั่งถนนพุทธบูชา (หลังมอ) · CB4 เป็นทางรถเข้าออกคู่กัน 2 ช่อง (n4200384990 เป็นช่อง access=private) ใช้ช่องที่ไม่ปิด
+  { id: "gate_cb4", kind: "gate", osm: "n4200384989" },
+  { id: "gate_cb3", kind: "gate", osm: "n4200387854" },
   { id: "bus_stop_front", kind: "bus", lat: 13.6507049, lon: 100.4965371 },
   { id: "shuttle_stop", kind: "shuttle", osm: "n4348163154" },
   { id: "seven_eleven_eng", kind: "shop", osm: "w1333533931" },

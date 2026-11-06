@@ -199,5 +199,42 @@
     "ประตู\\W{0,3}1"
    ]
   }
+ },
+ {
+  "id": "back-to-cb3",
+  "cat": "map",
+  "q": "จากหลังมอไป cb3 ยังไง",
+  "expect": {
+   "places_any": [
+    "gate_cb3"
+   ],
+   "show_map": true,
+   "exclude": [
+    "ประตู 1",
+    "ประตูหน้า"
+   ]
+  }
+ },
+ {
+  "id": "back-to-cb4",
+  "cat": "map",
+  "q": "มาจากหอพุทธบูชา เข้ามอทางไหนใกล้ CB4",
+  "expect": {
+   "places_any": [
+    "gate_cb4"
+   ],
+   "show_map": true
+  }
+ },
+ {
+  "id": "back-gate-rules",
+  "cat": "map",
+  "q": "ประตูหลังมอเดินเข้าได้ไหม",
+  "expect": {
+   "include": [
+    "CB3|CB4",
+    "เงื่อนไข|ยังไม่|ยืนยัน|เวลาเปิด"
+   ]
+  }
  }
 ]
