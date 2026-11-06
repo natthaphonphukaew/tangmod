@@ -1,0 +1,101 @@
+[
+ {
+  "id": "sch-phet-benefit",
+  "cat": "official",
+  "q": "ทุนเพชรพระจอมเกล้า ป.ตรี ได้อะไรบ้าง",
+  "expect": {
+   "include": [
+    "4,?000"
+   ]
+  }
+ },
+ {
+  "id": "sch-phet-gpax",
+  "cat": "official",
+  "q": "ได้ทุนเพชรแล้วต้องรักษาเกรดเท่าไหร่",
+  "expect": {
+   "include": [
+    "3.40"
+   ]
+  }
+ },
+ {
+  "id": "sch-siriwiriya",
+  "cat": "official",
+  "q": "ทุนสิริวิริยาได้เดือนละเท่าไหร่ ปีไหนถึงสมัครได้",
+  "expect": {
+   "include": [
+    "6,?000"
+   ]
+  }
+ },
+ {
+  "id": "sch-dharmaraksha",
+  "cat": "official",
+  "q": "ทุนธรรมรักษาเหมาะกับใคร",
+  "expect": {
+   "include": [
+    "ทุรกันดาร|ไม่มี.*จบ|ครอบครัว"
+   ]
+  }
+ },
+ {
+  "id": "sch-real-pay",
+  "cat": "official",
+  "q": "ทุน REAL ทำงานแลกทุน ได้เงินเท่าไหร่",
+  "expect": {
+   "include": [
+    "20,?000"
+   ]
+  }
+ },
+ {
+  "id": "sch-accident",
+  "cat": "official",
+  "q": "บ้านโดนน้ำท่วมมีทุนช่วยไหม",
+  "expect": {
+   "include": [
+    "5,?000"
+   ]
+  }
+ },
+ {
+  "id": "sch-masters-phet",
+  "cat": "official",
+  "q": "ทุนเพชรพระจอมเกล้า ป.โท ได้เดือนละเท่าไหร่",
+  "expect": {
+   "include": [
+    "8,?000"
+   ]
+  }
+ },
+ {
+  "id": "sch-gys",
+  "cat": "official",
+  "q": "กู้ กยศ. ดูรายละเอียดที่ไหน",
+  "expect": {
+   "include": [
+    "studentloan"
+   ]
+  }
+ },
+ {
+  "id": "sch-which-pay-tuition",
+  "cat": "official",
+  "q": "ทุนไหนจ่ายค่าเทอมให้บ้าง",
+  "expect": {
+   "include": [
+    "เพชร",
+    "ธรรมรักษา|สิริวิริยา|แสดเหลือง"
+   ]
+  }
+ },
+ {
+  "id": "sch-gys-amount",
+  "cat": "unknown",
+  "q": "กยศ. ที่ มจธ. ให้กู้เดือนละกี่บาท",
+  "expect": {
+   "admits_unknown": true
+  }
+ }
+]
