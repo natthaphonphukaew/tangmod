@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
+  academicEvents,
   admissionEvents,
+  calendar,
   findIntegrityProblems,
   holidays,
   assistant,
@@ -50,6 +52,22 @@ describe("content", () => {
     // กันพิมพ์วันผิด: วันชดเชยต้องตกวันจันทร์
     for (const h of holidays.holidays.filter((x) => x.label.includes("ชดเชย")))
       expect(new Date(`${h.date}T00:00:00Z`).getUTCDay(), h.date).toBe(1);
+  });
+
+  it("วันสำคัญของปีการศึกษาอยู่ในช่วงปีการศึกษา และวันเรียนชดเชยตกวันเสาร์", () => {
+    const first = calendar.terms[0].start;
+    const last = "2027-08-31"; // ประกาศเกรดและแก้ผลสอบภาคฤดูร้อนเลยวันปิดภาคไปได้
+    for (const e of academicEvents.events) {
+      expect(e.start >= "2026-07-01" && e.end <= last, e.id).toBe(true);
+      expect(e.start <= e.end, e.id).toBe(true);
+      if (e.kind === "makeup") expect(new Date(`${e.start}T00:00:00Z`).getUTCDay(), e.id).toBe(6);
+    }
+    expect(first).toBe("2026-08-03");
+  });
+
+  it("วันหยุดใน academic-events ไม่ซ้ำกับ holidays.json", () => {
+    const official = new Set(holidays.holidays.map((h) => h.date));
+    for (const e of academicEvents.events.filter((x) => x.kind === "holiday")) expect(official.has(e.start), e.id).toBe(false);
   });
 
   it("ข้อมูล mock ต้องบอกเหตุผลไว้เสมอ", () => {

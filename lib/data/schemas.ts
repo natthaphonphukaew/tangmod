@@ -179,3 +179,30 @@ export const Holidays = Provenance.extend({
 });
 export type Holidays = z.infer<typeof Holidays>;
 export type Holiday = Holidays["holidays"][number];
+
+/** ชนิดวันสำคัญในปฏิทินนักศึกษา ใช้เลือกสีและตัวกรองในหน้าปฏิทิน */
+export const AcademicEventKind = z.enum(["register", "pay", "withdraw", "exam", "holiday", "makeup", "grade", "activity", "other"]);
+export type AcademicEventKind = z.infer<typeof AcademicEventKind>;
+
+/**
+ * วันสำคัญของปีการศึกษา (ลงทะเบียน จ่ายเงิน ถอน W สอบ วันหยุด เรียนชดเชย ประกาศเกรด)
+ * วันเปิด-ปิดภาคอยู่ใน AcademicCalendar · วันหยุดราชการของปีที่มีใน Holidays ไม่ต้องใส่ซ้ำ
+ */
+export const AcademicEvents = Provenance.extend({
+  year_be: z.number().int(),
+  events: z.array(
+    z.object({
+      id: z.string(),
+      kind: AcademicEventKind,
+      title: z.string(),
+      start: isoDate,
+      end: isoDate,
+      term_id: z.string().optional(),
+      /** วันเรียนชดเชย: เรียนตามตารางของวันไหน (ใส่เฉพาะที่ปฏิทินบอก) */
+      follows_day: Day.optional(),
+      note: z.string().optional(),
+    }),
+  ),
+});
+export type AcademicEvents = z.infer<typeof AcademicEvents>;
+export type AcademicEvent = AcademicEvents["events"][number];
