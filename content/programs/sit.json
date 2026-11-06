@@ -46,7 +46,7 @@
     "name_th": "วิทยาศาสตรบัณฑิต สาขาวิชาวิทยาการคอมพิวเตอร์ (หลักสูตรภาษาอังกฤษ)",
     "name_en": "B.Sc. Computer Science (English Program)",
     "short": "CS",
-    "aliases": ["CS", "ซีเอส", "วิทยาการคอมพิวเตอร์", "คอมไซ", "CS SIT"],
+    "aliases": ["CS", "ซีเอส", "วิทยาการคอมพิวเตอร์", "คอมไซ", "CS SIT", "คอมวิทย์"],
     "degree": "วท.บ.",
     "language": "en",
     "international": false,
