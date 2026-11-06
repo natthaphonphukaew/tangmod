@@ -75,6 +75,38 @@ function programChunk(p: Program): Chunk {
   };
 }
 
+const FACULTY_NAME: Record<string, string> = {
+  eng: "วิศวะ (คณะวิศวกรรมศาสตร์)",
+  sit: "SIT (คณะเทคโนโลยีสารสนเทศ)",
+  fibo: "FIBO (สถาบันวิทยาการหุ่นยนต์ภาคสนาม)",
+};
+
+/**
+ * ค่าเทอมทุกสาขาของคณะรวมในก้อนเดียว คนถาม "ค่าเทอมวิศวะแต่ละสาขา" จะได้ครบทุกสาขา
+ * (ก้อนของแต่ละหลักสูตรถูกค้นเจอได้ไม่กี่ก้อน โมเดลเลยเคยตอบแค่ CPE แล้วบอกว่าสาขาอื่นไม่มีข้อมูล)
+ */
+function feeSummaryChunks(): Chunk[] {
+  const byFaculty = new Map<string, Program[]>();
+  for (const p of programs) byFaculty.set(p.faculty, [...(byFaculty.get(p.faculty) ?? []), p]);
+  return [...byFaculty]
+    .filter(([, list]) => list.length > 1)
+    .map(([faculty, list]) => {
+      const name = FACULTY_NAME[faculty] ?? faculty;
+      return {
+        id: `fees:${faculty}`,
+        namespace: faculty === "sit" ? "sit" : "eng",
+        title: `ค่าเทอม${name} ทุกสาขา แต่ละสาขาเท่าไหร่`,
+        text: [
+          `ค่าเทอม ค่าเล่าเรียน ${name} ทุกสาขา (${list.length} หลักสูตร) จากตารางค่าธรรมเนียมการศึกษาของ มจธ.:`,
+          ...list.map((p) => `- ${p.name_th} (${p.short}) [program id: ${p.id}]: ${describeFee(p.fee)}`),
+        ].join("\n"),
+        tier: list.every((p) => p.tier === "official") ? "official" : list.some((p) => p.tier === "mock") ? "mock" : "student",
+        source_url: list[0].fee_source_url,
+        updated_at: list.map((p) => p.updated_at).sort().at(-1)!,
+      };
+    });
+}
+
 const THAI_DAY: Record<string, string> = { mon: "จ.", tue: "อ.", wed: "พ.", thu: "พฤ.", fri: "ศ.", sat: "ส.", sun: "อา." };
 
 // ผู้ใช้พิมพ์ "2 ธันวา" ไม่ใช่ 2026-12-02 และโมเดลแปลงเลขเดือนผิดได้ (เคยตอบรอบ 3 ที่เป็น 2027-05 ว่า "พฤศจิกายน")
@@ -94,7 +126,7 @@ export function thaiRange(start: string, end: string): string {
 }
 
 function structuredChunks(): Chunk[] {
-  const chunks: Chunk[] = programs.map(programChunk);
+  const chunks: Chunk[] = [...programs.map(programChunk), ...feeSummaryChunks()];
 
   for (const p of places) {
     const lines = [

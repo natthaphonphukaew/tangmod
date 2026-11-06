@@ -236,5 +236,42 @@
     "เงื่อนไข|ยังไม่|ยืนยัน|เวลาเปิด"
    ]
   }
+ },
+ {
+  "id": "exercise-where",
+  "cat": "official",
+  "q": "เขาไปออกกำลังกายกันที่ไหน",
+  "expect": {
+   "places_any": [
+    "S14"
+   ],
+   "include": [
+    "S14|190 ปี|ฟิตเนส"
+   ]
+  }
+ },
+ {
+  "id": "gym-means-fitness",
+  "cat": "official",
+  "q": "ยิมอยู่ตึกไหน",
+  "expect": {
+   "places_any": [
+    "S14"
+   ],
+   "include": [
+    "ชั้น 1"
+   ]
+  }
+ },
+ {
+  "id": "route-thai-cb3",
+  "cat": "map",
+  "q": "จากประตูหน้าไปซีบีสามยังไง",
+  "expect": {
+   "places_any": [
+    "S13"
+   ],
+   "show_map": true
+  }
  }
 ]
