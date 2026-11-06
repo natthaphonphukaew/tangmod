@@ -1,6 +1,6 @@
 "use client";
 
-import { Brain, ClockCounterClockwise, Compass, GoogleLogo, NotePencil, SignOut, Trash, X } from "@phosphor-icons/react";
+import { Brain, CalendarDots, ClockCounterClockwise, Compass, GoogleLogo, NotePencil, SignOut, Trash, X } from "@phosphor-icons/react";
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { AntAvatar, AntMascot } from "@/components/brand/AntMascot";
@@ -66,6 +66,7 @@ export function Sidebar({ conversations, currentId, listedAt, profile, account, 
         {/* แชทใหม่ = หน้าแรก: ไฮไลต์เมื่อยังไม่ได้เปิดแชทไหน */}
         <NavItem icon={<NotePencil size={20} />} label="แชทใหม่" active={currentId === null} onClick={onNew} />
         <NavItem icon={<Compass size={20} weight="duotone" />} label="เข็มทิศสาขา" onClick={onOpenCompass} />
+        <NavItem icon={<CalendarDots size={20} weight="duotone" />} label="ปฏิทินนักศึกษา" href="/calendar" />
       </div>
 
       <div className="mt-4 min-h-0 flex-1 overflow-y-auto px-3 pb-3">
@@ -117,14 +118,20 @@ export function Sidebar({ conversations, currentId, listedAt, profile, account, 
   );
 }
 
-function NavItem({ icon, label, active = false, onClick }: { icon: ReactNode; label: string; active?: boolean; onClick: () => void }) {
+const NAV_CLASS =
+  "flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-[15px] font-medium text-ink hover:bg-card aria-[current=page]:bg-brand-tint-strong aria-[current=page]:font-semibold aria-[current=page]:text-brand-deep aria-[current=page]:shadow-[inset_3px_0_0_var(--brand)] active:bg-brand-tint-strong [&>svg]:text-brand-ink";
+
+/** เมนูซ้าย: onClick = เปิดอะไรในหน้าแชท · href = ไปอีกหน้า (เช่น ปฏิทิน) */
+function NavItem({ icon, label, active = false, onClick, href }: { icon: ReactNode; label: string; active?: boolean } & ({ onClick: () => void; href?: never } | { href: string; onClick?: never })) {
+  if (href)
+    return (
+      <Link href={href} className={NAV_CLASS}>
+        {icon}
+        {label}
+      </Link>
+    );
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-current={active ? "page" : undefined}
-      className="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-[15px] font-medium text-ink hover:bg-card aria-[current=page]:bg-brand-tint-strong aria-[current=page]:font-semibold aria-[current=page]:text-brand-deep aria-[current=page]:shadow-[inset_3px_0_0_var(--brand)] active:bg-brand-tint-strong [&>svg]:text-brand-ink"
-    >
+    <button type="button" onClick={onClick} aria-current={active ? "page" : undefined} className={NAV_CLASS}>
       {icon}
       {label}
     </button>
