@@ -157,9 +157,13 @@
  },
  {
   "id": "oc-probation",
-  "cat": "unknown",
+  "cat": "official",
   "q": "ใครพอมีข้อมูลเรื่องการติดโปรบ้างไหมคะ",
-  "expect": { "admits_unknown": true }
+  "expect": {
+   "include": [
+    "2[.,]00"
+   ]
+  }
  },
  {
   "id": "oc-loan",
