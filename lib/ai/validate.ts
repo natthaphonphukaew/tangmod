@@ -26,11 +26,44 @@ export const locationIntent = (question: string) => LOCATION_RE.test(question) |
 // ถามเวลา ราคา หลักสูตร การสมัคร: ต่อให้ LLM ขอเปิดแผนที่ก็ไม่เปิด (ยกเว้นถามหาที่ตั้งด้วย) — MiniMax ชอบตั้ง show_map=true เกินจำเป็น
 const NON_LOCATION_RE = /กี่โมง|เปิดกี่|ปิดกี่|เปิดไหม|ค่าเทอม|ราคา|เท่าไหร่|เท่าไร|หน่วยกิต|เกรด|gpax|สมัคร|tcas|รอบ/i;
 
+/*
+ * ชื่อมหาวิทยาลัยอื่นที่โผล่มาเอง: โมเดลหลัก (MiniMax-m3) ไม่รู้จัก มจธ. เวลาข้อมูลไม่พอจะเติมเอง
+ * เช่น "มจธ. เป็นมหาวิทยาลัยเทคโนโลยีของมหาวิทยาลัยมหิดล" (วัดไว้ใน docs/research/gap-report.html)
+ * ชื่อที่ผู้ใช้พูดถึงเอง หรือมีอยู่ใน CONTEXT ที่ค้นมา (เช่น เรื่องสามพระจอม) ใช้ได้ตามปกติ
+ */
+const OTHER_UNIVERSITIES: RegExp[] = [
+  /มหิดล/i,
+  /จุฬาลงกรณ์|จุฬาฯ|จุฬา(?!ภรณ์)/i,
+  /ธรรมศาสตร์|\bSIIT\b/i,
+  /เกษตรศาสตร์/i,
+  /ราชมงคล|มทร\./i,
+  /ลาดกระบัง|สจล\.|\bKMITL\b/i,
+  /พระนครเหนือ|มจพ\.|\bKMUTNB\b/i,
+  /ศิลปากร|รามคำแหง|ศรีนครินทรวิโรฒ|บูรพา|มหาวิทยาลัยเชียงใหม่|มหาวิทยาลัยขอนแก่น/i,
+];
+
+/**
+ * ตัดท่อนที่มีชื่อมหาวิทยาลัยอื่นซึ่งไม่มีที่มา (ไม่อยู่ในคำถามและไม่อยู่ใน CONTEXT)
+ * ภาษาไทยไม่มีจุดจบประโยค จึงตัดทีละท่อนที่คั่นด้วยช่องว่างหรือขึ้นบรรทัดใหม่ · ตัดแล้วเหลือสั้นเกินไปถือว่าตอบไม่ได้
+ */
+export function stripUnsupportedUniversities(message: string, allowed: string): { message: string; stripped: boolean } {
+  const unsupported = OTHER_UNIVERSITIES.filter((re) => re.test(message) && !re.test(allowed));
+  if (unsupported.length === 0) return { message, stripped: false };
+  const kept = message
+    .split("\n")
+    .map((line) => line.split(/(?<=\s)/).filter((part) => !unsupported.some((re) => re.test(part))).join("").trimEnd())
+    .filter((line, i, lines) => line.trim() !== "" || (i > 0 && lines[i - 1].trim() !== ""))
+    .join("\n")
+    .trim();
+  return { message: kept.length >= 20 ? kept : "มดยังไม่มีข้อมูลเรื่องนี้ที่ยืนยันได้ ลองถามช่องทางทางการของ มจธ. หรือถามมดเรื่องอื่นในมอได้เลย", stripped: true };
+}
+
 /**
  * question = คำถามของผู้ใช้ ใช้ตัดสินว่าควรเปิดแผนที่ไหม เพราะ LLM ตั้ง show_map ไม่สม่ำเสมอ
  * แผนที่เปิดเมื่อมีหมุด และ (LLM ขอ หรือคำถามถามหาตำแหน่ง) — ถามค่าเทอมแล้วแผนที่ไม่ควรเด้ง
+ * context = ข้อความของ CONTEXT ที่ส่งให้โมเดล ใช้ตรวจว่าชื่อมหาวิทยาลัยอื่นในคำตอบมีที่มาไหม
  */
-export function validateAnswer(raw: ChatAnswer, question: string): ValidatedAnswer {
+export function validateAnswer(raw: ChatAnswer, question: string, context = ""): ValidatedAnswer {
   const wantsLocation = locationIntent(question);
   const placeList = uniq(raw.places.map((p) => p.place_id))
     .filter((id) => placeById.has(id))
@@ -72,14 +105,17 @@ export function validateAnswer(raw: ChatAnswer, question: string): ValidatedAnsw
     role_guess: raw.profile_update.role_guess,
   };
 
+  const guarded = stripUnsupportedUniversities(cleanMessage(raw.message), `${question}\n${context}`);
+
   return {
-    message: cleanMessage(raw.message),
+    message: guarded.message,
     places: placeList,
     show_map: placeList.length > 0 && (wantsLocation || (raw.show_map && !NON_LOCATION_RE.test(question))),
     cards,
     chips: raw.chips.map((c) => c.trim()).filter((c) => c && c.length <= 40).slice(0, 3),
     profile_update,
-    confidence: raw.confidence,
+    // ตัดข้อความที่แต่งออกไปแล้ว ส่วนที่เหลือก็ไม่ควรถือว่ามั่นใจ (คำถามนี้จะไปอยู่ในรายการที่ตอบไม่ได้ให้เติมข้อมูล)
+    confidence: guarded.stripped ? "low" : raw.confidence,
     sources: resolveSources(raw.source_ids, cards),
   };
 }
