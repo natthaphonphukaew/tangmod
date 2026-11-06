@@ -2,6 +2,7 @@
 
 import { ArrowRight, CaretRight, Compass, Sparkle } from "@phosphor-icons/react";
 import { AntMascot } from "@/components/brand/AntMascot";
+import { TodayCard } from "@/components/calendar/TodayCard";
 import { assistant } from "@/lib/data";
 import { CHIPS_SHOWN, chipMeta, TONE_CLASS, useStarterChips } from "./starter-chips";
 
@@ -56,6 +57,8 @@ export function HomeScreen({ onPick, onOpenCompass }: { onPick: (text: string) =
             <ArrowRight size={22} weight="bold" />
           </span>
         </button>
+
+        <TodayCard />
 
         <div className="mt-6 flex items-center gap-2 xl:mt-8">
           <Sparkle size={22} weight="fill" className="text-trail" />
