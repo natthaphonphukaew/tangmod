@@ -11,3 +11,6 @@ const subscribe = () => () => {};
 const getToday = () => bangkokDate(new Date());
 
 export const useToday = (): string | null => useSyncExternalStore(subscribe, getToday, () => null);
+
+/** เวลาเที่ยงของวันนี้ (กรุงเทพ) ใช้นับวันถึงกำหนดการ · ไม่อ่านนาฬิกาตอน render (Next เตือนเรื่อง new Date() ใน client component) */
+export const noonOf = (today: string) => new Date(`${today}T12:00:00+07:00`);

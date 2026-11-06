@@ -145,6 +145,11 @@ body {
   outline: none;
 }
 
+/* หัวเรื่องที่รับ focus จากโค้ด (tabindex=-1) เช่น ชื่อหน้าปฏิทินตอนสลับหน้า ไม่ต้องมีกรอบ เพราะผู้ใช้กดไปที่มันไม่ได้ */
+[tabindex="-1"]:focus-visible {
+  outline: none;
+}
+
 /* รอยทางมด: จุดเรียงกันเดินไปตามเส้น */
 .ant-march {
   animation: ant-march 1.1s linear infinite;
