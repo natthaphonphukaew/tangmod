@@ -1,0 +1,32 @@
+[
+ {
+  "id": "lib-pastexam",
+  "cat": "niche",
+  "q": "หาข้อสอบเก่าแคลคูลัสได้ที่ไหน",
+  "expect": {
+   "include": [
+    "หอสมุด|ห้องสมุด"
+   ]
+  }
+ },
+ {
+  "id": "lib-pastexam-year",
+  "cat": "niche",
+  "q": "ข้อสอบเก่าในห้องสมุดมีของปีล่าสุดไหม",
+  "expect": {
+   "include": [
+    "ไม่มี|2560"
+   ]
+  }
+ },
+ {
+  "id": "lib-coursera",
+  "cat": "niche",
+  "q": "นักศึกษาเรียน Coursera ฟรีได้ไหม",
+  "expect": {
+   "include": [
+    "Coursera"
+   ]
+  }
+ }
+]
