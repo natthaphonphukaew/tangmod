@@ -7,16 +7,24 @@ import type { Day } from "@/lib/data/schemas";
 import { roomPlaceId } from "@/lib/calendar/classes";
 import { authClient } from "@/lib/client/auth-client";
 import { clearTimetable, saveTimetable, useTimetable } from "@/lib/client/timetable-store";
-import { DAY_ORDER, DAY_TH, TimetableEntry, sortEntries, type Timetable } from "@/lib/timetable/schema";
+import { DAY_ORDER, DAY_TH, TimetableEntry, sortEntries, weeklyConflicts, type Timetable } from "@/lib/timetable/schema";
 
 /*
  * ตารางเรียนของฉัน: อัปรูป → AI อ่าน → ผู้ใช้ตรวจแก้ → บันทึก (หรือกรอกเองตั้งแต่ต้น)
  * ผลจาก AI ไม่บันทึกเองอัตโนมัติ ต้องกดบันทึกหลังตรวจทุกครั้ง
  */
 
-type Draft = { code: string; name: string; day: Day; start: string; end: string; room: string; note: string };
-const EMPTY: Draft = { code: "", name: "", day: "mon", start: "", end: "", room: "", note: "" };
-const toDraft = (e: TimetableEntry): Draft => ({ ...EMPTY, ...e, name: e.name ?? "", room: e.room ?? "", note: e.note ?? "" });
+type Change = { from: string; room: string };
+type Draft = { code: string; name: string; day: Day; start: string; end: string; room: string; note: string; changes: Change[] };
+const EMPTY: Draft = { code: "", name: "", day: "mon", start: "", end: "", room: "", note: "", changes: [] };
+const toDraft = (e: TimetableEntry): Draft => ({
+  ...EMPTY,
+  ...e,
+  name: e.name ?? "",
+  room: e.room ?? "",
+  note: e.note ?? "",
+  changes: e.room_changes?.map((c) => ({ ...c })) ?? [],
+});
 const fromDraft = (d: Draft) =>
   TimetableEntry.safeParse({
     code: d.code.replace(/\s+/g, "").toUpperCase(),
@@ -26,6 +34,7 @@ const fromDraft = (d: Draft) =>
     end: d.end,
     room: d.room.replace(/\s+/g, "") || undefined,
     note: d.note.trim() || undefined,
+    room_changes: d.changes.length ? d.changes.map((c) => ({ from: c.from, room: c.room.replace(/\s+/g, "") })) : undefined,
   });
 
 /** ภาคที่ตารางนี้น่าจะเป็น: ภาคที่กำลังเรียนอยู่ หรือภาคถัดไป */
@@ -62,6 +71,7 @@ export function TimetablePanel({ today }: { today: string | null }) {
     try {
       const form = new FormData();
       form.append("image", await shrink(file), "timetable.jpg");
+      form.append("term_id", term); // ใช้แปลง "ย้ายห้องสัปดาห์ที่ 9" เป็นวันที่
       const res = await fetch("/api/timetable/extract", { method: "POST", body: form });
       const body = (await res.json()) as { entries?: TimetableEntry[]; dropped?: number; message?: string };
       if (!res.ok || !body.entries) throw new Error(body.message ?? "อ่านรูปไม่สำเร็จ");
@@ -162,6 +172,7 @@ function Summary({ timetable }: { timetable: Timetable }) {
   return (
     <div className="mt-1">
       <p className="text-sm text-ink-soft">{termLabel} · {timetable.entries.length} คาบต่อสัปดาห์</p>
+      <ConflictNote entries={timetable.entries} />
       <ul className="mt-2 space-y-2">
         {DAY_ORDER.filter((d) => timetable.entries.some((e) => e.day === d)).map((d) => (
           <li key={d}>
@@ -177,6 +188,12 @@ function Summary({ timetable }: { timetable: Timetable }) {
                     <span className="font-medium">{e.code}</span>
                     {e.name && <span className="text-ink-soft"> {e.name}</span>}
                     {e.room && <span className="text-ink-soft"> · {e.room}{buildingOf(e.room)}</span>}
+                    {e.room_changes?.map((c) => (
+                      <span key={c.from} className="block pl-[5.5rem] text-[13px] text-[#1d4f73]">
+                        ตั้งแต่ {shortDate(c.from)} ย้ายไป {c.room}
+                        {buildingOf(c.room)}
+                      </span>
+                    ))}
                   </li>
                 ))}
             </ul>
@@ -184,6 +201,23 @@ function Summary({ timetable }: { timetable: Timetable }) {
         ))}
       </ul>
     </div>
+  );
+}
+
+const shortDate = (iso: string) =>
+  new Intl.DateTimeFormat("th-TH", { day: "numeric", month: "short", year: "2-digit", timeZone: "UTC" }).format(new Date(`${iso}T00:00:00Z`));
+
+/** คาบในตารางที่เวลาชนกันเอง (มักเป็นอ่านรูปผิด หรือลงทะเบียนชนจริง) */
+function ConflictNote({ entries }: { entries: TimetableEntry[] }) {
+  const clashes = weeklyConflicts(entries);
+  if (!clashes.length) return null;
+  return (
+    <p className="mt-2 flex gap-1.5 rounded-lg bg-[#fde3ec] p-2 text-[13px] text-[#8f1d45]">
+      <Warning size={16} className="mt-0.5 shrink-0" />
+      <span>
+        เวลาชนกัน: {clashes.map((c) => `${DAY_TH[c.day]} ${c.a.code} (${c.a.start}–${c.a.end}) กับ ${c.b.code} (${c.b.start}–${c.b.end})`).join(" · ")}
+      </span>
+    </p>
   );
 }
 
@@ -233,6 +267,7 @@ function Editor({
           ))}
         </select>
       </label>
+      <ConflictNote entries={drafts.map(fromDraft).flatMap((p) => (p.success ? [p.data] : []))} />
       <ul className="mt-3 space-y-3">
         {drafts.map((d, i) => {
           const bad = new Set(fromDraft(d).error?.issues.map((x) => String(x.path[0])) ?? []);
@@ -253,8 +288,37 @@ function Editor({
                 <input aria-label="ชื่อวิชา" placeholder="ชื่อวิชา (ไม่ใส่ก็ได้)" value={d.name} onChange={(e) => update(i, { name: e.target.value })} className={`${INPUT} ${edge(bad.has("name"))}`} />
                 <input aria-label="หมายเหตุ" placeholder="หมายเหตุ (ไม่ใส่ก็ได้)" value={d.note} onChange={(e) => update(i, { note: e.target.value })} className={`${INPUT} col-span-2 ${edge(bad.has("note"))}`} />
               </div>
+              {d.changes.map((c, k) => (
+                <div key={k} className="mt-2 grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] items-center gap-2 text-xs text-ink-soft">
+                  <span className="col-span-3">ย้ายห้อง ตั้งแต่วันที่ · ไปห้อง</span>
+                  <input
+                    aria-label="วันที่เริ่มใช้ห้องใหม่"
+                    type="date"
+                    value={c.from}
+                    onChange={(e) => update(i, { changes: d.changes.map((x, j) => (j === k ? { ...x, from: e.target.value } : x)) })}
+                    className={`${INPUT} ${edge(bad.has("room_changes"))}`}
+                  />
+                  <input
+                    aria-label="ห้องใหม่"
+                    placeholder="ห้องใหม่"
+                    value={c.room}
+                    onChange={(e) => update(i, { changes: d.changes.map((x, j) => (j === k ? { ...x, room: e.target.value } : x)) })}
+                    className={`${INPUT} ${edge(bad.has("room_changes"))}`}
+                  />
+                  <button type="button" aria-label="ลบการย้ายห้อง" onClick={() => update(i, { changes: d.changes.filter((_, j) => j !== k) })} className="grid size-9 place-items-center rounded-full hover:bg-card">
+                    <Trash size={14} />
+                  </button>
+                </div>
+              ))}
               <div className="mt-1.5 flex items-center justify-between text-xs text-ink-soft">
-                <span>{d.room && buildingOf(d.room) ? `ตึก${buildingOf(d.room).replace(/[()]/g, "")}` : ""}</span>
+                <span className="flex items-center gap-3">
+                  {d.room && buildingOf(d.room) ? `ตึก${buildingOf(d.room).replace(/[()]/g, "")}` : ""}
+                  {d.changes.length < 4 && (
+                    <button type="button" onClick={() => update(i, { changes: [...d.changes, { from: "", room: "" }] })} className="inline-flex min-h-9 items-center gap-1 rounded-full px-2 font-medium text-brand-ink hover:bg-card">
+                      <Plus size={12} weight="bold" /> ย้ายห้องระหว่างภาค
+                    </button>
+                  )}
+                </span>
                 <button type="button" onClick={() => setDrafts(drafts.filter((_, j) => j !== i))} className="inline-flex min-h-9 items-center gap-1 rounded-full px-2 hover:bg-card hover:text-ink">
                   <Trash size={14} /> ลบคาบนี้
                 </button>
