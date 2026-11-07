@@ -429,5 +429,114 @@
       "summer program"
     ],
     "source_url": "https://www.kmutt.ac.th/internationalization/mobility-program/exchange-programs/"
+  },
+  {
+    "id": "dept_ee",
+    "label": "ภาควิชาวิศวกรรมไฟฟ้า (EE) คณะวิศวะ",
+    "phone": "02-470-9043, 02-470-9033",
+    "web": "https://ee.kmutt.ac.th/ee-kmutt/",
+    "topics": [
+      "วิศวะไฟฟ้า",
+      "EE",
+      "ไฟฟ้ากำลัง"
+    ],
+    "source_url": "https://eng.kmutt.ac.th/departments/electrical-engineering/"
+  },
+  {
+    "id": "dept_ene",
+    "label": "ภาควิชาวิศวกรรมอิเล็กทรอนิกส์และโทรคมนาคม (ENE / EIE) คณะวิศวะ",
+    "phone": "02-470-9057, 02-470-9071",
+    "web": "https://ene.kmutt.ac.th",
+    "topics": [
+      "ENE",
+      "EIE",
+      "อิเล็กทรอนิกส์",
+      "โทรคม"
+    ],
+    "source_url": "https://eng.kmutt.ac.th/departments/electronics-and-telecommunications-engineering/"
+  },
+  {
+    "id": "dept_ce",
+    "label": "ภาควิชาวิศวกรรมโยธา (CE) คณะวิศวะ",
+    "phone": "02-470-9135, 02-470-9130",
+    "web": "https://ce.kmutt.ac.th",
+    "topics": [
+      "วิศวะโยธา",
+      "CE",
+      "โยธา"
+    ],
+    "source_url": "https://eng.kmutt.ac.th/departments/civil-engineering/"
+  },
+  {
+    "id": "dept_me",
+    "label": "ภาควิชาวิศวกรรมเครื่องกล (ME) คณะวิศวะ",
+    "phone": "02-470-9123, 02-470-9122",
+    "topics": [
+      "วิศวะเครื่องกล",
+      "ME",
+      "เครื่องกล"
+    ],
+    "source_url": "https://eng.kmutt.ac.th/departments/mechanical-engineering/"
+  },
+  {
+    "id": "dept_pe",
+    "label": "ภาควิชาวิศวกรรมอุตสาหการ (PE) คณะวิศวะ",
+    "phone": "02-470-8352, 02-470-9177",
+    "web": "https://pe.kmutt.ac.th",
+    "topics": [
+      "วิศวะอุตสาหการ",
+      "PE",
+      "IE",
+      "อุตสาหการ"
+    ],
+    "source_url": "https://eng.kmutt.ac.th/departments/production-engineering/"
+  },
+  {
+    "id": "dept_che",
+    "label": "ภาควิชาวิศวกรรมเคมี (ChE) คณะวิศวะ",
+    "phone": "02-470-8294",
+    "topics": [
+      "วิศวะเคมี",
+      "ChE",
+      "เคมี"
+    ],
+    "source_url": "https://eng.kmutt.ac.th/departments/chemical-engineering/"
+  },
+  {
+    "id": "dept_env",
+    "label": "ภาควิชาวิศวกรรมสิ่งแวดล้อม (EnvE) คณะวิศวะ",
+    "phone": "02-470-9163",
+    "web": "https://env.kmutt.ac.th",
+    "topics": [
+      "วิศวะสิ่งแวดล้อม",
+      "EnvE",
+      "สิ่งแวดล้อม"
+    ],
+    "source_url": "https://eng.kmutt.ac.th/departments/environmental-engineering/"
+  },
+  {
+    "id": "dept_inc",
+    "label": "ภาควิชาวิศวกรรมระบบควบคุมและเครื่องมือวัด (INC) คณะวิศวะ",
+    "phone": "02-470-9096",
+    "web": "https://inc.kmutt.ac.th/home/page/th",
+    "topics": [
+      "INC",
+      "ระบบควบคุม",
+      "เครื่องมือวัด",
+      "วิศวะอัตโนมัติ"
+    ],
+    "source_url": "https://eng.kmutt.ac.th/departments/control-systems-and-instrumentation-engineering/"
+  },
+  {
+    "id": "dept_tme",
+    "label": "ภาควิชาวิศวกรรมเครื่องมือและวัสดุ (TME) คณะวิศวะ",
+    "phone": "02-470-9219",
+    "web": "https://tme.kmutt.ac.th",
+    "topics": [
+      "วิศวะวัสดุ",
+      "เครื่องมือและวัสดุ",
+      "TME"
+    ],
+    "source_url": "https://eng.kmutt.ac.th/departments/tool-and-materials-engineering/"
   }
 ]
