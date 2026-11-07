@@ -132,16 +132,22 @@
   {
     "id": "registrar",
     "label": "สำนักงานทะเบียนนักศึกษา",
-    "phone": "02-470-8354",
+    "phone": "02-470-8147, 02-470-8354",
+    "email": "regist@kmutt.ac.th",
     "web": "https://regis.kmutt.ac.th",
+    "social": "LINE @regiskmutt · Facebook REGISTKMUTT",
     "topics": [
       "งานทะเบียน",
       "ลงทะเบียนเรียน",
       "ถอนรายวิชา",
       "ใบรับรองการเป็นนักศึกษา",
-      "ปฏิทินการศึกษา"
+      "ปฏิทินการศึกษา",
+      "ขอเอกสาร",
+      "ทรานสคริปต์",
+      "คำร้องออนไลน์",
+      "รับเอกสารที่ THE HUB"
     ],
-    "source_url": "https://www.kmutt.ac.th/en/about-kmutt/contact-us/"
+    "source_url": "https://regis.kmutt.ac.th/"
   },
   {
     "id": "student_card",
@@ -333,5 +339,66 @@
       "อาคารจอดรถ 1 (S2)"
     ],
     "source_url": "https://www.kmutt.ac.th/en/about-kmutt/contact-us/"
+  },
+  {
+    "id": "sfa",
+    "label": "กลุ่มงานช่วยเหลือทางการเงินแก่นักศึกษา (SFA) ทุนการศึกษาและ กยศ.",
+    "phone": "02-470-8107, 02-470-8097",
+    "email": "sfa@kmutt.ac.th",
+    "web": "https://www.kmutt.ac.th/sfa/",
+    "social": "Facebook SFAKMUTT",
+    "topics": [
+      "กยศ",
+      "กู้ยืม",
+      "ทุนการศึกษา",
+      "ทุนทำงาน REAL",
+      "Campus Gig",
+      "จิตอาสา กยศ"
+    ],
+    "source_url": "https://www.kmutt.ac.th/sfa/"
+  },
+  {
+    "id": "it_helpdesk",
+    "label": "สำนักคอมพิวเตอร์ Service Desk (Wi-Fi บัญชีผู้ใช้ อีเมล)",
+    "phone": "02-470-9444",
+    "web": "https://cc.kmutt.ac.th/",
+    "topics": [
+      "Wi-Fi",
+      "ไวไฟ",
+      "อินเทอร์เน็ต",
+      "บัญชีผู้ใช้",
+      "อีเมลนักศึกษา",
+      "ลืมรหัส"
+    ],
+    "source_url": "https://cc.kmutt.ac.th/en/wifi.html"
+  },
+  {
+    "id": "health_care",
+    "label": "กลุ่มงานบริการสุขภาพและอนามัย (Health Care Unit ห้องพยาบาล คลินิกเสริมสร้างกำลังใจ)",
+    "phone": "02-470-8446, 02-470-8444",
+    "web": "https://hcu.kmutt.ac.th/th/service",
+    "social": "LINE JaideeOnline (lin.ee/cJmJxeA)",
+    "topics": [
+      "ห้องพยาบาล",
+      "หาหมอ",
+      "ตารางแพทย์",
+      "ปรึกษาใจ",
+      "นักจิตวิทยา",
+      "จิตแพทย์"
+    ],
+    "source_url": "https://hcu.kmutt.ac.th/th/service/timetable"
+  },
+  {
+    "id": "emergency",
+    "label": "สายด่วนฉุกเฉิน มจธ. บางมด (ศูนย์รักษาความปลอดภัย 24 ชั่วโมง)",
+    "phone": "02-470-9090",
+    "web": "https://hcu.kmutt.ac.th/th/service/emergency",
+    "topics": [
+      "ฉุกเฉิน",
+      "อุบัติเหตุ",
+      "เจ็บป่วยฉุกเฉิน",
+      "รปภ"
+    ],
+    "source_url": "https://hcu.kmutt.ac.th/th/service/emergency"
   }
 ]

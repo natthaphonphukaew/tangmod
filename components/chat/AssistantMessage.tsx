@@ -5,6 +5,8 @@ import { Fragment, useState } from "react";
 import type { FeedbackReason } from "@/lib/ai/schema";
 import { placeById } from "@/lib/data";
 import { CompareCard } from "@/components/cards/CompareCard";
+import { ContactCard } from "@/components/cards/ContactCard";
+import { DeadlineCard } from "@/components/cards/DeadlineCard";
 import { ProgramCard } from "@/components/cards/ProgramCard";
 import { TimelineCard } from "@/components/cards/TimelineCard";
 import { TierBadge } from "@/components/ui/TierBadge";
@@ -85,6 +87,8 @@ export function AssistantMessage({ item, onShowPlace, onRetry, onFeedback }: Pro
             {card.type === "program" && <ProgramCard id={card.ids[0]} onShowPlace={onShowPlace} />}
             {card.type === "compare" && <CompareCard ids={card.ids} onShowPlace={onShowPlace} />}
             {card.type === "timeline" && <TimelineCard programIds={card.ids} />}
+            {card.type === "contact" && card.ids.map((id) => <ContactCard key={id} id={id} />)}
+            {card.type === "deadline" && <DeadlineCard ids={card.ids} />}
             {card.type === "place" && !answer.places.some((p) => p.place_id === card.ids[0]) && (
               <button
                 type="button"

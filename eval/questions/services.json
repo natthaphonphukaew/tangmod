@@ -1,0 +1,159 @@
+[
+ {
+  "id": "svc-loan-when",
+  "cat": "official",
+  "q": "กยศ เปิดให้กู้เมื่อไหร่ สมัครที่ไหน",
+  "expect": {
+   "include": [
+    "1 มิ(ถุนายน|\\.ย\\.)",
+    "DSL|กยศ\\.?\\s*Connect|studentloan"
+   ]
+  }
+ },
+ {
+  "id": "svc-loan-docs",
+  "cat": "official",
+  "q": "กู้ กยศ ใช้เอกสารอะไรบ้าง",
+  "expect": {
+   "include": [
+    "จิตอาสา",
+    "รายได้"
+   ]
+  }
+ },
+ {
+  "id": "svc-loan-contact",
+  "cat": "official",
+  "q": "ติดต่อเรื่อง กยศ ที่ไหน",
+  "expect": {
+   "card_types_any": [
+    "contact"
+   ],
+   "include": [
+    "8107|8097|sfa"
+   ]
+  }
+ },
+ {
+  "id": "svc-volunteer",
+  "cat": "official",
+  "q": "จิตอาสา กยศ ต้องกี่ชั่วโมง",
+  "expect": {
+   "include": [
+    "36"
+   ]
+  }
+ },
+ {
+  "id": "svc-scholarship",
+  "cat": "official",
+  "q": "มอมีทุนอะไรให้ปริญญาตรีบ้าง",
+  "expect": {
+   "include": [
+    "ธรรมรักษา|สิริวิริยา|แสดเหลือง|เพชรพระจอมเกล้า"
+   ]
+  }
+ },
+ {
+  "id": "svc-real",
+  "cat": "official",
+  "q": "ทำงานพาร์ทไทม์ในมอได้ชั่วโมงละเท่าไหร่",
+  "expect": {
+   "include": [
+    "50"
+   ]
+  }
+ },
+ {
+  "id": "svc-transcript",
+  "cat": "official",
+  "q": "ขอทรานสคริปต์ยังไง",
+  "expect": {
+   "include": [
+    "New ACIS|sinfo|Mod Link"
+   ]
+  }
+ },
+ {
+  "id": "svc-doc-pickup",
+  "cat": "official",
+  "q": "รับเอกสารทะเบียนที่ไหน กี่โมง",
+  "expect": {
+   "include": [
+    "THE HUB|N2|อธิการบดี",
+    "8[.:]30|16[.:]30"
+   ]
+  }
+ },
+ {
+  "id": "svc-wifi",
+  "cat": "official",
+  "q": "wifi มอชื่ออะไร ต่อยังไง",
+  "expect": {
+   "include": [
+    "KMUTT-Secure|eduroam"
+   ]
+  }
+ },
+ {
+  "id": "svc-doctor",
+  "cat": "official",
+  "q": "หมอที่ห้องพยาบาลมาวันไหนบ้าง",
+  "expect": {
+   "include": [
+    "จันทร์",
+    "13[.:]00"
+   ]
+  }
+ },
+ {
+  "id": "svc-psych",
+  "cat": "official",
+  "q": "ช่วงนี้เครียดมาก อยากคุยกับนักจิตวิทยา",
+  "expect": {
+   "include": [
+    "คลินิก|นักจิตวิทยา|จิตแพทย์",
+    "นัด"
+   ]
+  }
+ },
+ {
+  "id": "svc-emergency",
+  "cat": "official",
+  "q": "เกิดอุบัติเหตุในมอ โทรเบอร์ไหน",
+  "expect": {
+   "include": [
+    "9090"
+   ],
+   "card_types_any": [
+    "contact"
+   ]
+  }
+ },
+ {
+  "id": "svc-deadline-reg",
+  "cat": "official",
+  "q": "ลงทะเบียนเทอม 2 วันไหน",
+  "expect": {
+   "card_types_any": [
+    "deadline"
+   ],
+   "include": [
+    "ม\\.ค\\.|มกราคม|2027-01"
+   ]
+  }
+ },
+ {
+  "id": "svc-deadline-withdraw",
+  "cat": "official",
+  "q": "ถอน W เทอมนี้ได้ถึงวันไหน",
+  "expect": {
+   "card_types_any": [
+    "deadline"
+   ],
+   "include": [
+    "13"
+   ]
+  }
+ }
+]
