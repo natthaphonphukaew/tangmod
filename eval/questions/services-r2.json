@@ -1,0 +1,109 @@
+[
+ {
+  "id": "r2-lib-borrow",
+  "cat": "official",
+  "q": "ยืมหนังสือห้องสมุดได้กี่เล่ม กี่วัน",
+  "expect": {
+   "include": [
+    "10",
+    "15"
+   ]
+  }
+ },
+ {
+  "id": "r2-lib-fine",
+  "cat": "official",
+  "q": "คืนหนังสือห้องสมุดช้าโดนปรับเท่าไหร่",
+  "expect": {
+   "include": [
+    "5 บาท"
+   ]
+  }
+ },
+ {
+  "id": "r2-lib-renew",
+  "cat": "official",
+  "q": "ยืมหนังสือต่อออนไลน์ได้ไหม",
+  "expect": {
+   "include": [
+    "2 วัน|มีคนจอง|มีผู้จอง"
+   ]
+  }
+ },
+ {
+  "id": "r2-km-room",
+  "cat": "official",
+  "q": "อยากจองห้องติวในห้องสมุด",
+  "expect": {
+   "include": [
+    "KM Room|ชั้น 5",
+    "walk-in|เคาน์เตอร์"
+   ]
+  }
+ },
+ {
+  "id": "r2-lib-offcampus",
+  "cat": "official",
+  "q": "อยู่หอจะเข้าฐานข้อมูลห้องสมุดยังไง",
+  "expect": {
+   "include": [
+    "OpenAthens|Proxy"
+   ]
+  }
+ },
+ {
+  "id": "r2-intern-hours",
+  "cat": "official",
+  "q": "ฝึกงานต้องกี่ชั่วโมง",
+  "expect": {
+   "include": [
+    "160"
+   ]
+  }
+ },
+ {
+  "id": "r2-intern-letter",
+  "cat": "official",
+  "q": "ขอหนังสือฝึกงานต้องทำยังไง",
+  "expect": {
+   "include": [
+    "kmutt-intern|ยื่นคำร้องออนไลน์|คำร้องออนไลน์",
+    "1 เดือน|ล่วงหน้า"
+   ]
+  }
+ },
+ {
+  "id": "r2-intern-contact",
+  "cat": "official",
+  "q": "ติดต่อเรื่องฝึกงานที่ไหน",
+  "expect": {
+   "include": [
+    "8115|sao"
+   ],
+   "card_types_any": [
+    "contact"
+   ]
+  }
+ },
+ {
+  "id": "r2-exchange",
+  "cat": "official",
+  "q": "อยากไปแลกเปลี่ยนต่างประเทศต้องทำยังไง",
+  "expect": {
+   "include": [
+    "วิเทศ|International Affairs|IA",
+    "อาจารย์ที่ปรึกษา|คณะ"
+   ]
+  }
+ },
+ {
+  "id": "r2-exchange-cost",
+  "cat": "official",
+  "q": "ไป exchange ต้องจ่ายค่าเทอมไหม",
+  "expect": {
+   "include": [
+    "ไม่ต้อง|ยกเว้น"
+   ]
+  }
+ }
+]

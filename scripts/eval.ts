@@ -14,6 +14,7 @@ import { readFileSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { emptyProfile, type StreamEvent, type ValidatedAnswer } from "@/lib/ai/schema";
+import { contactById } from "@/lib/data";
 import { loadQuestions, type Expect, type Question } from "./eval-questions";
 
 // route ใช้ฐานข้อมูลนับ rate limit: ใช้ Postgres ในหน่วยความจำ ไม่แตะ .data/pglite ที่ dev server อาจเปิดอยู่
@@ -27,13 +28,22 @@ const re = (pattern: string) => new RegExp(pattern, "i");
 const UNKNOWN_RE = re("ยังไม่มีข้อมูล|ไม่มีข้อมูล|ไม่ทราบ|ไม่แน่ใจ|ยังไม่ได้|ยืนยันไม่ได้|ไม่สามารถ|สอบถาม|ติดต่อ|ไม่รู้");
 const REFUSE_RE = re("ขอโทษ|ขออภัย|ไม่ได้|ไม่สามารถ|นอกเหนือ|เฉพาะเรื่อง|ปฏิเสธ|ไม่รับ");
 
+const contactCardText = (a: ValidatedAnswer) =>
+  a.cards
+    .filter((c) => c.type === "contact")
+    .flatMap((c) => c.ids.map((id) => contactById.get(id)))
+    .map((c) => (c ? [c.label, c.phone, c.email, c.social].filter(Boolean).join(" ") : ""))
+    .join("\n");
+
 function check(e: Expect, a: ValidatedAnswer): string[] {
   const fails: string[] = [];
   const msg = a.message;
   const places = a.places.map((p) => p.place_id);
   const cardIds = a.cards.flatMap((c) => c.ids);
 
-  for (const p of e.include ?? []) if (!re(p).test(msg)) fails.push(`ข้อความไม่มี /${p}/`);
+  // include นับข้อความในการ์ดติดต่อด้วย (เบอร์ อีเมล ไลน์ แสดงในการ์ดที่ผู้ใช้เห็น ไม่จำเป็นต้องซ้ำในข้อความ)
+  const visible = `${msg}\n${contactCardText(a)}`;
+  for (const p of e.include ?? []) if (!re(p).test(visible)) fails.push(`ข้อความไม่มี /${p}/`);
   for (const p of e.exclude ?? []) if (re(p).test(msg)) fails.push(`ข้อความมี /${p}/ ซึ่งไม่ควรมี`);
   if (e.places_any && !e.places_any.some((id) => places.includes(id))) fails.push(`หมุดไม่มี ${e.places_any.join("|")} (ได้ ${places.join(",") || "-"})`);
   for (const id of e.places_all ?? []) if (!places.includes(id)) fails.push(`หมุดขาด ${id}`);
