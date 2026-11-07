@@ -1,0 +1,80 @@
+[
+  {
+    "id": "r3-nb-loan",
+    "cat": "official",
+    "q": "ห้องสมุดมีโน้ตบุ๊กให้ยืมไหม ยืมได้กี่วัน",
+    "expect": { "include": ["7 วัน", "LX|Learning Commons"] }
+  },
+  {
+    "id": "r3-nb-days",
+    "cat": "official",
+    "q": "ยืม notebook ห้องสมุดวันไหนได้บ้าง",
+    "expect": { "include": ["อังคาร", "พฤหัส"] }
+  },
+  {
+    "id": "r3-nb-fine",
+    "cat": "official",
+    "q": "คืนโน้ตบุ๊กห้องสมุดช้าโดนปรับเท่าไหร่",
+    "expect": { "include": ["100"] }
+  },
+  {
+    "id": "r3-ill",
+    "cat": "official",
+    "q": "อยากยืมหนังสือจากห้องสมุดจุฬา ห้องสมุด มจธ. ช่วยได้ไหม",
+    "expect": { "include": ["ยืมระหว่างห้องสมุด|Interlibrary|ILL"] }
+  },
+  {
+    "id": "r3-endnote",
+    "cat": "official",
+    "q": "endnote โหลดฟรีได้ที่ไหน",
+    "expect": { "include": ["ห้องสมุด|หอสมุด|lib\\.kmutt"] }
+  },
+  {
+    "id": "r3-coop-cpe",
+    "cat": "official",
+    "q": "วิศวะคอมฝึกงานตอนปีไหน กี่สัปดาห์",
+    "expect": { "include": ["ปี 3|ปี3", "6 สัปดาห์"] }
+  },
+  {
+    "id": "r3-wil-cpe",
+    "cat": "official",
+    "q": "CPE มี WiL หรือสหกิจไหม",
+    "expect": { "include": ["WiL|Work-Integrated|ร่วมกับการทำงาน", "ปี 4|ปี4"] }
+  },
+  {
+    "id": "r3-coop-ce",
+    "cat": "official",
+    "q": "วิศวะโยธามีแผนสหกิจไหม ไปนานแค่ไหน",
+    "expect": { "include": ["สหกิจ", "ภาคการศึกษา|เทอม"] }
+  },
+  {
+    "id": "r3-coop-pe",
+    "cat": "official",
+    "q": "อุตสาหการฝึกงานกี่ชั่วโมง",
+    "expect": { "include": ["240|30 วัน"] }
+  },
+  {
+    "id": "r3-coop-env",
+    "cat": "official",
+    "q": "วิศวะสิ่งแวดล้อมต้องฝึกงานกี่ชั่วโมง",
+    "expect": { "include": ["128"] }
+  },
+  {
+    "id": "r3-coop-sit-it",
+    "cat": "official",
+    "q": "IT ที่ SIT ฝึกงานกี่เดือน",
+    "expect": { "include": ["2", "4", "6 เดือน"] }
+  },
+  {
+    "id": "r3-dept-ce-phone",
+    "cat": "official",
+    "q": "เบอร์ภาควิชาวิศวะโยธา",
+    "expect": { "include": ["02-470-9135|02-470-9130"] }
+  },
+  {
+    "id": "r3-dept-ee-phone",
+    "cat": "official",
+    "q": "ติดต่อภาควิศวะไฟฟ้ายังไง",
+    "expect": { "include": ["02-470-9043|02-470-9033|ee\\.kmutt"] }
+  }
+]
