@@ -400,5 +400,34 @@
       "รปภ"
     ],
     "source_url": "https://hcu.kmutt.ac.th/th/service/emergency"
+  },
+  {
+    "id": "internship",
+    "label": "สำนักงานกิจการนักศึกษา งานฝึกงาน (หนังสือขอฝึกงาน ส่งตัว แบบประเมิน)",
+    "phone": "02-470-8115",
+    "email": "sao@kmutt.ac.th",
+    "web": "https://www.kmutt.ac.th/current-student-internship/",
+    "social": "LINE @sao-kmutt · Facebook sao.kmutt",
+    "topics": [
+      "ฝึกงาน",
+      "หนังสือขอฝึกงาน",
+      "หนังสือส่งตัว",
+      "หนังสือรับรองการฝึกงาน"
+    ],
+    "source_url": "https://www.kmutt.ac.th/current-student-internship/"
+  },
+  {
+    "id": "international",
+    "label": "สำนักงานวิเทศสัมพันธ์ (International Affairs) แลกเปลี่ยนต่างประเทศ",
+    "phone": "02-470-8342, 02-470-8344",
+    "email": "orginter@kmutt.ac.th",
+    "web": "https://inter.kmutt.ac.th/",
+    "topics": [
+      "แลกเปลี่ยน",
+      "exchange",
+      "เรียนต่างประเทศ",
+      "summer program"
+    ],
+    "source_url": "https://www.kmutt.ac.th/internationalization/mobility-program/exchange-programs/"
   }
 ]
