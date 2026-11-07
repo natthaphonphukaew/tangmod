@@ -39,7 +39,8 @@
   "cat": "unknown",
   "q": "รหัส wifi ของมหาลัยคืออะไร",
   "expect": {
-   "admits_unknown": true
+   "include": ["รหัสนักศึกษา|KMUTT Account|บัญชี"],
+   "exclude": ["รหัส(ผ่าน)?\\s*(wifi\\s*)?คือ\\s*\\d"]
   }
  },
  {

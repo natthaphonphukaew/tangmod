@@ -132,16 +132,22 @@
   {
     "id": "registrar",
     "label": "สำนักงานทะเบียนนักศึกษา",
-    "phone": "02-470-8354",
+    "phone": "02-470-8147, 02-470-8354",
     "web": "https://regis.kmutt.ac.th",
     "topics": [
       "งานทะเบียน",
       "ลงทะเบียนเรียน",
       "ถอนรายวิชา",
       "ใบรับรองการเป็นนักศึกษา",
-      "ปฏิทินการศึกษา"
+      "ปฏิทินการศึกษา",
+      "ขอเอกสาร",
+      "ทรานสคริปต์",
+      "คำร้องออนไลน์",
+      "รับเอกสารที่ THE HUB"
     ],
-    "source_url": "https://www.kmutt.ac.th/en/about-kmutt/contact-us/"
+    "source_url": "https://regis.kmutt.ac.th/",
+    "email": "regist@kmutt.ac.th",
+    "social": "LINE @regiskmutt · Facebook REGISTKMUTT"
   },
   {
     "id": "student_card",
@@ -193,7 +199,14 @@
     "email": "pr_fsci@mail.kmutt.ac.th",
     "web": "https://science.kmutt.ac.th",
     "social": "FB fsci.kmutt",
-    "topics": ["คณะวิทย์", "คณะวิทยาศาสตร์", "เคมี", "ฟิสิกส์", "คณิตศาสตร์", "จุลชีววิทยา"],
+    "topics": [
+      "คณะวิทย์",
+      "คณะวิทยาศาสตร์",
+      "เคมี",
+      "ฟิสิกส์",
+      "คณิตศาสตร์",
+      "จุลชีววิทยา"
+    ],
     "source_url": "https://www.kmutt.ac.th/education/curriculum/faculty-of-science/"
   },
   {
@@ -202,7 +215,11 @@
     "phone": "02-470-9500",
     "email": "info.fiet@kmutt.ac.th",
     "web": "https://www.fiet.kmutt.ac.th",
-    "topics": ["คณะครุ", "ครุศาสตร์", "FIET"],
+    "topics": [
+      "คณะครุ",
+      "ครุศาสตร์",
+      "FIET"
+    ],
     "source_url": "https://www.kmutt.ac.th/education/curriculum/faculty-of-industrial-education-and-technology/"
   },
   {
@@ -211,7 +228,10 @@
     "phone": "02-470-8711, 02-470-8713",
     "web": "https://sola.pr.kmutt.ac.th",
     "social": "FB SoLA.KMUTT",
-    "topics": ["คณะศิลปศาสตร์", "SoLA"],
+    "topics": [
+      "คณะศิลปศาสตร์",
+      "SoLA"
+    ],
     "source_url": "https://www.kmutt.ac.th/education/curriculum/school-of-liberal-arts/"
   },
   {
@@ -219,7 +239,11 @@
     "label": "คณะพลังงานสิ่งแวดล้อมและวัสดุ",
     "phone": "02-470-8610, 02-470-8608",
     "web": "https://seem.kmutt.ac.th",
-    "topics": ["คณะพลังงาน", "SEE", "SEEM"],
+    "topics": [
+      "คณะพลังงาน",
+      "SEE",
+      "SEEM"
+    ],
     "source_url": "https://www.kmutt.ac.th/education/curriculum/school-of-energy-environment-and-materials/"
   },
   {
@@ -229,7 +253,9 @@
     "email": "gmi@mail.kmutt.ac.th",
     "web": "http://www.gmi.kmutt.ac.th",
     "social": "LINE @gmikmutt",
-    "topics": ["GMI"],
+    "topics": [
+      "GMI"
+    ],
     "source_url": "https://www.kmutt.ac.th/education/curriculum/gmi-kmutt/"
   },
   {
@@ -238,7 +264,9 @@
     "phone": "02-470-8309-10",
     "email": "academic@jgsee.kmutt.ac.th",
     "web": "https://www.jgsee.kmutt.ac.th",
-    "topics": ["JGSEE"],
+    "topics": [
+      "JGSEE"
+    ],
     "source_url": "https://www.kmutt.ac.th/education/curriculum/jgsee/"
   },
   {
@@ -248,7 +276,11 @@
     "email": "arc.off@kmutt.ac.th",
     "web": "https://soad.kmutt.ac.th",
     "social": "FB kmutt.soad",
-    "topics": ["สถาปัตย์", "คณะสถาปัตยกรรมศาสตร์และการออกแบบ", "SoA+D"],
+    "topics": [
+      "สถาปัตย์",
+      "คณะสถาปัตยกรรมศาสตร์และการออกแบบ",
+      "SoA+D"
+    ],
     "source_url": "https://www.kmutt.ac.th/education/curriculum/school-of-architecture-and-design/"
   },
   {
@@ -257,14 +289,84 @@
     "phone": "02-470-7703",
     "email": "sbt@kmutt.ac.th",
     "web": "https://sbt.kmutt.ac.th",
-    "topics": ["คณะทรัพยากรชีวภาพ", "ไบโอเทค", "SBT"],
+    "topics": [
+      "คณะทรัพยากรชีวภาพ",
+      "ไบโอเทค",
+      "SBT"
+    ],
     "source_url": "https://www.kmutt.ac.th/education/curriculum/school-of-bioresources-and-technology/"
   },
   {
     "id": "sport",
     "label": "ฝ่ายกีฬา (ฟิตเนส โรงยิม สนามกีฬา)",
     "phone": "02-470-8092, 02-470-8095",
-    "topics": ["ยิม", "ฟิตเนส", "สนามกีฬา", "เทนนิส"],
+    "topics": [
+      "ยิม",
+      "ฟิตเนส",
+      "สนามกีฬา",
+      "เทนนิส"
+    ],
     "source_url": "https://www.kmutt.ac.th/en/?p=453"
+  },
+  {
+    "id": "sfa",
+    "label": "กลุ่มงานช่วยเหลือทางการเงินแก่นักศึกษา (SFA) ทุนการศึกษาและ กยศ.",
+    "phone": "02-470-8107, 02-470-8097",
+    "email": "sfa@kmutt.ac.th",
+    "web": "https://www.kmutt.ac.th/sfa/",
+    "social": "Facebook SFAKMUTT",
+    "topics": [
+      "กยศ",
+      "กู้ยืม",
+      "ทุนการศึกษา",
+      "ทุนทำงาน REAL",
+      "Campus Gig",
+      "จิตอาสา กยศ"
+    ],
+    "source_url": "https://www.kmutt.ac.th/sfa/"
+  },
+  {
+    "id": "it_helpdesk",
+    "label": "สำนักคอมพิวเตอร์ Service Desk (Wi-Fi บัญชีผู้ใช้ อีเมล)",
+    "phone": "02-470-9444",
+    "web": "https://cc.kmutt.ac.th/",
+    "topics": [
+      "Wi-Fi",
+      "ไวไฟ",
+      "อินเทอร์เน็ต",
+      "บัญชีผู้ใช้",
+      "อีเมลนักศึกษา",
+      "ลืมรหัส"
+    ],
+    "source_url": "https://cc.kmutt.ac.th/en/wifi.html"
+  },
+  {
+    "id": "health_care",
+    "label": "กลุ่มงานบริการสุขภาพและอนามัย (Health Care Unit ห้องพยาบาล คลินิกเสริมสร้างกำลังใจ)",
+    "phone": "02-470-8446, 02-470-8444",
+    "web": "https://hcu.kmutt.ac.th/th/service",
+    "social": "LINE JaideeOnline (lin.ee/cJmJxeA)",
+    "topics": [
+      "ห้องพยาบาล",
+      "หาหมอ",
+      "ตารางแพทย์",
+      "ปรึกษาใจ",
+      "นักจิตวิทยา",
+      "จิตแพทย์"
+    ],
+    "source_url": "https://hcu.kmutt.ac.th/th/service/timetable"
+  },
+  {
+    "id": "emergency",
+    "label": "สายด่วนฉุกเฉิน มจธ. บางมด (ศูนย์รักษาความปลอดภัย 24 ชั่วโมง)",
+    "phone": "02-470-9090",
+    "web": "https://hcu.kmutt.ac.th/th/service/emergency",
+    "topics": [
+      "ฉุกเฉิน",
+      "อุบัติเหตุ",
+      "เจ็บป่วยฉุกเฉิน",
+      "รปภ"
+    ],
+    "source_url": "https://hcu.kmutt.ac.th/th/service/emergency"
   }
 ]

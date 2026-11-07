@@ -6,7 +6,7 @@ import { Timetable } from "@/lib/timetable/schema";
  * ลำดับ field สำคัญ: message มาก่อนเพื่อให้ข้อความ stream ขึ้นจอได้เร็ว
  * ใช้ schema ให้เรียบที่สุด เพราะ Gemini ทิ้ง keyword บางตัว (minLength ฯลฯ) — ตรวจจริงที่ validate.ts
  */
-export const CardType = z.enum(["program", "compare", "place", "timeline"]);
+export const CardType = z.enum(["program", "compare", "place", "timeline", "contact", "deadline"]);
 export type CardType = z.infer<typeof CardType>;
 
 export const RoleGuess = z.enum(["highschool", "student", "parent", "unknown"]);
@@ -23,7 +23,7 @@ export const ChatAnswer = z.object({
     .describe("true เมื่อการเห็นแผนที่ช่วยให้เข้าใจคำตอบ เช่น ถามว่าตึก ห้อง ร้าน อยู่ไหน หรือไปยังไง · ถามค่าเทอม หน่วยกิต รอบสมัคร ให้เป็น false"),
   cards: z
     .array(z.object({ type: CardType, ids: z.array(z.string()) }))
-    .describe("การ์ดข้อมูลจริงที่ต้องแนบ: program=[program id], compare=[program id 2–4 ตัว], place=[place id], timeline=[] หรือ [program id]"),
+    .describe("การ์ดข้อมูลจริงที่ต้องแนบ: program=[program id], compare=[program id 2–4 ตัว], place=[place id], timeline=[] หรือ [program id], contact=[contact id จาก CONTACTS 1–2 ตัว], deadline=[date id จาก DATES 1–3 ตัว]"),
   chips: z.array(z.string()).describe("คำถามถัดไปที่ผู้ใช้น่าจะถาม 2–3 ข้อ แต่ละข้อไม่เกิน 6 คำ"),
   profile_update: z
     .object({

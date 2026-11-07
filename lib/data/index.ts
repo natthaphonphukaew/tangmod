@@ -38,6 +38,7 @@ const byId = <T extends { id: string }>(items: T[]) =>
 export const placeById = byId(places);
 export const programById = byId(programs);
 export const admissionEventById = byId(admissionEvents);
+export const contactById = byId(contacts);
 
 /** ตรวจว่า id ที่อ้างถึงกันข้ามไฟล์มีอยู่จริง คืนรายการปัญหา (ว่าง = ผ่าน) */
 export function findIntegrityProblems(): string[] {

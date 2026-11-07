@@ -1,4 +1,5 @@
-import { placeById, programById } from "@/lib/data";
+import { contactById, placeById, programById } from "@/lib/data";
+import { allEvents } from "@/lib/calendar/events";
 import { findRooms } from "@/lib/map/rooms";
 import { corpus } from "./knowledge";
 import { detectEntities } from "./retrieve";
@@ -82,6 +83,15 @@ export function validateAnswer(raw: ChatAnswer, question: string, context = ""):
           return validPrograms.length ? { type: "program" as const, ids: validPrograms.slice(0, 1) } : null;
         case "timeline":
           return { type: "timeline" as const, ids: validPrograms };
+        case "contact": {
+          // ยอมรับทั้ง "sfa" และ "contact:sfa" (id ใน CONTEXT มี prefix)
+          const ids = uniq(card.ids.map((id) => id.replace(/^contact:/, ""))).filter((id) => contactById.has(id)).slice(0, 2);
+          return ids.length ? { type: "contact" as const, ids } : null;
+        }
+        case "deadline": {
+          const ids = uniq(card.ids).filter((id) => calendarEventById().has(id)).slice(0, 3);
+          return ids.length ? { type: "deadline" as const, ids } : null;
+        }
         case "place": {
           const ids = uniq(card.ids).filter((id) => placeById.has(id)).slice(0, 1);
           return ids.length ? { type: "place" as const, ids } : null;
@@ -90,6 +100,12 @@ export function validateAnswer(raw: ChatAnswer, question: string, context = ""):
     })
     .filter((c) => c !== null)
     .slice(0, 3);
+
+  // ตอบจากช่องทางติดต่อใน CONTEXT แต่ลืมแนบการ์ด: แนบให้เอง ผู้ใช้กดโทรหรือเปิดเว็บได้ทันที
+  if (!cards.some((c) => c.type === "contact")) {
+    const fromSources = uniq(raw.source_ids.filter((id) => id.startsWith("contact:")).map((id) => id.slice(8))).filter((id) => contactById.has(id));
+    if (fromSources.length && cards.length < 3) cards.push({ type: "contact" as const, ids: fromSources.slice(0, 1) });
+  }
 
   // ถามหาตำแหน่งแต่โมเดลลืมใส่ places (MiniMax เป็นบ่อย): ปักจากชื่อตึก/เลขห้องที่อยู่ในคำถามเอง
   if (placeList.length === 0 && wantsLocation) {
@@ -136,7 +152,7 @@ export function salvageAnswer(partial: Loose<ChatAnswer> | undefined): ChatAnswe
       .filter((p) => typeof p.place_id === "string")
       .map((p) => ({ place_id: p.place_id as string, reason: typeof p.reason === "string" ? p.reason : "" })),
     cards: objects(partial.cards)
-      .filter((c) => ["program", "compare", "place", "timeline"].includes(c.type as string))
+      .filter((c) => ["program", "compare", "place", "timeline", "contact", "deadline"].includes(c.type as string))
       .map((c) => ({ type: c.type as ChatAnswer["cards"][number]["type"], ids: strings(c.ids) })),
     show_map: partial.show_map === true,
     chips: strings(partial.chips),
@@ -163,4 +179,11 @@ function resolveSources(sourceIds: string[], cards: { type: string; ids: string[
     out.push({ id: chunk.id, title: chunk.title, url: chunk.source_url, tier: chunk.tier, updated_at: chunk.updated_at });
   }
   return out.slice(0, 5);
+}
+
+let eventIndex: Map<string, ReturnType<typeof allEvents>[number]> | undefined;
+/** วันสำคัญทั้งหมดตาม id (ใช้ตรวจการ์ด deadline) */
+export function calendarEventById() {
+  eventIndex ??= new Map(allEvents().map((e) => [e.id, e]));
+  return eventIndex;
 }

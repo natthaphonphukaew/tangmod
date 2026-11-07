@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { admissionEvents, assistant, calendar, holidays, places, programs } from "@/lib/data";
-import { addDays, dayOf } from "@/lib/calendar/events";
+import { admissionEvents, assistant, calendar, contacts, holidays, places, programs } from "@/lib/data";
+import { addDays, allEvents, dayOf } from "@/lib/calendar/events";
 import { classesOn, roomPlaceId, type ClassDay } from "@/lib/calendar/classes";
 import { findRooms } from "@/lib/map/rooms";
 import { DAY_TH, sortEntries, type Timetable, type TimetableEntry } from "@/lib/timetable/schema";
@@ -91,7 +91,7 @@ export function buildSystemPrompt(opts: { profile: Profile; chunks: Chunk[]; now
 1. ตอบจากข้อมูลใน CONTEXT, PLACES, PROGRAMS และ NOW เท่านั้น ห้ามใช้ความรู้นอกเหนือจากนี้เรื่อง มจธ. ข้อมูลทั้งหมดนี้เป็นของ มจธ. เท่านั้น ถ้าถามถึงมหาวิทยาลัยอื่น (เช่น จุฬาฯ เกษตรฯ ลาดกระบัง) ให้บอกตรง ๆ ว่าไม่มีข้อมูลของที่อื่น และตั้ง confidence เป็น "low" จะเสนอข้อมูลสาขาเดียวกันของ มจธ. ได้ แต่ต้องบอกชัดว่าเป็นของ มจธ.
 2. ถ้าข้อมูลไม่พอ ให้ตั้ง confidence เป็น "low" แล้วบอกตรง ๆ ว่ายังไม่มีข้อมูล และแนะนำช่องทางติดต่อที่มีใน CONTEXT ห้ามเดา อย่าขึ้นต้นคำตอบด้วยประโยค "ยังไม่มีข้อมูล" ให้เริ่มจากเท่าที่มีใน CONTEXT หรือทางไปต่อที่ถามได้จริงก่อน (เบอร์ เพจ อีเมลใน CONTEXT) แล้วค่อยบอกส่วนที่ยังไม่มีสั้น ๆ ท้ายคำตอบ และห้ามแต่งเลขสายรถ ราคา หรือวันที่ที่ไม่มีใน CONTEXT
 3. ห้ามแต่งตัวเลขหรือข้อเท็จจริงเด็ดขาด ทุกครั้งที่พูดถึงค่าเทอม หน่วยกิต GPAX หรือเกณฑ์ ต้องแนบการ์ด (program หรือ compare) ตัวเลข ชื่อปริญญา (เช่น วท.บ. / วศ.บ.) และชั้นของตึกที่เขียนในข้อความต้องตรงกับ CONTEXT
-4. ถ้าเปรียบเทียบตั้งแต่ 2 สาขาขึ้นไป ให้ใช้การ์ด compare ถ้าถามเรื่องรอบสมัครหรือวันที่ ให้ใช้การ์ด timeline
+4. ถ้าเปรียบเทียบตั้งแต่ 2 สาขาขึ้นไป ให้ใช้การ์ด compare ถ้าถามเรื่องรอบสมัคร TCAS ให้ใช้การ์ด timeline ถ้าถามว่าต้องติดต่อใคร ที่ไหน เบอร์อะไร หรือคำตอบแนะนำให้ไปติดต่อหน่วยงาน ให้แนบการ์ด contact ด้วย id จาก CONTACTS (1–2 หน่วยงานที่ตรงเรื่องที่สุด) ถ้าถามวันลงทะเบียน จ่ายเงิน ถอน สอบ วันหยุด หรือกำหนดการของนักศึกษา ให้แนบการ์ด deadline ด้วย id จาก DATES (1–3 รายการที่ตรงคำถาม) เบอร์และวันที่ในข้อความต้องตรงกับการ์ด
 5. แผนที่เป็นตัวช่วย ไม่ใช่ทุกคำตอบต้องมี ใส่ places และตั้ง show_map เป็น true เฉพาะเมื่อผู้ใช้ถามว่าที่ไหน อยู่ไหน ไปยังไง ตึก ห้อง (เช่น CB2301) ร้าน หรือจุดนัดพบ (ใช้ id จาก PLACES เท่านั้น เรียงตามลำดับที่ควรไป) ถ้าถามเรื่องค่าเทอม หน่วยกิต เกรด รอบสมัคร ให้ places เป็น [] และ show_map เป็น false ถ้าถามเลขห้อง ให้บอกตึกและชั้นตาม CONTEXT
 6. ข้อมูลที่ tier=student คือข้อมูลไม่เป็นทางการ ต้องบอกว่า "จากรีวิวรุ่นพี่" หรือ "จากเว็บข่าว" ส่วน tier=mock คือข้อมูลตัวอย่างที่ยังไม่ยืนยัน ต้องบอกผู้ใช้ด้วย
 7. ถ้าข้อมูลมาจากหลายเรื่อง (เช่น สาขา + ของกิน) ตอบรวมในคำตอบเดียวได้เลย
@@ -120,6 +120,12 @@ ${placeList.map((p) => `- ${p.id} | ${p.short ?? ""} ${p.name_th} | ${p.kind}${p
 
 # PROGRAMS (id | ชื่อ) — ใช้เป็น ids ของการ์ด
 ${programs.map((p) => `- ${p.id} | ${p.short} ${p.name_th}`).join("\n")}
+
+# CONTACTS (id | หน่วยงาน) — ใช้เป็น ids ของการ์ด contact
+${contacts.map((c) => `- ${c.id} | ${c.label}`).join("\n")}
+
+# DATES (id | วันที่ | กำหนดการ) — ใช้เป็น ids ของการ์ด deadline (เฉพาะที่ยังไม่ผ่านไป 120 วันข้างหน้า)
+${upcomingDates(now)}
 
 # NOW
 เวลาปัจจุบัน: ${dateTh(now)}
@@ -175,4 +181,12 @@ ${classDayText("วันนี้", today, classesOn(today, timetable))}
 ${classDayText("พรุ่งนี้", tomorrow, classesOn(tomorrow, timetable))}
 
 `;
+}
+
+/** กำหนดการของนักศึกษาที่ยังไม่จบใน 120 วันข้างหน้า สำหรับการ์ด deadline (ไม่รวม TCAS ซึ่งมีการ์ด timeline แล้ว) */
+function upcomingDates(now: Date): string {
+  const today = bangkokDate(now);
+  const until = addDays(today, 120);
+  const list = allEvents().filter((e) => e.kind !== "admission" && e.end >= today && e.start <= until);
+  return list.length ? list.map((e) => `- ${e.id} | ${e.start === e.end ? e.start : `${e.start} ถึง ${e.end}`} | ${e.title}`).join("\n") : "ไม่มี";
 }
