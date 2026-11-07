@@ -1,0 +1,14 @@
+[
+ {"id":"svc-print","cat":"niche","q":"ร้านปริ้นงานหน้ามอ ร้านไหนเปิดกี่โมง","expect":{"include":["Post Shop|โพสช๊อป|น้ำส้ม|น้องน้ำ|บี พรินติ้ง","0?[78][:.]00"]}},
+ {"id":"svc-print-short","cat":"niche","q":"ถ่ายเอกสารที่ไหนดี","expect":{"include":["Post Shop|โพสช๊อป|น้ำส้ม|น้องน้ำ|บี พรินติ้ง|เอพริล"]}},
+ {"id":"svc-repair-pc","cat":"niche","q":"โน้ตบุ๊กพัง ซ่อมคอมแถวมอได้ที่ไหน","expect":{"include":["ไอที เซอร์วิส|PC4U|N&B|ซ่อมคอม"]}},
+ {"id":"svc-repair-phone","cat":"niche","q":"จอมือถือแตก ร้านซ่อมใกล้มอมีไหม","expect":{"include":["IC Phone|All-mobile|ซ่อมมือถือ"]}},
+ {"id":"svc-barber","cat":"niche","q":"อยากตัดผมแถวหน้ามอ ร้านไหนเปิดดึก","expect":{"include":["Klear|STEEL|Te & Chin|KUNG|ดีคับผม|ร้านตัดผม"]}},
+ {"id":"svc-laundry","cat":"niche","q":"ซักผ้าหยอดเหรียญใกล้หอ ร้านเปิดตอนดึกไหม","expect":{"include":["24 ?ชั่วโมง|24 ?ชม","Goose|Otteri|WashXpress|Glorys|Oasis"]}},
+ {"id":"svc-pharmacy","cat":"niche","q":"ร้านยาในมอมีไหม เปิดกี่โมง","expect":{"include":["ยาหนึ่ง","07[:.]00"]}},
+ {"id":"svc-hcu","cat":"niche","q":"ไม่สบาย ห้องพยาบาลในมออยู่ไหน","expect":{"include":["HCU|Health Care|CB1|อาคารเรียนรวม 1"]}},
+ {"id":"svc-atm","cat":"niche","q":"ตู้ ATM ในมอมีธนาคารอะไรบ้าง","expect":{"include":["กรุงไทย|กรุงศรี|กสิกร|กรุงเทพ"]}},
+ {"id":"svc-uniform","cat":"niche","q":"ซื้อชุดนักศึกษาที่ไหนแถวมอ","expect":{"include":["ศูนย์หนังสือ|ร้านหนังสือ|Book"]}},
+ {"id":"svc-print-price","cat":"unknown","q":"ปริ้นขาวดำแผ่นละกี่บาท","expect":{"admits_unknown":true}},
+ {"id":"svc-haircut-price","cat":"unknown","q":"ตัดผมหน้ามอราคาเท่าไหร่","expect":{"admits_unknown":true}}
+]
