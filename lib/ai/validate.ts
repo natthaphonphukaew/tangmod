@@ -1,4 +1,4 @@
-import { contactById, placeById, programById } from "@/lib/data";
+import { contactById, contacts, placeById, programById } from "@/lib/data";
 import { allEvents } from "@/lib/calendar/events";
 import { findRooms } from "@/lib/map/rooms";
 import { corpus } from "./knowledge";
@@ -102,9 +102,11 @@ export function validateAnswer(raw: ChatAnswer, question: string, context = ""):
     .slice(0, 3);
 
   // ตอบจากช่องทางติดต่อใน CONTEXT แต่ลืมแนบการ์ด: แนบให้เอง ผู้ใช้กดโทรหรือเปิดเว็บได้ทันที
+  // หรือข้อความมีเบอร์โทรที่ตรงกับหน่วยงานใน contacts.json (เบอร์มาจาก KB แต่ชิ้น contact ไม่ได้ถูกค้นมา)
   if (!cards.some((c) => c.type === "contact")) {
     const fromSources = uniq(raw.source_ids.filter((id) => id.startsWith("contact:")).map((id) => id.slice(8))).filter((id) => contactById.has(id));
-    if (fromSources.length && cards.length < 3) cards.push({ type: "contact" as const, ids: fromSources.slice(0, 1) });
+    const ids = fromSources.length ? fromSources : contactsByPhoneIn(raw.message);
+    if (ids.length && cards.length < 3) cards.push({ type: "contact" as const, ids: ids.slice(0, 1) });
   }
 
   // ถามหาตำแหน่งแต่โมเดลลืมใส่ places (MiniMax เป็นบ่อย): ปักจากชื่อตึก/เลขห้องที่อยู่ในคำถามเอง
@@ -186,4 +188,24 @@ let eventIndex: Map<string, ReturnType<typeof allEvents>[number]> | undefined;
 export function calendarEventById() {
   eventIndex ??= new Map(allEvents().map((e) => [e.id, e]));
   return eventIndex;
+}
+
+const digitsOf = (s: string) => s.replace(/\D/g, "");
+// เบอร์ 9–10 หลักของแต่ละหน่วยงาน (ช่วงเบอร์ "8460-3" ใช้ 4 หลักแรกของเบอร์เต็มเป็นตัวแทน)
+let phoneIndex: [string, string][] | undefined;
+function contactPhones(): [string, string][] {
+  phoneIndex ??= contacts.flatMap((c) =>
+    (c.phone ?? "")
+      .split(/[,/]/)
+      .map((p) => digitsOf(p.trim().replace(/^(\d{1,3}-\d{3}-\d{4})-\d+$/, "$1")))
+      .filter((d) => d.length >= 9)
+      .map((d) => [d, c.id] as [string, string]),
+  );
+  return phoneIndex;
+}
+
+/** หน่วยงานที่เบอร์โทรปรากฏในข้อความ เรียงตามลำดับที่เจอ */
+export function contactsByPhoneIn(message: string): string[] {
+  const numbers = (message.match(/0[\d\s-]{8,13}\d/g) ?? []).map(digitsOf).filter((d) => d.length >= 9);
+  return uniq(numbers.flatMap((n) => contactPhones().filter(([d]) => d === n).map(([, id]) => id)));
 }

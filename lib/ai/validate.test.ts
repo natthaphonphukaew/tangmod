@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { buildSystemPrompt, admissionNow, schemaInstructions } from "./prompt";
 import { offlineAnswer } from "./mock-model";
 import { ChatAnswer, emptyProfile } from "./schema";
-import { cleanMessage, salvageAnswer, stripUnsupportedUniversities, validateAnswer } from "./validate";
+import { cleanMessage, contactsByPhoneIn, salvageAnswer, stripUnsupportedUniversities, validateAnswer } from "./validate";
 
 const base: ChatAnswer = {
   message: "ดูที่ https://evil.example ได้เลย",
@@ -151,5 +151,36 @@ describe("ชื่อมหาวิทยาลัยอื่นที่โ�
     const r = stripUnsupportedUniversities("มหาวิทยาลัยมหิดลล้านพระยา", "");
     expect(r.stripped).toBe(true);
     expect(r.message).toMatch(/ยังไม่มีข้อมูล/);
+  });
+});
+
+describe("การ์ดติดต่อและกำหนดการ", () => {
+  const base: ChatAnswer = {
+    message: "",
+    places: [],
+    show_map: false,
+    cards: [],
+    chips: [],
+    profile_update: null,
+    source_ids: [],
+    confidence: "high",
+  };
+
+  it("ตรวจ id ของการ์ด contact และ deadline (รับ id ที่มี prefix contact: ด้วย)", () => {
+    const a = validateAnswer(
+      { ...base, message: "ติดต่อ SFA", cards: [{ type: "contact", ids: ["contact:sfa", "nope"] }, { type: "deadline", ids: ["t2-pay", "fake"] }] },
+      "ติดต่อ กยศ",
+    );
+    expect(a.cards).toEqual([
+      { type: "contact", ids: ["sfa"] },
+      { type: "deadline", ids: ["t2-pay"] },
+    ]);
+  });
+
+  it("ลืมแนบการ์ดติดต่อ: แนบจาก source หรือจากเบอร์ในข้อความ", () => {
+    expect(validateAnswer({ ...base, message: "โทรเลย", source_ids: ["contact:registrar"] }, "x").cards).toEqual([{ type: "contact", ids: ["registrar"] }]);
+    expect(validateAnswer({ ...base, message: "เกิดเหตุในมอ โทร 02-470-9090 ได้ 24 ชั่วโมง" }, "x").cards).toEqual([{ type: "contact", ids: ["emergency"] }]);
+    expect(contactsByPhoneIn("โทร 0 2470 8107")).toEqual(["sfa"]);
+    expect(contactsByPhoneIn("ไม่มีเบอร์")).toEqual([]);
   });
 });

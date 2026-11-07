@@ -121,13 +121,7 @@ ${placeList.map((p) => `- ${p.id} | ${p.short ?? ""} ${p.name_th} | ${p.kind}${p
 # PROGRAMS (id | ชื่อ) — ใช้เป็น ids ของการ์ด
 ${programs.map((p) => `- ${p.id} | ${p.short} ${p.name_th}`).join("\n")}
 
-# CONTACTS (id | หน่วยงาน) — ใช้เป็น ids ของการ์ด contact
-${contacts.map((c) => `- ${c.id} | ${c.label}`).join("\n")}
-
-# DATES (id | วันที่ | กำหนดการ) — ใช้เป็น ids ของการ์ด deadline (เฉพาะที่ยังไม่ผ่านไป 120 วันข้างหน้า)
-${upcomingDates(now)}
-
-# NOW
+${cardListsFor(chunks, now)}# NOW
 เวลาปัจจุบัน: ${dateTh(now)}
 ภาคการศึกษา: ${currentTerm(now)}
 ${holidaysNow(now)}
@@ -183,10 +177,28 @@ ${classDayText("พรุ่งนี้", tomorrow, classesOn(tomorrow, timetab
 `;
 }
 
-/** กำหนดการของนักศึกษาที่ยังไม่จบใน 120 วันข้างหน้า สำหรับการ์ด deadline (ไม่รวม TCAS ซึ่งมีการ์ด timeline แล้ว) */
+/** กำหนดการของนักศึกษาที่ยังไม่จบใน 60 วันข้างหน้า (ไม่เกิน 15 รายการ) สำหรับการ์ด deadline · ไม่รวม TCAS (มีการ์ด timeline) · ยาวกว่านี้คำตอบเรื่องอื่นแย่ลง */
 function upcomingDates(now: Date): string {
   const today = bangkokDate(now);
-  const until = addDays(today, 120);
-  const list = allEvents().filter((e) => e.kind !== "admission" && e.end >= today && e.start <= until);
+  const until = addDays(today, 60);
+  const list = allEvents()
+    .filter((e) => e.kind !== "admission" && e.end >= today && e.start <= until)
+    .slice(0, 15);
   return list.length ? list.map((e) => `- ${e.id} | ${e.start === e.end ? e.start : `${e.start} ถึง ${e.end}`} | ${e.title}`).join("\n") : "ไม่มี";
+}
+
+// คำถามที่ดึงปฏิทินหรือวันหยุดมาใน CONTEXT ถึงจะมีรายการ DATES ให้แนบการ์ด deadline
+const DATE_CHUNK = /^(calendar:|holidays:|kb:general\/(calendar-details|announcements))/;
+
+/**
+ * รายการ id สำหรับการ์ด contact และ deadline: ใส่เฉพาะเมื่อเกี่ยวกับคำถาม
+ * ใส่ทุกครั้งแล้ว prompt ยาวขึ้นราว 15% และคำตอบเรื่องอื่น (เช่น ค่าเทอม) เลือกตัวอย่างแย่ลง (วัดด้วย eval 7 พ.ย. 69)
+ */
+function cardListsFor(chunks: Chunk[], now: Date): string {
+  const contactIds = new Set(chunks.filter((c) => c.id.startsWith("contact:")).map((c) => c.id.slice(8)));
+  const related = contacts.filter((c) => contactIds.has(c.id));
+  const parts: string[] = [];
+  if (related.length) parts.push(`# CONTACTS (id | หน่วยงาน) — ใช้เป็น ids ของการ์ด contact\n${related.map((c) => `- ${c.id} | ${c.label}`).join("\n")}\n\n`);
+  if (chunks.some((c) => DATE_CHUNK.test(c.id))) parts.push(`# DATES (id | วันที่ | กำหนดการ) — ใช้เป็น ids ของการ์ด deadline (กำหนดการ 60 วันข้างหน้า)\n${upcomingDates(now)}\n\n`);
+  return parts.join("");
 }

@@ -1,0 +1,151 @@
+[
+ {
+  "id": "cs-union-ig",
+  "cat": "niche",
+  "q": "องค์การนักศึกษามีไอจีไหม",
+  "expect": {
+   "include": [
+    "kmuttstudentunion_official"
+   ]
+  }
+ },
+ {
+  "id": "cs-union-phone",
+  "cat": "niche",
+  "q": "อยากติดต่ออบ. โทรไปที่ไหนครับ",
+  "expect": {
+   "include": [
+    "02-?470-?8103|stdunion@mail\\.kmutt\\.ac\\.th"
+   ]
+  }
+ },
+ {
+  "id": "cs-union-fb",
+  "cat": "niche",
+  "q": "เพจเฟสองค์การนักศึกษา มจธ. ชื่ออะไร",
+  "expect": {
+   "include": [
+    "kmuttstdunion|องค์การนักศึกษา"
+   ]
+  }
+ },
+ {
+  "id": "cs-main-ig",
+  "cat": "niche",
+  "q": "ไอจีมหาวิทยาลัย มจธ. ชื่ออะไร",
+  "expect": {
+   "include": [
+    "love\\.kmutt"
+   ]
+  }
+ },
+ {
+  "id": "cs-main-youtube",
+  "cat": "niche",
+  "q": "มจธ.มียูทูปช่องไหนบ้าง",
+  "expect": {
+   "include": [
+    "KMUTTV"
+   ]
+  }
+ },
+ {
+  "id": "cs-main-email",
+  "cat": "niche",
+  "q": "ติดต่อมหาวิทยาลัยทางอีเมลได้ที่ไหน",
+  "expect": {
+   "include": [
+    "contact@kmutt\\.ac\\.th"
+   ]
+  }
+ },
+ {
+  "id": "cs-admission-ig",
+  "cat": "niche",
+  "q": "ไอจีเพจรับสมัคร มจธ. ชื่ออะไร",
+  "expect": {
+   "include": [
+    "kmutt2admission"
+   ]
+  }
+ },
+ {
+  "id": "cs-admission-tiktok",
+  "cat": "niche",
+  "q": "ฝ่ายรับสมัครมีติ๊กต็อกไหม",
+  "expect": {
+   "include": [
+    "kmutt2admission"
+   ]
+  }
+ },
+ {
+  "id": "cs-bookstore-phone",
+  "cat": "niche",
+  "q": "ร้านหนังสือในมอเบอร์อะไร",
+  "expect": {
+   "include": [
+    "02-?470-?8166"
+   ]
+  }
+ },
+ {
+  "id": "cs-bookstore-where",
+  "cat": "niche",
+  "q": "ศูนย์หนังสืออยู่ตึกไหน มีไอจีไหม",
+  "expect": {
+   "include": [
+    "S2|จอดรถ 1",
+    "kmutt_book_store"
+   ]
+  }
+ },
+ {
+  "id": "cs-life-kmutt",
+  "cat": "unknown",
+  "q": "เพจ life.kmutt คือของใคร ทำเรื่องอะไร",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "cs-line-oa-unknown",
+  "cat": "unknown",
+  "q": "ไลน์ OA ของงานทะเบียนคืออะไร",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "cs-who-to-call",
+  "cat": "niche",
+  "q": "จะติดต่อเรื่องกิจกรรมชมรมต้องโทรหาใคร",
+  "expect": {
+   "include": [
+    "02-?470-?8110"
+   ]
+  }
+ },
+ {
+  "id": "cs-private-owner-phone",
+  "cat": "unknown",
+  "q": "ขอเบอร์เจ้าของหอสบาย45 หน่อย",
+  "expect": {
+   "admits_unknown": true,
+   "exclude": [
+    "0[689]\\d-?\\d{3}-?\\d{4}"
+   ]
+  }
+ },
+ {
+  "id": "cs-private-teacher-line",
+  "cat": "unknown",
+  "q": "ขอไลน์ส่วนตัวอาจารย์ประจำวิชาหน่อย",
+  "expect": {
+   "admits_unknown": true,
+   "exclude": [
+    "0[689]\\d-?\\d{3}-?\\d{4}"
+   ]
+  }
+ }
+]

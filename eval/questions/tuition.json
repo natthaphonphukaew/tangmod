@@ -1,0 +1,515 @@
+[
+ {
+  "id": "tuition-cpe-term",
+  "cat": "official",
+  "q": "วิศวะคอมเทอมละเท่าไหร่",
+  "expect": {
+   "include": [
+    "30,?000"
+   ]
+  }
+ },
+ {
+  "id": "tuition-cpe-total",
+  "cat": "official",
+  "q": "เรียน CPE ทั้งหลักสูตรต้องเตรียมเงินเท่าไหร่",
+  "expect": {
+   "include": [
+    "240,?000"
+   ]
+  }
+ },
+ {
+  "id": "tuition-cpe-vs-it",
+  "cat": "official",
+  "q": "CPE กับ IT ค่าเทอมต่างกันเท่าไหร่",
+  "expect": {
+   "include": [
+    "106,?400|240,?000.*346,?400|346,?400.*240,?000"
+   ]
+  }
+ },
+ {
+  "id": "tuition-it-first",
+  "cat": "official",
+  "q": "ค่าเทอมแรกของ IT ต้องจ่ายเท่าไหร่",
+  "expect": {
+   "include": [
+    "45,?100"
+   ]
+  }
+ },
+ {
+  "id": "tuition-it-total",
+  "cat": "official",
+  "q": "เรียน IT จบหลักสูตรรวมประมาณเท่าไหร่",
+  "expect": {
+   "include": [
+    "346,?400"
+   ]
+  }
+ },
+ {
+  "id": "tuition-cs-term",
+  "cat": "official",
+  "q": "เรียน CS ที่ SIT เทอมละกี่บาท",
+  "expect": {
+   "include": [
+    "57,?000"
+   ]
+  }
+ },
+ {
+  "id": "tuition-dsi-total",
+  "cat": "official",
+  "q": "DSI ทั้งหลักสูตรกี่บาท",
+  "expect": {
+   "include": [
+    "380,?000"
+   ]
+  }
+ },
+ {
+  "id": "tuition-inter-vs-thai",
+  "cat": "official",
+  "q": "CPE นานาชาติแพงกว่าภาคไทยไหม",
+  "expect": {
+   "include": [
+    "70,?000",
+    "30,?000"
+   ]
+  }
+ },
+ {
+  "id": "tuition-inter-total",
+  "cat": "official",
+  "q": "วิศวะนานาชาติค่าเรียนตลอดหลักสูตรเท่าไหร่",
+  "expect": {
+   "include": [
+    "560,?000|448,?000|531,?050"
+   ]
+  }
+ },
+ {
+  "id": "tuition-me-total",
+  "cat": "official",
+  "q": "วิศวะเครื่องกลเรียนจบหมดเท่าไหร่",
+  "expect": {
+   "include": [
+    "210,?250"
+   ]
+  }
+ },
+ {
+  "id": "tuition-confirm-fee",
+  "cat": "official",
+  "q": "ค่ายืนยันสิทธิ์ ค่าแรกเข้าของวิศวะโยธาเท่าไหร่",
+  "expect": {
+   "include": [
+    "27,?500"
+   ]
+  }
+ },
+ {
+  "id": "tuition-how-calc",
+  "cat": "official",
+  "q": "ค่าเทอมมอคิดยังไง เหมาจ่ายหรือตามหน่วยกิต",
+  "expect": {
+   "include": [
+    "เหมา",
+    "หน่วยกิต"
+   ]
+  }
+ },
+ {
+  "id": "tuition-fibo-total",
+  "cat": "official",
+  "q": "FIBO เรียนทั้งหลักสูตรเท่าไหร่",
+  "expect": {
+   "include": [
+    "456,?000"
+   ]
+  }
+ },
+ {
+  "id": "tuition-isbe-extra",
+  "cat": "official",
+  "q": "วิศวะ ISBE มีค่าธรรมเนียมพิเศษไหม",
+  "expect": {
+   "include": [
+    "5,?000"
+   ]
+  }
+ },
+ {
+  "id": "tuition-summer-not-incl",
+  "cat": "official",
+  "q": "ค่าเทอมทั้งหลักสูตรรวมซัมเมอร์ไหม",
+  "expect": {
+   "include": [
+    "ไม่รวม"
+   ]
+  }
+ },
+ {
+  "id": "tuition-monthly-budget",
+  "cat": "official",
+  "q": "ต้องมีเงินเท่าไหร่ต่อเดือนถ้าอยู่หอใน",
+  "expect": {
+   "include": [
+    "2,?500|3,?500"
+   ]
+  }
+ },
+ {
+  "id": "tuition-installment",
+  "cat": "unknown",
+  "q": "ผ่อนค่าเทอมได้ไหม ต้องทำยังไง",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "tuition-loan-gyso",
+  "cat": "unknown",
+  "q": "กยศ. ของ มจธ. กู้ค่าเทอมได้เท่าไหร่",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "tuition-food-budget",
+  "cat": "unknown",
+  "q": "ค่ากินในมอเดือนละกี่บาท",
+  "expect": {
+   "admits_unknown": true
+  }
+ },
+ {
+  "id": "tuition-sci-math-total",
+  "cat": "official",
+  "q": "เรียนคณิตศาสตร์ที่คณะวิทย์ ทั้งหลักสูตรกี่บาท",
+  "expect": {
+   "include": [
+    "200,?500"
+   ]
+  }
+ },
+ {
+  "id": "tuition-sci-micro-first",
+  "cat": "official",
+  "q": "จุลชีววิทยา ค่าเทอมแรกเท่าไหร่",
+  "expect": {
+   "include": [
+    "26,?850"
+   ]
+  }
+ },
+ {
+  "id": "tuition-sci-cs-applied",
+  "cat": "official",
+  "q": "วิทยาการคอมพิวเตอร์ประยุกต์ คณะวิทย์ ค่าเทอมเท่าไหร่",
+  "expect": {
+   "include": [
+    "32,?500|245,?000"
+   ]
+  }
+ },
+ {
+  "id": "tuition-arch-5yr",
+  "cat": "official",
+  "q": "เรียนสถาปัตยกรรมต้องจ่ายทั้งหมดเท่าไหร่ กี่ปี",
+  "expect": {
+   "include": [
+    "760,?000",
+    "5 ปี|ห้าปี"
+   ]
+  }
+ },
+ {
+  "id": "tuition-arch-term",
+  "cat": "official",
+  "q": "สถาปัตย์นานาชาติเทอมละเท่าไหร่",
+  "expect": {
+   "include": [
+    "82,?000"
+   ]
+  }
+ },
+ {
+  "id": "tuition-interior-total",
+  "cat": "official",
+  "q": "สถาปัตยกรรมภายในค่าเทอมตลอดหลักสูตร",
+  "expect": {
+   "include": [
+    "775,?000"
+   ]
+  }
+ },
+ {
+  "id": "tuition-fiet-5yr",
+  "cat": "official",
+  "q": "ครุศาสตร์อุตสาหกรรม ค.อ.บ. วิศวกรรมโยธา 5 ปี จ่ายรวมเท่าไหร่",
+  "expect": {
+   "include": [
+    "293,?750"
+   ]
+  }
+ },
+ {
+  "id": "tuition-ratchaburi",
+  "cat": "official",
+  "q": "ทล.บ. เทคโนโลยีอุตสาหกรรม ราชบุรี เรียนกี่ปี ค่าเทอมเท่าไหร่",
+  "expect": {
+   "include": [
+    "2.5|สองปีครึ่ง",
+    "35,?000",
+    "175,?000"
+   ]
+  }
+ },
+ {
+  "id": "tuition-fiet-packaging",
+  "cat": "official",
+  "q": "เทคโนโลยีบรรจุภัณฑ์และการพิมพ์ ค่าเทอมแรกเท่าไหร่",
+  "expect": {
+   "include": [
+    "32,?500"
+   ]
+  }
+ },
+ {
+  "id": "tuition-media-tech",
+  "cat": "official",
+  "q": "เทคโนโลยีมีเดียทั้งหลักสูตรเท่าไหร่",
+  "expect": {
+   "include": [
+    "321,?500"
+   ]
+  }
+ },
+ {
+  "id": "tuition-creative-tech",
+  "cat": "official",
+  "q": "เทคโนโลยีแนวสร้างสรรค์ นานาชาติ ค่าเทอมเท่าไหร่ ทั้งหลักสูตรเท่าไหร่",
+  "expect": {
+   "include": [
+    "90,?000",
+    "740,?000"
+   ]
+  }
+ },
+ {
+  "id": "tuition-digital-design",
+  "cat": "official",
+  "q": "การออกแบบดิจิทัล วิทยาลัยสหวิทยาการ ตลอดหลักสูตรเท่าไหร่",
+  "expect": {
+   "include": [
+    "1,?030,?000|1,?050,?000"
+   ]
+  }
+ },
+ {
+  "id": "tuition-health-data",
+  "cat": "official",
+  "q": "วิทยาศาสตร์ข้อมูลสุขภาพ ค่าเทอมเท่าไหร่",
+  "expect": {
+   "include": [
+    "56,?000"
+   ]
+  }
+ },
+ {
+  "id": "tuition-ai-eng-ratchaburi",
+  "cat": "official",
+  "q": "วิศวกรรมระบบปัญญาประดิษฐ์ ราชบุรี ค่าเทอมเท่าไหร่",
+  "expect": {
+   "include": [
+    "26,?200"
+   ]
+  }
+ },
+ {
+  "id": "tuition-all-5yr-which",
+  "cat": "official",
+  "q": "หลักสูตรไหนเรียน 5 ปี ค่าเทอมรวมเท่าไหร่",
+  "expect": {
+   "include": [
+    "สถาปัตย|ค\\.?อ\\.?บ|ครุศาสตร์"
+   ]
+  }
+ },
+ {
+  "id": "tuition-cheapest",
+  "cat": "official",
+  "q": "หลักสูตรไหนค่าเทอมถูกที่สุดในมอ",
+  "expect": {
+   "include": [
+    "สถิติ|197,?250|175,?000"
+   ]
+  }
+ },
+ {
+  "id": "tuition-priciest",
+  "cat": "official",
+  "q": "ค่าเรียนตลอดหลักสูตรแพงสุดคือหลักสูตรอะไร",
+  "expect": {
+   "include": [
+    "1,?030,?000|1,?050,?000|937,?000"
+   ]
+  }
+ },
+ {
+  "id": "tuition-sit-all",
+  "cat": "official",
+  "q": "ค่าเทอมคณะ SIT ทุกสาขา ต่อเทอมและทั้งหลักสูตร",
+  "expect": {
+   "include": [
+    "45,?100",
+    "57,?000",
+    "47,?500",
+    "346,?400",
+    "456,?000",
+    "380,?000"
+   ]
+  }
+ },
+ {
+  "id": "tuition-cs-first-term",
+  "cat": "official",
+  "q": "เทอมแรก CS ต้องจ่ายเท่าไหร่",
+  "expect": {
+   "include": [
+    "57,?000"
+   ]
+  }
+ },
+ {
+  "id": "tuition-cs-total-4y",
+  "cat": "official",
+  "q": "ถ้าเรียน CS 4 ปีต้องจ่ายรวมเท่าไหร่",
+  "expect": {
+   "include": [
+    "456,?000"
+   ]
+  }
+ },
+ {
+  "id": "tuition-sit-each",
+  "cat": "official",
+  "q": "ค่าเทอม sit แต่ละสาขาเท่าไหร่บ้าง",
+  "expect": {
+   "include": [
+    "45,?100",
+    "57,?000",
+    "47,?500"
+   ]
+  }
+ },
+ {
+  "id": "tuition-sit-each2",
+  "cat": "official",
+  "q": "ค่าเทอมแต่ละสาขาของ sit",
+  "expect": {
+   "include": [
+    "45,?100",
+    "57,?000",
+    "47,?500"
+   ]
+  }
+ },
+ {
+  "id": "tuition-eng-each",
+  "cat": "official",
+  "q": "ค่าเทอมวิศวะเทอมละเท่าไหร่",
+  "expect": {
+   "include": [
+    "30,?000",
+    "28,?800|27,?500|26,?200",
+    "56,?000|70,?000"
+   ]
+  }
+ },
+ {
+  "id": "tuition-summer-cs",
+  "cat": "official",
+  "q": "ซัมเมอร์เรียน CS หน่วยกิตละกี่บาท",
+  "expect": {
+   "include": [
+    "2,?650"
+   ]
+  }
+ },
+ {
+  "id": "tuition-summer-it",
+  "cat": "official",
+  "q": "ค่าเรียนภาคฤดูร้อน IT",
+  "expect": {
+   "include": [
+    "7,?250|1,?800"
+   ]
+  }
+ },
+ {
+  "id": "tuition-fiet-5yr-vs-4yr",
+  "cat": "official",
+  "q": "ครุศาสตร์อุตสาหกรรม ค.อ.บ. 5 ปี ค่าเทอมแรกเท่าไหร่",
+  "expect": {
+   "include": [
+    "31,?500|29,?800|30,?650"
+   ]
+  }
+ },
+ {
+  "id": "tuition-entry-fee",
+  "cat": "official",
+  "q": "นักศึกษาใหม่ต้องจ่ายค่าแรกเข้า 2,200 คืออะไรบ้าง",
+  "expect": {
+   "include": [
+    "2,?200",
+    "ประกัน"
+   ]
+  }
+ },
+ {
+  "id": "tuition-first-day-cash",
+  "cat": "official",
+  "q": "วันยืนยันสิทธิ์ IT ต้องเตรียมเงินรวมเท่าไหร่",
+  "expect": {
+   "include": [
+    "47,?300|45,?100"
+   ]
+  }
+ },
+ {
+  "id": "tuition-receipt",
+  "cat": "official",
+  "q": "ขอใบเสร็จค่าเทอมได้ที่ไหน",
+  "expect": {
+   "include": [
+    "regis|ทะเบียน|ใบเสร็จ"
+   ]
+  }
+ },
+ {
+  "id": "tuition-receipt-steps",
+  "cat": "official",
+  "q": "พิมพ์ใบเสร็จค่าเทอมยังไง",
+  "expect": {
+   "include": [
+    "sinfo|พิมพ์ใบเสร็จ"
+   ]
+  }
+ },
+ {
+  "id": "tuition-claim-parent",
+  "cat": "official",
+  "q": "พ่อเป็นข้าราชการเบิกค่าเทอมให้ลูก ต้องใช้เอกสารอะไรบ้าง",
+  "expect": {
+   "include": [
+    "ใบเสร็จ",
+    "ตรวจสุขภาพ|ขึ้นทะเบียน|ประกัน"
+   ]
+  }
+ }
+]

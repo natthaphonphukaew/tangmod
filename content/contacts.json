@@ -5,7 +5,7 @@
     "phone": "02-470-8333",
     "email": "admission@kmutt.ac.th",
     "web": "https://admission.kmutt.ac.th",
-    "social": "FB @KMUTT2ADMISSION",
+    "social": "FB @KMUTT2ADMISSION · IG kmutt2admission · YouTube admissionkmutt8376 · X admissionkmutt · TikTok kmutt2admission",
     "topics": [
       "สมัครเรียน",
       "TCAS",
@@ -133,7 +133,9 @@
     "id": "registrar",
     "label": "สำนักงานทะเบียนนักศึกษา",
     "phone": "02-470-8147, 02-470-8354",
+    "email": "regist@kmutt.ac.th",
     "web": "https://regis.kmutt.ac.th",
+    "social": "LINE @regiskmutt · Facebook REGISTKMUTT",
     "topics": [
       "งานทะเบียน",
       "ลงทะเบียนเรียน",
@@ -145,9 +147,7 @@
       "คำร้องออนไลน์",
       "รับเอกสารที่ THE HUB"
     ],
-    "source_url": "https://regis.kmutt.ac.th/",
-    "email": "regist@kmutt.ac.th",
-    "social": "LINE @regiskmutt · Facebook REGISTKMUTT"
+    "source_url": "https://regis.kmutt.ac.th/"
   },
   {
     "id": "student_card",
@@ -188,9 +188,14 @@
     "phone": "02-470-8000",
     "web": "https://www.kmutt.ac.th",
     "topics": [
-      "ทั่วไป"
+      "ทั่วไป",
+      "เพจมหาวิทยาลัย",
+      "ไอจี",
+      "เฟส"
     ],
-    "source_url": "https://www.kmutt.ac.th/en/about-kmutt/contact-us/"
+    "source_url": "https://www.kmutt.ac.th/en/about-kmutt/contact-us/",
+    "email": "contact@kmutt.ac.th",
+    "social": "FB KMUTT · IG love.kmutt · TikTok love.kmutt · YouTube KMUTTV"
   },
   {
     "id": "science",
@@ -307,6 +312,33 @@
       "เทนนิส"
     ],
     "source_url": "https://www.kmutt.ac.th/en/?p=453"
+  },
+  {
+    "id": "student_union",
+    "label": "องค์การบริหารองค์การนักศึกษา (อบ.มจธ. / KMUTT Student Union)",
+    "phone": "02-470-8103",
+    "email": "stdunion@mail.kmutt.ac.th",
+    "social": "FB kmuttstdunion · IG kmuttstudentunion_official",
+    "topics": [
+      "องค์การนักศึกษา",
+      "อบ.",
+      "กิจกรรมนักศึกษา",
+      "ข่าวนักศึกษา"
+    ],
+    "source_url": "https://www.facebook.com/kmuttstdunion"
+  },
+  {
+    "id": "book_store",
+    "label": "ศูนย์หนังสือพระจอมเกล้าธนบุรี (KMUTT Book Store)",
+    "phone": "02-470-8166",
+    "social": "IG kmutt_book_store · FB KMUTT BOOK STORE",
+    "topics": [
+      "ร้านหนังสือ",
+      "ซื้อหนังสือเรียน",
+      "อุปกรณ์การเรียน",
+      "อาคารจอดรถ 1 (S2)"
+    ],
+    "source_url": "https://www.kmutt.ac.th/en/about-kmutt/contact-us/"
   },
   {
     "id": "sfa",

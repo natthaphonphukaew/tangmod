@@ -1,0 +1,22 @@
+[
+ {
+  "id": "leb2-what",
+  "cat": "niche",
+  "q": "LEB2 คืออะไร ใช้ส่งงานใช่ไหม",
+  "expect": {
+   "include": [
+    "LEB2"
+   ]
+  }
+ },
+ {
+  "id": "leb2-help",
+  "cat": "niche",
+  "q": "เข้า LEB2 ไม่ได้ ติดต่อใคร",
+  "expect": {
+   "include": [
+    "leb2@|kmuttlearning|Support"
+   ]
+  }
+ }
+]
