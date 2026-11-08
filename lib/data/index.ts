@@ -9,10 +9,12 @@ import contactsJson from "@/content/contacts.json";
 import calendarJson from "@/content/calendar.json";
 import holidaysJson from "@/content/holidays.json";
 import academicEventsJson from "@/content/academic-events-2569.json";
+import catalogJson from "@/content/programs/catalog.json";
 import {
   AcademicCalendar,
   AcademicEvents,
   AdmissionEvent,
+  CatalogProgram,
   Contact,
   Assistant,
   Holidays,
@@ -31,6 +33,8 @@ export const contacts = z.array(Contact).parse(contactsJson);
 export const calendar = AcademicCalendar.parse(calendarJson);
 export const holidays = Holidays.parse(holidaysJson);
 export const academicEvents = AcademicEvents.parse(academicEventsJson);
+/** ปริญญาตรีทั้งมหาวิทยาลัย (เข็มทิศสาขา) แยกจาก programs ที่ใช้ตอบแชทแบบละเอียด */
+export const catalog = z.array(CatalogProgram).parse(catalogJson);
 
 const byId = <T extends { id: string }>(items: T[]) =>
   new Map(items.map((item) => [item.id, item]));
@@ -39,6 +43,7 @@ export const placeById = byId(places);
 export const programById = byId(programs);
 export const admissionEventById = byId(admissionEvents);
 export const contactById = byId(contacts);
+export const catalogById = byId(catalog);
 
 /** ตรวจว่า id ที่อ้างถึงกันข้ามไฟล์มีอยู่จริง คืนรายการปัญหา (ว่าง = ผ่าน) */
 export function findIntegrityProblems(): string[] {
@@ -54,6 +59,14 @@ export function findIntegrityProblems(): string[] {
   dupes("program", programs.map((p) => p.id));
   dupes("admission", admissionEvents.map((e) => e.id));
   dupes("academic event", academicEvents.events.map((e) => e.id));
+  dupes("catalog", catalog.map((p) => p.id));
+
+  for (const p of catalog) {
+    if (p.place_id && !placeById.has(p.place_id)) problems.push(`catalog ${p.id}: ไม่มี place "${p.place_id}"`);
+  }
+  for (const program of programs) {
+    if (!catalogById.has(program.id)) problems.push(`catalog: ไม่มีหลักสูตร "${program.id}" จาก programs/*.json`);
+  }
 
   for (const program of programs) {
     if (program.place_id && !placeById.has(program.place_id))

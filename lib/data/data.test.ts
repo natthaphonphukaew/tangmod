@@ -3,6 +3,7 @@ import {
   academicEvents,
   admissionEvents,
   calendar,
+  catalog,
   findIntegrityProblems,
   holidays,
   assistant,
@@ -10,6 +11,7 @@ import {
   programById,
   programs,
 } from "./index";
+import { COMPASS_DIMS } from "./schemas";
 
 describe("content", () => {
   it("ไม่มี id ที่อ้างถึงกันแล้วหาไม่เจอ", () => {
@@ -32,6 +34,24 @@ describe("content", () => {
       "sit-it": 346400,
       "sit-dsi": 380000,
     });
+  });
+
+  it("catalog: ค่าเทอมรวมตรงกับ programs/*.json และคิดค่าต่อเทอมจากจำนวนเทอมจริง", () => {
+    for (const p of catalog) {
+      const deep = programById.get(p.id);
+      if (deep) expect(p.fee.total, p.id).toBe(deep.fee.total_est);
+      if (p.fee.total) expect(p.fee.per_term_est, p.id).toBe(Math.round(p.fee.total / (p.years * 2)));
+      else expect(p.note, `${p.id} ไม่มีค่าเทอมต้องบอกเหตุผลใน note`).toBeTruthy();
+      if (!p.campus) expect(p.note, `${p.id} ไม่มีวิทยาเขตต้องบอกเหตุผลใน note`).toBeTruthy();
+    }
+  });
+
+  it("catalog: ครอบคลุมทุกคณะที่มีปริญญาตรี และสาขาที่เปิดรับมีพอให้เข็มทิศจัดอันดับ", () => {
+    const open = catalog.filter((p) => p.status === "open");
+    expect(open.length).toBeGreaterThanOrEqual(55);
+    expect(new Set(open.map((p) => p.faculty))).toEqual(new Set(["eng", "sci", "fiet", "sit", "soad", "sola", "fibo", "cms"]));
+    // ทุกสาขาต้องมีความสนใจอย่างน้อยหนึ่งด้านที่เด่น (3) ไม่งั้นไม่มีทางขึ้นอันดับต้น
+    for (const p of open) expect(Math.max(...COMPASS_DIMS.map((d) => p.profile[d])), p.id).toBe(3);
   });
 
   it("หลักสูตรแบบ deep ทุกตัวมีรายวิชาเด่นและเกณฑ์ AR", () => {

@@ -95,7 +95,7 @@ export function ChatColumn(props: Props) {
       </p>
       <div ref={scrollRef} hidden={compact} className="relative min-h-0 flex-1 overflow-y-auto">
         {empty ? (
-          <HomeScreen onPick={submit} onOpenCompass={props.onOpenCompass} />
+          <HomeScreen onPick={submit} />
         ) : (
           <div className="mx-auto w-full max-w-[46rem] space-y-6 px-4 py-6 lg:space-y-8 lg:px-6">
             {thread.map((item) =>

@@ -121,4 +121,14 @@ export const timetable = pgTable("timetable", {
   updatedAt: bigint("updated_at", { mode: "number" }).notNull(),
 });
 
-export const schema = { user, session, account, verification, conversation, rateLimit, feedback, timetable };
+/** ผลเข็มทิศสาขาล่าสุดและสาขาที่เลือกไว้เทียบ (1 คน 1 แถว) · ไม่ login เก็บใน localStorage */
+export const compassResult = pgTable("compass_result", {
+  userId: text("user_id")
+    .primaryKey()
+    .references(() => user.id, { onDelete: "cascade" }),
+  /** SavedCompass จาก lib/compass-saved.ts */
+  data: jsonb("data").notNull(),
+  updatedAt: bigint("updated_at", { mode: "number" }).notNull(),
+});
+
+export const schema = { user, session, account, verification, conversation, rateLimit, feedback, timetable, compassResult };

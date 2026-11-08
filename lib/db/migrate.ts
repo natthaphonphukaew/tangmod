@@ -78,4 +78,9 @@ export const MIGRATIONS: string[] = [
     "data" jsonb NOT NULL,
     "updated_at" bigint NOT NULL
   )`,
+  `CREATE TABLE IF NOT EXISTS "compass_result" (
+    "user_id" text PRIMARY KEY REFERENCES "user"("id") ON DELETE CASCADE,
+    "data" jsonb NOT NULL,
+    "updated_at" bigint NOT NULL
+  )`,
 ];
