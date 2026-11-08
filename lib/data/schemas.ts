@@ -119,6 +119,69 @@ export const Program = Provenance.extend({
 });
 export type Program = z.infer<typeof Program>;
 
+/**
+ * รายชื่อปริญญาตรีทั้ง มจธ. (content/programs/catalog.json) ใช้กับเข็มทิศสาขาและหน้าสำรวจสาขา
+ * ข้อเท็จจริง (ชื่อ ปี ค่าเทอม ภาษา) มาจากระบบหลักสูตร EDS และตารางค่าเทอมทางการ
+ * ส่วน profile เป็นคะแนนที่ทีมประเมินจากคำอธิบายหลักสูตร ไม่ใช่คะแนนทางการ
+ */
+export const COMPASS_DIMS = [
+  "computing",
+  "electronics",
+  "machines",
+  "construction",
+  "chem_bio",
+  "food_health",
+  "math_data",
+  "physics",
+  "design_art",
+  "media",
+  "business",
+  "teaching",
+  "environment",
+] as const;
+export const COMPASS_STYLES = ["hands_on", "theory", "creative"] as const;
+export type CompassDim = (typeof COMPASS_DIMS)[number];
+export type CompassStyle = (typeof COMPASS_STYLES)[number];
+
+export const CatalogFaculty = z.enum(["eng", "sci", "fiet", "sit", "soad", "sola", "fibo", "cms"]);
+export type CatalogFaculty = z.infer<typeof CatalogFaculty>;
+export const Campus = z.enum(["bangmod", "bangkhuntien", "ratchaburi"]);
+export type Campus = z.infer<typeof Campus>;
+
+export const CatalogProgram = Provenance.extend({
+  /** สาขาที่มีใน programs/*.json ใช้ id เดียวกัน */
+  id: z.string().regex(/^[a-z]+-[a-z0-9-]+$/),
+  faculty: CatalogFaculty,
+  faculty_th: z.string(),
+  name_th: z.string(),
+  name_en: z.string(),
+  short: z.string().optional(),
+  aliases: z.array(z.string()).default([]),
+  degree: z.string(),
+  years: z.union([z.literal(4), z.literal(5)]),
+  /** null = ยังไม่ได้ยืนยันว่าเรียนวิทยาเขตไหน */
+  campus: Campus.nullable(),
+  language: z.enum(["th", "en", "th/en"]),
+  international: z.boolean(),
+  /** null = ยังไม่มีในตารางค่าเทอม (หลักสูตรใหม่) */
+  fee: z.object({
+    first_term: z.number().int().positive().nullable(),
+    total: z.number().int().positive().nullable(),
+    per_term_est: z.number().int().positive().nullable(),
+  }),
+  fee_source_url: z.url(),
+  curriculum_year: z.number().int().optional(),
+  place_id: z.string().optional(),
+  /** closed = ยุติการรับนักศึกษา (ไม่จัดอันดับในเข็มทิศ) */
+  status: z.enum(["open", "closed"]),
+  summary: z.string(),
+  careers: z.array(z.string()).default([]),
+  profile: z.object(Object.fromEntries([...COMPASS_DIMS, ...COMPASS_STYLES].map((k) => [k, Level])) as Record<CompassDim | CompassStyle, typeof Level>),
+  profile_note: z.string(),
+  note: z.string().optional(),
+});
+export type CatalogProgram = z.infer<typeof CatalogProgram>;
+
 export const AdmissionEvent = Provenance.extend({
   id: z.string(),
   round: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)]),

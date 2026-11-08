@@ -1,16 +1,17 @@
 "use client";
 
-import { ArrowRight, CaretRight, Compass, Sparkle } from "@phosphor-icons/react";
+import { CaretRight, Sparkle } from "@phosphor-icons/react";
 import { AntMascot } from "@/components/brand/AntMascot";
 import { TodayCard } from "@/components/calendar/TodayCard";
 import { assistant } from "@/lib/data";
 import { CHIPS_SHOWN, chipMeta, TONE_CLASS, useStarterChips } from "./starter-chips";
 
 /*
- * หน้าแรกของแชทใหม่ (อิง ref ที่เจ้าของโปรเจกต์เลือก): หัวข้อสองสี + น้องมด → แบนเนอร์เข็มทิศ → การ์ดคำถามตัวอย่าง
+ * หน้าแรกของแชทใหม่ (อิง ref ที่เจ้าของโปรเจกต์เลือก): หัวข้อสองสี + น้องมด → การ์ดวันนี้ → การ์ดคำถามตัวอย่าง
+ * เข็มทิศสาขาเข้าจากแถบซ้ายอย่างเดียว (หน้า /compass)
  * ไม่เรียกว่า "คำถามยอดนิยม" เพราะเป็นการสุ่ม ไม่ได้มาจากสถิติจริง
  */
-export function HomeScreen({ onPick, onOpenCompass }: { onPick: (text: string) => void; onOpenCompass: () => void }) {
+export function HomeScreen({ onPick }: { onPick: (text: string) => void }) {
   const chips = useStarterChips();
   return (
     <div className="relative min-h-full overflow-hidden">
@@ -40,23 +41,6 @@ export function HomeScreen({ onPick, onOpenCompass }: { onPick: (text: string) =
             <AntMascot priority sizes="(min-width: 1280px) 184px, 140px" className="relative h-48 w-auto xl:h-64" />
           </div>
         </div>
-
-        <button
-          type="button"
-          onClick={onOpenCompass}
-          className="group mt-6 flex w-full items-center gap-4 rounded-[20px] border border-trail/60 bg-trail-tint p-4 text-left transition hover:border-trail sm:px-5 xl:mt-8"
-        >
-          <span className="hidden size-14 shrink-0 place-items-center rounded-full bg-card text-brand-ink shadow-[var(--shadow-card)] sm:grid">
-            <Compass size={28} weight="duotone" />
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block font-display text-lg text-ink sm:text-xl">ยังไม่รู้จะเลือกสาขาไหน?</span>
-            <span className="block text-sm text-ink-soft sm:text-[15px]">เข็มทิศสาขา · ตอบ 7 ข้อ ไม่ถึง 1 นาที แล้วมดจัดอันดับสาขาที่เข้ากับเราให้</span>
-          </span>
-          <span className="grid size-11 shrink-0 place-items-center rounded-full bg-brand text-white transition group-hover:translate-x-0.5">
-            <ArrowRight size={22} weight="bold" />
-          </span>
-        </button>
 
         <TodayCard />
 

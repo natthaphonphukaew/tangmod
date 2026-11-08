@@ -18,11 +18,10 @@ import { applyAnswer, clearProfile, loadProfile, markVisited, saveProfile } from
 import type { MapHighlight } from "@/components/map/CampusMap";
 import { ChatColumn } from "@/components/chat/ChatColumn";
 import { hasContent, type ThreadItem } from "@/components/chat/types";
-import { CompassDialog } from "@/components/compass/CompassDialog";
+import { CompassScreen } from "@/components/compass/CompassScreen";
 import { trapTab } from "@/components/ui/trap-tab";
 import { UndoToast, type Undo } from "@/components/ui/UndoToast";
-import { programById } from "@/lib/data";
-import { compassSummary, scoreCompass, type CompassAnswers, type CompassResult } from "@/lib/compass";
+import { compassPlaceIds, compassSummary, programName, type CompassResult } from "@/lib/compass";
 import { BottomSheet, detentHeight, useElementHeight, useIsDesktop, useIsWide, type Detent } from "./BottomSheet";
 import { MapPanel } from "./MapPanel";
 import { Sidebar } from "./Sidebar";
@@ -45,10 +44,12 @@ const toHighlights = (answer: ValidatedAnswer): MapHighlight[] => answer.places.
 
 export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
   // แชทกับปฏิทินอยู่ในแอปเดียวกัน (แถบซ้ายไม่หาย) เลือกหน้าจาก path ซึ่งเปลี่ยนด้วย navigate() แบบไม่โหลดใหม่
-  const view: "chat" | "calendar" = usePathname() === "/calendar" ? "calendar" : "chat";
+  const pathname = usePathname();
+  const view: "chat" | "calendar" | "compass" = pathname === "/calendar" ? "calendar" : pathname === "/compass" ? "compass" : "chat";
   // สลับหน้าด้วย pushState ไม่ได้โหลดหน้าใหม่ ชื่อแท็บจึงต้องเปลี่ยนเอง
   useEffect(() => {
-    document.title = view === "calendar" ? "ปฏิทินนักศึกษา · ทางมด" : "ทางมด · ถามน้องมดได้ทุกเรื่องในบางมด";
+    document.title =
+      view === "calendar" ? "ปฏิทินนักศึกษา · ทางมด" : view === "compass" ? "เข็มทิศสาขา · ทางมด" : "ทางมด · ถามน้องมดได้ทุกเรื่องในบางมด";
   }, [view]);
   const session = authClient.useSession();
   // ตารางเรียนจากหน้าปฏิทิน ส่งไปกับคำถาม มดจะตอบ "พรุ่งนี้เรียนอะไร" ได้
@@ -89,7 +90,6 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
     const active = document.activeElement;
     if (opener && (!active || active === document.body || drawerRef.current?.contains(active))) opener.focus();
   }, [drawerOpen]);
-  const [compassOpen, setCompassOpen] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
   const areaRef = useRef<HTMLDivElement>(null);
   const areaHeight = useElementHeight(areaRef);
@@ -268,15 +268,28 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
     send(`${place.short ?? place.name_th} (${place.id}) มีอะไรบ้าง เปิดกี่โมง`);
   };
 
-  // เข็มทิศสาขา: คิดผลในเครื่อง ใส่การ์ดผลลงแชท จดสาขาอันดับต้นไว้ในความจำ แล้วให้ตึกคณะเรืองตามอันดับบนแผนที่
-  const finishCompass = (answers: CompassAnswers) => {
-    setCompassOpen(false);
-    const results = scoreCompass(answers);
-    if (!convId) setConvId(crypto.randomUUID());
-    setThread((t) => [...t, { kind: "compass", id: nextId(), answers, results }]);
-    const top = results.slice(0, 2).map((r) => r.programId);
+  // เข็มทิศสาขา (หน้า /compass): จดสาขาอันดับต้นไว้ในความจำของมด จะได้ตอบต่อเนื่องในแชท
+  const compassFinished = (results: CompassResult[]) => {
+    const top = results.slice(0, 2).map((r) => programName(r.programId));
     updateProfile((p) => ({ ...p, considering_programs: [...new Set([...top, ...p.considering_programs])].slice(0, 8) }));
-    openMap(compassHighlights(results));
+  };
+
+  // ถามมดจากหน้าเข็มทิศ: เปิดแชทใหม่ที่มีการ์ดผลเข็มทิศนำหน้า (มดจะได้รู้ผล) แล้วส่งคำถาม
+  const askFromCompass = (text: string, results: CompassResult[] | null) => {
+    navigate("/");
+    abortRef.current?.abort();
+    setPending(false);
+    setConvId(crypto.randomUUID());
+    setSelectedId(null);
+    const prior: ThreadItem[] = results ? [{ kind: "compass", id: nextId(), results }] : [];
+    if (results) openMap(compassHighlights(results));
+    else setMapOpen(false);
+    void ask(text, prior);
+  };
+
+  const showCompassMap = (placeIds: string[]) => {
+    navigate("/");
+    openMap(placeIds.map((placeId, i) => ({ placeId, n: i + 1 })));
   };
 
   const newChat = () => {
@@ -414,8 +427,7 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
       }}
       onOpenCompass={() => {
         setDrawerOpen(false);
-        navigate("/");
-        setCompassOpen(true);
+        navigate("/compass");
       }}
       onOpenCalendar={() => {
         setDrawerOpen(false);
@@ -476,12 +488,12 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
       </AnimatePresence>
 
       <main className="flex min-w-0 flex-1 flex-col">
-        {/* หน้าปฏิทินมี h1 ของตัวเอง */}
+        {/* หน้าปฏิทินและเข็มทิศมี h1 ของตัวเอง */}
         {view === "chat" && <h1 className="sr-only">ทางมด — ผู้ช่วยแชทประจำแคมปัส มจธ. บางมด</h1>}
         {/* หน้าปฏิทินบนจอใหญ่ไม่ต้องมีแถบบน (หัวหน้ามี breadcrumb และชื่อหน้าแล้ว) มือถือยังต้องใช้ปุ่มเมนู */}
-        <div inert={mapFull} className={view === "calendar" ? "contents lg:hidden" : "contents"}>
+        <div inert={mapFull} className={view === "chat" ? "contents" : "contents lg:hidden"}>
         <TopBar
-          title={view === "calendar" ? "ปฏิทินนักศึกษา" : convId ? titleOf(thread) : null}
+          title={view === "calendar" ? "ปฏิทินนักศึกษา" : view === "compass" ? "เข็มทิศสาขา" : convId ? titleOf(thread) : null}
           mapOpen={mapOpen && view === "chat"}
           showMap={view === "chat"}
           onToggleMap={() => {
@@ -504,8 +516,13 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
             <CalendarScreen />
           </div>
         )}
-        {/* หน้าปฏิทิน: ซ่อนแชทไว้แต่ไม่ถอดออก ข้อความที่พิมพ์ค้างและแผนที่ยังอยู่เมื่อกลับมา */}
-        <div ref={areaRef} className={`relative min-h-0 flex-1 ${view === "calendar" ? "hidden" : "flex"}`}>
+        {view === "compass" && (
+          <div className="min-h-0 flex-1 overflow-y-auto">
+            <CompassScreen onAsk={askFromCompass} onShowMap={showCompassMap} onFinished={compassFinished} />
+          </div>
+        )}
+        {/* หน้าปฏิทินและเข็มทิศ: ซ่อนแชทไว้แต่ไม่ถอดออก ข้อความที่พิมพ์ค้างและแผนที่ยังอยู่เมื่อกลับมา */}
+        <div ref={areaRef} className={`relative min-h-0 flex-1 ${view === "chat" ? "flex" : "hidden"}`}>
           <div inert={mapFull} className="contents">
           <BottomSheet mode={sheetMode ? "sheet" : "full"} detent={detent} onDetentChange={setDetent} areaHeight={areaHeight}>
             <ChatColumn
@@ -519,7 +536,7 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
               onShowPlace={showPlace}
               onRetry={retry}
               onFeedback={feedback}
-              onOpenCompass={() => setCompassOpen(true)}
+              onOpenCompass={() => navigate("/compass")}
               onCompassMap={(results) => openMap(compassHighlights(results))}
             />
           </BottomSheet>
@@ -561,7 +578,6 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
       </main>
 
       <UndoToast toast={toast} onDone={clearToast} />
-      <CompassDialog open={compassOpen} onClose={() => setCompassOpen(false)} onDone={finishCompass} />
     </div>
     </MotionConfig>
   );
@@ -569,11 +585,10 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
 
 /** ตึกคณะของสาขาเรียงตามอันดับที่ดีที่สุดของตึกนั้น (IT/CS/DSI อยู่ N11 ตึกเดียวกัน) */
 function compassHighlights(results: CompassResult[]): MapHighlight[] {
-  const placeIds = [...new Set(results.map((r) => programById.get(r.programId)?.place_id).filter((id): id is string => !!id))];
-  return placeIds.map((placeId, i) => ({ placeId, n: i + 1 }));
+  return compassPlaceIds(results).map((placeId, i) => ({ placeId, n: i + 1 }));
 }
 
 function compassChips(results: CompassResult[]): string[] {
-  const [a, b] = results.map((r) => programById.get(r.programId)?.short ?? r.programId);
+  const [a, b] = results.map((r) => programName(r.programId));
   return [`เล่าเรื่อง ${a} ให้ฟังหน่อย`, `${a} กับ ${b} ต่างกันยังไง`, "ทำไม " + a + " ได้คะแนนสูงสุด"];
 }

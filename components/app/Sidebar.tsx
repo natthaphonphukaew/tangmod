@@ -29,7 +29,7 @@ type Props = {
   profile: Profile;
   account: AccountProps;
   /** หน้าที่เปิดอยู่: แชท หรือ ปฏิทิน (ไฮไลต์เมนู) */
-  view: "chat" | "calendar";
+  view: "chat" | "calendar" | "compass";
   onNew: () => void;
   onOpenCompass: () => void;
   onOpenCalendar: () => void;
@@ -68,7 +68,7 @@ export function Sidebar({ conversations, currentId, listedAt, profile, account, 
       <div className="space-y-1 px-3">
         {/* แชทใหม่ = หน้าแรก: ไฮไลต์เมื่อยังไม่ได้เปิดแชทไหน */}
         <NavItem icon={<NotePencil size={20} />} label="แชทใหม่" active={view === "chat" && currentId === null} onClick={onNew} />
-        <NavItem icon={<Compass size={20} weight="duotone" />} label="เข็มทิศสาขา" onClick={onOpenCompass} />
+        <NavItem icon={<Compass size={20} weight="duotone" />} label="เข็มทิศสาขา" active={view === "compass"} onClick={onOpenCompass} />
         <NavItem icon={<CalendarDots size={20} weight="duotone" />} label="ปฏิทินนักศึกษา" active={view === "calendar"} onClick={onOpenCalendar} />
       </div>
 
