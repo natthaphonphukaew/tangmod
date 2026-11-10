@@ -93,7 +93,7 @@ export function ChatColumn(props: Props) {
       <p role="status" aria-live="polite" className="sr-only">
         {announcement}
       </p>
-      <div ref={scrollRef} hidden={compact} className="relative min-h-0 flex-1 overflow-y-auto">
+      <div ref={scrollRef} data-app-scroll hidden={compact} className="relative min-h-0 flex-1 overflow-y-auto">
         {empty ? (
           <HomeScreen onPick={submit} />
         ) : (
