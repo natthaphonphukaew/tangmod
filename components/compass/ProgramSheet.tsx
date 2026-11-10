@@ -4,7 +4,7 @@ import { ArrowSquareOut, ChatCircleDots, MapPin } from "@phosphor-icons/react";
 import { DIM_LABEL, feeText } from "@/lib/compass";
 import { programById } from "@/lib/data";
 import { COMPASS_DIMS, type CatalogProgram } from "@/lib/data/schemas";
-import { Dialog } from "./Dialog";
+import { Dialog } from "@/components/ui/Dialog";
 import { TcasList } from "./TcasList";
 import { CompareToggle, DIM_ICON, FactChips, PILL_BTN } from "./shared";
 

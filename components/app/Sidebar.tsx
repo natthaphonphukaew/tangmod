@@ -1,12 +1,9 @@
 "use client";
 
-import { Brain, CalendarDots, ClockCounterClockwise, Compass, GoogleLogo, NotePencil, SignOut, Trash, X } from "@phosphor-icons/react";
-import Link from "next/link";
+import { CalendarDots, ClockCounterClockwise, Compass, GearSix, NotePencil, SidebarSimple, Trash, UserCircle, X } from "@phosphor-icons/react";
 import { useState, type ReactNode } from "react";
 import { AntAvatar, AntMascot } from "@/components/brand/AntMascot";
 import type { AuthOptions } from "@/lib/auth-options";
-import { programById } from "@/lib/data";
-import type { Profile } from "@/lib/ai/schema";
 import type { ConversationMeta } from "@/lib/client/history-store";
 
 export type AccountProps = {
@@ -26,7 +23,6 @@ type Props = {
   currentId: string | null;
   /** เวลาที่โหลดรายการล่าสุด (ใช้แบ่ง "วันนี้"/"ก่อนหน้านี้" โดยไม่อ่านนาฬิกาตอน render) */
   listedAt: number;
-  profile: Profile;
   account: AccountProps;
   /** หน้าที่เปิดอยู่: แชท หรือ ปฏิทิน (ไฮไลต์เมนู) */
   view: "chat" | "calendar" | "compass";
@@ -35,18 +31,24 @@ type Props = {
   onOpenCalendar: () => void;
   onOpen: (id: string) => void;
   onDelete: (id: string) => void;
-  onForget: () => void;
+  onOpenSettings: () => void;
   /** มือถือ: ปุ่มปิด drawer */
   onClose?: () => void;
+  /** คอม: พับแถบเหลือไอคอน (ไม่มีใน drawer มือถือ) */
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
 };
 
 const dayKey = (t: number) => new Date(t).toDateString();
 
 /*
- * แถบซ้าย: โลโก้ → เมนูหลัก → ประวัติแชท → ความจำ + บัญชี
+ * แถบซ้าย: โลโก้ + ปุ่มพับ → เมนูหลัก → ประวัติแชท → ปุ่มโปรไฟล์ (เปิดการตั้งค่า)
  * ปุ่มทุกอันสูง ≥44px บนมือถือ (40 บนคอมสำหรับแถวประวัติ) · รายการที่เปิดอยู่เป็นแคปซูลสีส้มอ่อน
+ * พับแล้ว (คอม): เหลือแถบไอคอนกว้าง 72px แบบแอป AI ทั่วไป ประวัติแชทซ่อนไว้จนกว่าจะกางกลับ
  */
-export function Sidebar({ conversations, currentId, listedAt, profile, account, view, onNew, onOpenCompass, onOpenCalendar, onOpen, onDelete, onForget, onClose }: Props) {
+export function Sidebar(props: Props) {
+  if (props.collapsed) return <Rail {...props} />;
+  const { conversations, currentId, listedAt, account, view, onNew, onOpenCompass, onOpenCalendar, onOpen, onDelete, onOpenSettings, onClose, onToggleCollapse } = props;
   const today = dayKey(listedAt);
   const groups = [
     { label: "วันนี้", items: conversations.filter((c) => dayKey(c.updatedAt) === today) },
@@ -58,6 +60,11 @@ export function Sidebar({ conversations, currentId, listedAt, profile, account, 
       <div className="flex items-center gap-3 px-4 pt-4 pb-3">
         <AntAvatar size={40} />
         <p className="flex-1 font-display text-[22px] leading-none text-ink">ทางมด</p>
+        {onToggleCollapse && (
+          <button type="button" onClick={onToggleCollapse} aria-label="พับแถบข้าง" title="พับแถบข้าง" className="grid size-11 place-items-center rounded-full text-ink-soft hover:bg-card hover:text-ink">
+            <SidebarSimple size={22} />
+          </button>
+        )}
         {onClose && (
           <button type="button" onClick={onClose} aria-label="ปิดเมนู" autoFocus className="grid size-11 place-items-center rounded-full text-ink-soft hover:bg-card hover:text-ink">
             <X size={20} />
@@ -113,9 +120,8 @@ export function Sidebar({ conversations, currentId, listedAt, profile, account, 
         ))}
       </div>
 
-      <div className="space-y-2 border-t border-line p-3">
-        <MemoryStrip profile={profile} onForget={onForget} />
-        <AccountBox {...account} />
+      <div className="border-t border-line p-3">
+        <ProfileButton account={account} onClick={onOpenSettings} />
       </div>
     </nav>
   );
@@ -133,114 +139,79 @@ function NavItem({ icon, label, active = false, onClick }: { icon: ReactNode; la
   );
 }
 
-/** ท้ายแถบซ้าย: login ไม่บังคับ — login แล้วประวัติแชทตามไปทุกเครื่อง */
-function AccountBox({ user, loading, busy, options, onSignInGoogle, onSignInDev, onSignOut, onDeleteAccount }: AccountProps) {
-  if (loading) return <div className="h-[68px]" aria-hidden />;
-  if (user) {
-    // แถวบน: รูป + ชื่อ (ชื่อได้ความกว้างเต็มที่) · แถวล่าง: ลิงก์บรรทัดเดียว + ปุ่มออกจากระบบชิดขวา
-    return (
-      <div className="rounded-[var(--radius-card)] border border-line bg-card px-3 pt-3 pb-1 shadow-[var(--shadow-card)]">
-        <div className="flex items-center gap-2.5">
-          <ProfilePhoto name={user.name} image={user.image} />
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-[15px] leading-[1.4] font-semibold" title={user.name}>
-              {user.name}
-            </p>
-            <p className="truncate text-xs text-ink-soft">ประวัติแชทเก็บในบัญชีนี้</p>
-          </div>
-        </div>
-        <div className="mt-1 flex items-center text-xs text-ink-soft">
-          <Link href="/privacy" className="inline-flex min-h-9 items-center whitespace-nowrap underline hover:text-ink">
-            ความเป็นส่วนตัว
-          </Link>
-          <span aria-hidden className="px-1.5">
-            ·
-          </span>
-          <button type="button" onClick={onDeleteAccount} disabled={busy} className="inline-flex min-h-9 items-center whitespace-nowrap underline hover:text-brand-ink disabled:opacity-50">
-            ลบบัญชี
-          </button>
-          <button
-            type="button"
-            onClick={onSignOut}
-            disabled={busy}
-            title="ออกจากระบบ"
-            className="ml-auto inline-flex min-h-9 items-center gap-1 rounded-full px-2 whitespace-nowrap hover:bg-paper hover:text-ink disabled:opacity-50"
-          >
-            <SignOut size={16} /> ออก
-          </button>
-        </div>
-      </div>
-    );
-  }
-  const canLogin = options.google || options.devLogin;
+/** แถบพับ (คอม): ปุ่มกาง → เมนูหลักแบบไอคอน → ปุ่มโปรไฟล์ */
+function Rail({ account, view, currentId, onNew, onOpenCompass, onOpenCalendar, onOpenSettings, onToggleCollapse }: Props) {
+  const item = (label: string, icon: ReactNode, active: boolean, onClick: () => void) => (
+    <button type="button" onClick={onClick} aria-label={label} title={label} aria-current={active ? "page" : undefined} className={RAIL_BTN}>
+      {icon}
+    </button>
+  );
   return (
-    <div className="space-y-2">
-      {options.google && (
-        <button
-          type="button"
-          onClick={onSignInGoogle}
-          disabled={busy}
-          className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-line-strong bg-card px-4 text-sm font-medium shadow-[var(--shadow-card)] hover:border-brand/50 disabled:opacity-50"
-        >
-          <GoogleLogo size={18} weight="bold" /> เข้าสู่ระบบด้วย Google
-        </button>
-      )}
-      {options.devLogin && (
-        <button
-          type="button"
-          onClick={onSignInDev}
-          disabled={busy}
-          className="flex min-h-10 w-full items-center justify-center gap-2 rounded-full border border-dashed border-line-strong px-4 text-xs text-ink-soft hover:text-ink disabled:opacity-50"
-        >
-          ล็อกอินทดสอบ (เฉพาะตอน dev)
-        </button>
-      )}
-      <p className="px-1 text-xs text-ink-soft">
-        {canLogin ? "ไม่บังคับ · " : ""}ประวัติแชทเก็บไว้ในเครื่องนี้ ·{" "}
-        <Link href="/privacy" className="whitespace-nowrap underline hover:text-ink">
-          ความเป็นส่วนตัว
-        </Link>
-      </p>
-    </div>
+    <nav aria-label="เมนูหลัก" className="flex h-full w-full flex-col items-center gap-1 bg-paper-deep py-3">
+      <button type="button" onClick={onToggleCollapse} aria-label="กางแถบข้าง" title="กางแถบข้าง" className="group relative mb-2 grid size-11 place-items-center rounded-full hover:bg-card">
+        <span className="transition group-hover:opacity-0 group-focus-visible:opacity-0">
+          <AntAvatar size={36} />
+        </span>
+        <SidebarSimple size={22} className="absolute text-ink opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100" />
+      </button>
+      {item("แชทใหม่", <NotePencil size={22} />, view === "chat" && currentId === null, onNew)}
+      {item("เข็มทิศสาขา", <Compass size={22} weight="duotone" />, view === "compass", onOpenCompass)}
+      {item("ปฏิทินนักศึกษา", <CalendarDots size={22} weight="duotone" />, view === "calendar", onOpenCalendar)}
+      <span className="flex-1" />
+      <button type="button" onClick={onOpenSettings} aria-label="การตั้งค่าและบัญชี" title="การตั้งค่าและบัญชี" className="grid size-12 place-items-center rounded-full hover:bg-card">
+        <Avatar account={account} />
+      </button>
+    </nav>
   );
 }
 
-/** รูปโปรไฟล์ Google · ไม่มีรูปหรือโหลดไม่ขึ้น ใช้ตัวอักษรแรกของชื่อบนพื้นส้มอ่อนแทน */
-function ProfilePhoto({ name, image }: { name: string; image: string | null }) {
-  const [broken, setBroken] = useState(false);
-  if (image && !broken) {
-    return (
-      // รูปจาก Google (โดเมนภายนอก) ใช้ img ธรรมดา ไม่ผ่าน next/image
-      // eslint-disable-next-line @next/next/no-img-element
-      <img src={image} alt="" onError={() => setBroken(true)} className="size-9 shrink-0 rounded-full object-cover" referrerPolicy="no-referrer" />
-    );
-  }
+const RAIL_BTN =
+  "grid size-11 place-items-center rounded-xl text-brand-ink hover:bg-card aria-[current=page]:bg-brand-tint-strong aria-[current=page]:text-brand-deep";
+
+/** ท้ายแถบซ้าย: รูปโปรไฟล์ + ชื่อ กดแล้วเปิดการตั้งค่า (เข้าสู่ระบบ ความจำของมด ข้อมูลของฉัน ฯลฯ) */
+function ProfileButton({ account, onClick }: { account: AccountProps; onClick: () => void }) {
+  const { user, loading } = account;
+  if (loading) return <div className="h-14" aria-hidden />;
   return (
-    <span aria-hidden className="grid size-9 shrink-0 place-items-center rounded-full bg-brand-tint font-display text-base text-brand-ink">
-      {name.trim().charAt(0).toUpperCase() || "?"}
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex min-h-14 w-full items-center gap-3 rounded-[var(--radius-card)] px-2.5 py-2 text-left hover:bg-card"
+    >
+      <Avatar account={account} />
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-[15px] font-semibold text-ink">{user ? user.name : "ผู้ใช้ทั่วไป"}</span>
+        <span className="block truncate text-xs text-ink-soft">{user ? "ข้อมูลเก็บในบัญชีนี้" : "ยังไม่ได้เข้าสู่ระบบ"}</span>
+      </span>
+      <GearSix size={20} className="shrink-0 text-ink-soft" aria-hidden />
+      <span className="sr-only">เปิดการตั้งค่า</span>
+    </button>
+  );
+}
+
+function Avatar({ account }: { account: AccountProps }) {
+  if (account.user) return <ProfilePhoto name={account.user.name} image={account.user.image} />;
+  return (
+    <span aria-hidden className="grid size-9 shrink-0 place-items-center rounded-full bg-card text-ink-soft">
+      <UserCircle size={26} weight="duotone" />
     </span>
   );
 }
 
-/** ความจำที่โปร่งใส: ผู้ใช้เห็นว่ามดจำอะไร และลบได้ (มีปุ่มเลิกทำใน toast) */
-function MemoryStrip({ profile, onForget }: { profile: Profile; onForget: () => void }) {
-  // AI มักใส่ชื่อสาขาซ้ำใน interests ("CS") จึงตัดคำที่ซ้ำกับชื่อสาขาออก
-  const bits = [
-    ...new Set([
-      ...profile.considering_programs.slice(0, 3).map((id) => programById.get(id)?.short ?? id),
-      ...profile.interests.slice(0, 2),
-    ]),
-  ];
-  if (!bits.length) return null;
+/** รูปโปรไฟล์ Google · ไม่มีรูปหรือโหลดไม่ขึ้น ใช้ตัวอักษรแรกของชื่อบนพื้นส้มอ่อนแทน */
+export function ProfilePhoto({ name, image, size = "md" }: { name: string; image: string | null; size?: "md" | "lg" }) {
+  const [broken, setBroken] = useState(false);
+  const box = size === "lg" ? "size-12 text-lg" : "size-9 text-base";
+  if (image && !broken) {
+    return (
+      // รูปจาก Google (โดเมนภายนอก) ใช้ img ธรรมดา ไม่ผ่าน next/image
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={image} alt="" onError={() => setBroken(true)} className={`${box} shrink-0 rounded-full object-cover`} referrerPolicy="no-referrer" />
+    );
+  }
   return (
-    <div className="flex items-center gap-2 rounded-xl bg-trail-tint py-0.5 pr-0.5 pl-3 text-xs text-ink-soft">
-      <Brain size={16} weight="duotone" className="shrink-0 text-brand-ink" />
-      <span className="min-w-0 flex-1 truncate" title={bits.join(" · ")}>
-        มดจำว่าสนใจ: {bits.join(" · ")}
-      </span>
-      <button type="button" onClick={onForget} className="min-h-11 min-w-11 shrink-0 rounded-full px-3 font-medium hover:bg-card hover:text-ink lg:min-h-8" title="ลบความจำทั้งหมด">
-        ลืม
-      </button>
-    </div>
+    <span aria-hidden className={`grid ${box} shrink-0 place-items-center rounded-full bg-brand-tint font-display text-brand-ink`}>
+      {name.trim().charAt(0).toUpperCase() || "?"}
+    </span>
   );
 }

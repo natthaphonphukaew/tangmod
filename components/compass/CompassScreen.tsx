@@ -1,12 +1,10 @@
 "use client";
 
-import { ArrowRight, CaretRight, Clock, Compass, House, ListBullets, Trash } from "@phosphor-icons/react";
+import { ArrowRight, Clock, Compass, ListBullets, Trash } from "@phosphor-icons/react";
 import { AnimatePresence } from "motion/react";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { AntMascot } from "@/components/brand/AntMascot";
 import { saveCompass, useCompass } from "@/lib/client/compass-store";
-import { navigate } from "@/lib/client/nav";
 import { CONSTRAINTS, STYLE_QUESTIONS, programName, scoreCompass, type CompassAnswers, type CompassResult } from "@/lib/compass";
 import { catalog, catalogById } from "@/lib/data";
 import type { CatalogProgram } from "@/lib/data/schemas";
@@ -236,24 +234,7 @@ function Header() {
   return (
     <div className="relative flex items-end gap-4">
       <div className="min-w-0 flex-1">
-        <nav aria-label="ตำแหน่งหน้า" className="hidden items-center gap-1.5 text-sm text-ink-soft lg:flex">
-          <Link
-            href="/"
-            onClick={(e) => {
-              if (e.metaKey || e.ctrlKey || e.shiftKey) return;
-              e.preventDefault();
-              navigate("/");
-            }}
-            className="inline-flex min-h-9 items-center gap-1.5 rounded-full hover:text-ink"
-          >
-            <House size={16} /> หน้าแรก
-          </Link>
-          <CaretRight size={12} aria-hidden />
-          <span aria-current="page" className="text-ink">
-            เข็มทิศสาขา
-          </span>
-        </nav>
-        <h1 id="compass-h1" ref={titleRef} tabIndex={-1} className="mt-1 font-display text-[28px] leading-tight text-balance text-ink outline-none sm:text-4xl lg:text-[40px]">
+        <h1 id="compass-h1" ref={titleRef} tabIndex={-1} className="font-display text-[28px] leading-tight text-balance text-ink outline-none sm:text-4xl lg:text-[40px]">
           เข็มทิศสาขา
         </h1>
         <p className="mt-2 max-w-[40rem] text-[15px] text-ink-soft sm:text-base">หาสาขาที่เข้ากับเรา สำรวจและเทียบปริญญาตรีทุกคณะของ มจธ.</p>

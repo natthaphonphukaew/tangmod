@@ -24,10 +24,12 @@ import { UndoToast, type Undo } from "@/components/ui/UndoToast";
 import { compassPlaceIds, compassSummary, programName, type CompassResult } from "@/lib/compass";
 import { BottomSheet, detentHeight, useElementHeight, useIsDesktop, useIsWide, type Detent } from "./BottomSheet";
 import { MapPanel } from "./MapPanel";
-import { Sidebar } from "./Sidebar";
+import { SettingsDialog } from "./SettingsDialog";
+import { Sidebar, type AccountProps } from "./Sidebar";
 import { TopBar } from "./TopBar";
 import { CalendarScreen } from "@/components/calendar/CalendarScreen";
 import { navigate } from "@/lib/client/nav";
+import { setPrefs, usePrefs } from "@/lib/client/prefs";
 import { usePathname } from "next/navigation";
 import { useTimetable } from "@/lib/client/timetable-store";
 
@@ -90,6 +92,8 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
     const active = document.activeElement;
     if (opener && (!active || active === document.body || drawerRef.current?.contains(active))) opener.focus();
   }, [drawerOpen]);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const prefs = usePrefs();
   const abortRef = useRef<AbortController | null>(null);
   const areaRef = useRef<HTMLDivElement>(null);
   const areaHeight = useElementHeight(areaRef);
@@ -404,22 +408,24 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
     }
   };
 
+  const account: AccountProps = {
+    user: user && { name: user.name, email: user.email, image: user.image ?? null },
+    loading: session.isPending,
+    busy: authBusy,
+    options: authOptions,
+    onSignInGoogle: signInGoogle,
+    onSignInDev: () => void signInDev(),
+    onSignOut: () => void signOut(),
+    onDeleteAccount: () => void deleteAccount(),
+  };
+
+  // drawer มือถือส่ง onClose มา (ไม่มีปุ่มพับ) · แถบซ้ายบนคอมพับได้
   const sidebar = (onClose?: () => void) => (
     <Sidebar
       conversations={conversations}
       currentId={convId}
       listedAt={listedAt}
-      profile={profile}
-      account={{
-        user: user && { name: user.name, email: user.email, image: user.image ?? null },
-        loading: session.isPending,
-        busy: authBusy,
-        options: authOptions,
-        onSignInGoogle: signInGoogle,
-        onSignInDev: () => void signInDev(),
-        onSignOut: () => void signOut(),
-        onDeleteAccount: () => void deleteAccount(),
-      }}
+      account={account}
       view={view}
       onNew={() => {
         navigate("/");
@@ -438,8 +444,13 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
         void openConversation(id);
       }}
       onDelete={(id) => void deleteConversation(id)}
-      onForget={forgetProfile}
+      onOpenSettings={() => {
+        setDrawerOpen(false);
+        setSettingsOpen(true);
+      }}
       onClose={onClose}
+      collapsed={!onClose && prefs.sidebarCollapsed}
+      onToggleCollapse={onClose ? undefined : () => setPrefs({ sidebarCollapsed: !prefs.sidebarCollapsed })}
     />
   );
 
@@ -447,14 +458,15 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
 
   return (
     // reducedMotion="user": ผู้ใช้ที่ตั้งลดการเคลื่อนไหวในเครื่อง จะไม่เห็นแอนิเมชันของ motion ทั้งแอป
-    <MotionConfig reducedMotion="user">
+    // ตั้ง "ลดภาพเคลื่อนไหว" ในการตั้งค่าของทางมด = ปิดเสมอ
+    <MotionConfig reducedMotion={prefs.reduceMotion ? "always" : "user"}>
     <div className="flex h-svh overflow-hidden bg-paper">
       <a href="#chat-input" className="sr-only rounded-md bg-ink px-3 py-2 text-paper focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60]">
         ข้ามไปช่องพิมพ์คำถาม
       </a>
       {/* จอ 1024–1279 ตอนเปิดแผนที่: ซ่อน sidebar ให้แชทกว้างพอ (ไม่งั้นเหลือ ~300px) ประวัติแชทเปิดเป็น drawer แทน
           ใช้ class ไม่ใช่ isWide เพื่อให้ HTML จาก server ตรงกับหน้าจอตั้งแต่แรก */}
-      <aside inert={mapFull} className={`hidden w-[272px] shrink-0 border-r border-line ${mapOpen && view === "chat" ? "xl:flex" : "lg:flex"}`}>{sidebar()}</aside>
+      <aside inert={mapFull} className={`hidden shrink-0 border-r border-line transition-[width] duration-200 ${prefs.sidebarCollapsed ? "w-[72px]" : "w-[272px]"} ${mapOpen && view === "chat" ? "xl:flex" : "lg:flex"}`}>{sidebar()}</aside>
 
       {/* มือถือ (และจอกลางตอนเปิดแผนที่): ประวัติแชทเป็น drawer จากซ้าย */}
       <AnimatePresence>
@@ -578,6 +590,9 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
       </main>
 
       <UndoToast toast={toast} onDone={clearToast} />
+      <AnimatePresence>
+        {settingsOpen && <SettingsDialog account={account} profile={profile} onForget={forgetProfile} onClose={() => setSettingsOpen(false)} />}
+      </AnimatePresence>
     </div>
     </MotionConfig>
   );

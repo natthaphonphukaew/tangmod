@@ -6,7 +6,7 @@ import { useState, type ReactNode } from "react";
 import { DIM_LABEL, campusLabel, feeText } from "@/lib/compass";
 import { catalogById, programById } from "@/lib/data";
 import { COMPASS_DIMS, type CatalogProgram } from "@/lib/data/schemas";
-import { Dialog } from "./Dialog";
+import { Dialog } from "@/components/ui/Dialog";
 import { MAX_COMPARE, PILL_BTN, langText, toggleCompare } from "./shared";
 
 /** แถบลอยด้านล่าง: สาขาที่เลือกไว้เทียบ + ปุ่มเปิดตาราง */
