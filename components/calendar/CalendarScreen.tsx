@@ -1,7 +1,6 @@
 "use client";
 
-import { ArrowSquareOut, CalendarBlank, CaretLeft, CaretRight, House, ListBullets, Megaphone, SquaresFour } from "@phosphor-icons/react";
-import Link from "next/link";
+import { ArrowSquareOut, CalendarBlank, CaretLeft, CaretRight, ListBullets, Megaphone, SquaresFour } from "@phosphor-icons/react";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { AntMascot } from "@/components/brand/AntMascot";
 import { TierBadge } from "@/components/ui/TierBadge";
@@ -19,7 +18,6 @@ import {
   type CalendarEvent,
   type CalendarKind,
 } from "@/lib/calendar/events";
-import { navigate } from "@/lib/client/nav";
 import { useTimetable } from "@/lib/client/timetable-store";
 import { noonOf, useToday } from "@/lib/client/use-today";
 import { calendar } from "@/lib/data";
@@ -238,25 +236,7 @@ function Header() {
   return (
     <div className="relative flex items-end gap-4">
       <div className="min-w-0 flex-1">
-        <nav aria-label="ตำแหน่งหน้า" className="hidden items-center gap-1.5 text-sm text-ink-soft lg:flex">
-          {/* Link ให้เปิดแท็บใหม่ได้ แต่คลิกปกติสลับหน้าในแอปเดียวกัน (แชทที่ค้างไว้ไม่หาย) */}
-          <Link
-            href="/"
-            onClick={(e) => {
-              if (e.metaKey || e.ctrlKey || e.shiftKey) return;
-              e.preventDefault();
-              navigate("/");
-            }}
-            className="inline-flex min-h-9 items-center gap-1.5 rounded-full hover:text-ink"
-          >
-            <House size={16} /> หน้าแรก
-          </Link>
-          <CaretRight size={12} aria-hidden />
-          <span aria-current="page" className="text-ink">
-            ปฏิทินนักศึกษา
-          </span>
-        </nav>
-        <h1 ref={titleRef} tabIndex={-1} className="mt-1 font-display text-[28px] leading-tight text-balance text-ink outline-none sm:text-4xl lg:text-[40px]">
+        <h1 ref={titleRef} tabIndex={-1} className="font-display text-[28px] leading-tight text-balance text-ink outline-none sm:text-4xl lg:text-[40px]">
           ปฏิทินนักศึกษา <span className="whitespace-nowrap">ปีการศึกษา 2569</span>
         </h1>
         <p className="mt-2 max-w-[40rem] text-[15px] text-ink-soft sm:text-base">วันลงทะเบียน จ่ายเงิน สอบ วันหยุด และคาบเรียนของคุณในที่เดียว</p>
