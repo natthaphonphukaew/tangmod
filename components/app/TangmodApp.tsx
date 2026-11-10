@@ -30,6 +30,7 @@ import { TopBar } from "./TopBar";
 import { CalendarScreen } from "@/components/calendar/CalendarScreen";
 import { navigate } from "@/lib/client/nav";
 import { setPrefs, usePrefs } from "@/lib/client/prefs";
+import { useScrollLock } from "@/lib/client/scroll-lock";
 import { usePathname } from "next/navigation";
 import { useTimetable } from "@/lib/client/timetable-store";
 
@@ -454,6 +455,10 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
     />
   );
 
+  // เมนูมือถือเปิดอยู่: หน้าข้างหลังเลื่อนไม่ได้ (เมนูเองยังเลื่อนประวัติแชทได้)
+  const drawerShown = drawerOpen && (isMobile || (mapOpen && view === "chat" && !isWide));
+  useScrollLock(drawerShown);
+
   const sheetPx = sheetMode && areaHeight ? detentHeight(mapDetent, areaHeight) : 0;
 
   return (
@@ -470,9 +475,10 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
 
       {/* มือถือ (และจอกลางตอนเปิดแผนที่): ประวัติแชทเป็น drawer จากซ้าย */}
       <AnimatePresence>
-        {drawerOpen && (isMobile || (mapOpen && view === "chat" && !isWide)) && (
+        {drawerShown && (
           <motion.div
             ref={drawerRef}
+            data-popup
             className={`fixed inset-0 z-40 ${mapOpen && view === "chat" ? "xl:hidden" : "lg:hidden"}`}
             role="dialog"
             aria-modal="true"
@@ -524,12 +530,12 @@ export function TangmodApp({ authOptions }: { authOptions: AuthOptions }) {
         />
         </div>
         {view === "calendar" && (
-          <div className="min-h-0 flex-1 overflow-y-auto">
+          <div data-app-scroll className="min-h-0 flex-1 overflow-y-auto">
             <CalendarScreen />
           </div>
         )}
         {view === "compass" && (
-          <div className="min-h-0 flex-1 overflow-y-auto">
+          <div data-app-scroll className="min-h-0 flex-1 overflow-y-auto">
             <CompassScreen onAsk={askFromCompass} onShowMap={showCompassMap} onFinished={compassFinished} />
           </div>
         )}

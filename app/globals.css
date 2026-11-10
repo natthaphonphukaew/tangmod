@@ -139,6 +139,22 @@ body {
   outline-offset: 2px;
 }
 
+/* เปิด popup อยู่ (lib/client/scroll-lock.ts): หน้าข้างหลังเลื่อนไม่ได้ ทั้ง body และกล่องที่เลื่อนได้ภายในแอป
+   ยกเว้นกล่องที่อยู่ใน popup เอง · !important เพราะ class overflow-y-auto ของ Tailwind อยู่ใน layer ที่ชนะไม่ได้อยู่แล้ว แต่กันไว้ */
+html[data-scroll-locked],
+html[data-scroll-locked] body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+html[data-scroll-locked] [data-app-scroll]:not([data-popup] [data-app-scroll]) {
+  overflow: hidden !important;
+  touch-action: none;
+}
+/* กล่องเลื่อนใน popup เลื่อนสุดแล้วไม่ส่งต่อให้หน้าข้างหลัง */
+[data-popup] [data-app-scroll] {
+  overscroll-behavior: contain;
+}
+
 /* ช่องพิมพ์แชทใช้วงโฟกัสของแคปซูลทั้งอัน (focus-within บน form) แทนเส้นรอบ textarea
    ต้องเขียนตรงนี้: กฎ :focus-visible ข้างบนอยู่นอก layer จึงชนะ class outline-none ของ Tailwind เสมอ */
 #chat-input:focus-visible {

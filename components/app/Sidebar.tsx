@@ -79,7 +79,7 @@ export function Sidebar(props: Props) {
         <NavItem icon={<CalendarDots size={20} weight="duotone" />} label="ปฏิทินนักศึกษา" active={view === "calendar"} onClick={onOpenCalendar} />
       </div>
 
-      <div className="mt-4 min-h-0 flex-1 overflow-y-auto px-3 pb-3">
+      <div data-app-scroll className="mt-4 min-h-0 flex-1 overflow-y-auto px-3 pb-3">
         {groups.length === 0 && (
           <div className="flex flex-col items-center px-3 py-4 text-center text-sm text-ink-soft">
             <AntMascot pose="laptop" className="mb-2 h-24 w-auto opacity-90" />

@@ -3,10 +3,13 @@
 import { X } from "@phosphor-icons/react";
 import { motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { trapTab } from "@/components/ui/trap-tab";
+import { useScrollLock } from "@/lib/client/scroll-lock";
 
 /**
- * กล่องกลางจอบนคอม · เต็มจอจากล่างบนมือถือ · Esc ปิด · Tab วนในกล่อง · ล็อกการเลื่อนหน้าข้างหลัง
+ * กล่องกลางจอบนคอม · เต็มจอจากล่างบนมือถือ · Esc ปิด · Tab วนในกล่อง · หน้าข้างหลังเลื่อนไม่ได้
+ * render ผ่าน portal ไปที่ body: ถ้าอยู่ในกล่องที่เลื่อนได้ (เช่น หน้าเข็มทิศ) การเลื่อนบนพื้นหลังมืดจะไหลไปเลื่อนกล่องนั้น
  * ปิดแล้วคืน focus ให้ปุ่มที่กดเปิด · effect รันครั้งเดียว (onClose เก็บใน ref) focus จะไม่กระโดดตอนหน้าแม่ render ใหม่
  */
 export function Dialog({ title, onClose, children, wide = false }: { title: string; onClose: () => void; children: ReactNode; wide?: boolean }) {
@@ -17,21 +20,21 @@ export function Dialog({ title, onClose, children, wide = false }: { title: stri
   useEffect(() => {
     onCloseRef.current = onClose;
   });
+  useScrollLock();
   useEffect(() => {
     closeRef.current?.focus();
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onCloseRef.current();
     window.addEventListener("keydown", onKey);
-    const overflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
     return () => {
       window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = overflow;
       opener?.focus?.({ preventScroll: true });
     };
   }, [opener]);
 
-  return (
+  if (typeof document === "undefined") return null;
+  return createPortal(
     <motion.div
+      data-popup
       className="fixed inset-0 z-50 flex items-end justify-center bg-ink/50 sm:items-center sm:p-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -54,8 +57,11 @@ export function Dialog({ title, onClose, children, wide = false }: { title: stri
             <X size={20} />
           </button>
         </header>
-        <div className="min-h-0 flex-1 overflow-y-auto">{children}</div>
+        <div data-app-scroll className="min-h-0 flex-1 overflow-y-auto">
+          {children}
+        </div>
       </motion.div>
-    </motion.div>
+    </motion.div>,
+    document.body,
   );
 }
