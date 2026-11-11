@@ -8,10 +8,10 @@ import {
   TransformWrapper,
   type ReactZoomPanPinchRef,
 } from "react-zoom-pan-pinch";
-import antFace from "@/components/brand/art/logo.webp";
+import antWalk from "@/components/brand/art/walk.webp";
 import { placeById } from "@/lib/data";
 import { campusTrees } from "@/lib/map/decor";
-import { routeLength, routePath, walkingRoute } from "@/lib/map/route";
+import { facingKeys, routeLength, routePath, walkingRoute } from "@/lib/map/route";
 import {
   anchorOf,
   buildingGeom,
@@ -130,6 +130,7 @@ export function CampusMap({ highlights, selectedId, onSelect, refitKey, avoidBot
   const route = useMemo(() => walkingRoute(focusKey ? focusKey.split(",") : []), [focusKey]);
   const trail = routePath(route);
   const trailLen = routeLength(route);
+  const facing = useMemo(() => facingKeys(route), [route]);
   const trailId = `trail-${uid}-${focusKey}`;
 
   return (
@@ -194,7 +195,7 @@ export function CampusMap({ highlights, selectedId, onSelect, refitKey, avoidBot
                 </g>
                 {!reduceMotion && (
                   <g>
-                    <Ant />
+                    <Ant facing={facing} dur={`${Math.max(3, trailLen / 60).toFixed(1)}s`} />
                     {/* เดินเร็วคงที่ ~60 หน่วยต่อวินาที (ประมาณ 40 ม./วิ บนแผนที่) */}
                     <animateMotion dur={`${Math.max(3, trailLen / 60).toFixed(1)}s`} repeatCount="indefinite" begin="1s">
                       <mpath href={`#${trailId}`} />
@@ -692,18 +693,22 @@ function Pin({ x, y, n, size, delay }: { x: number; y: number; n: number; size: 
 }
 
 /**
- * น้องมด (มาสคอตของเรา หน้าเดียวกับโลโก้) เดินตามรอยทาง: ตัวตั้งตรงเสมอ กระโดดเบา ๆ เป็นจังหวะก้าว
- * มีเงาวงรีใต้ตัวให้ดูเหมือนเดินบนพื้น · ขอบขาวให้เห็นชัดบนต้นไม้และหลังคาตึก
+ * น้องมดท่าเดิน (สติกเกอร์มีขอบขาว) เดินตามรอยทาง: เท้าแตะเส้นทาง ตัวตั้งตรง กระโดดเบา ๆ เป็นจังหวะก้าว
+ * รูปหันซ้าย: กลับด้านเมื่อเดินไปทางขวา (facingKeys สลับพร้อมกับ animateMotion เพราะใช้ dur และ begin เดียวกัน)
  */
-function Ant() {
+const ANT_H = 30;
+const ANT_W = Math.round((ANT_H * 158) / 240);
+
+function Ant({ facing, dur }: { facing: { values: string; keyTimes: string }; dur: string }) {
   return (
     <g pointerEvents="none">
-      <ellipse cx={0} cy={23} rx={13} ry={3.6} fill="var(--ink)" opacity={0.2} />
+      <ellipse cx={0} cy={0} rx={7} ry={2} fill="var(--ink)" opacity={0.22} />
       <g>
-        <animateTransform attributeName="transform" type="translate" values="0 0; 0 -5; 0 0" keyTimes="0; 0.45; 1" dur="0.5s" repeatCount="indefinite" />
-        <circle r={22} fill="white" />
-        <image href={antFace.src} x={-20} y={-20} width={40} height={40} preserveAspectRatio="xMidYMid slice" />
-        <circle r={22} fill="none" stroke="var(--brand)" strokeWidth={2.5} />
+        <animateTransform attributeName="transform" type="scale" calcMode="discrete" values={facing.values} keyTimes={facing.keyTimes} dur={dur} begin="1s" repeatCount="indefinite" />
+        <g>
+          <animateTransform attributeName="transform" type="translate" values="0 0; 0 -2.5; 0 0" keyTimes="0; 0.45; 1" dur="0.45s" repeatCount="indefinite" />
+          <image href={antWalk.src} x={-ANT_W / 2} y={-ANT_H + 1} width={ANT_W} height={ANT_H} />
+        </g>
       </g>
     </g>
   );

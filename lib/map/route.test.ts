@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { places } from "@/lib/data";
 import { pointInPolygon, polylinePoints } from "./decor";
 import { mapLayout } from "./layout";
-import { routeLength, routePath, walkingRoute } from "./route";
+import { facingKeys, routeLength, routePath, walkingRoute } from "./route";
 
 const nodeKeys = new Set(mapLayout.walk.nodes.map(([x, y]) => `${Math.round(x * 10) / 10},${Math.round(y * 10) / 10}`));
 
@@ -51,5 +51,21 @@ describe("เส้นทางเดินของรอยทางมด", (
       const isPoint = mapLayout.points.some((x) => x.id === p.id);
       expect(Math.hypot(route[1].x - route[0].x, route[1].y - route[0].y), p.id).toBeLessThan(isPoint ? 100 : 60);
     }
+  });
+});
+
+describe("ทิศที่น้องมดหันตอนเดิน", () => {
+  it("ไปทางขวากลับด้าน ไปทางซ้ายหันปกติ ช่วงขึ้นลงหันตามช่วงก่อน และเวลาเทียบกับระยะทาง", () => {
+    const pts = [
+      { x: 0, y: 0 },
+      { x: 100, y: 0 }, // ขวา 100
+      { x: 100, y: 100 }, // ลง 100 (หันเหมือนเดิม)
+      { x: 0, y: 100 }, // ซ้าย 100
+    ];
+    expect(facingKeys(pts)).toEqual({ values: "-1 1;1 1", keyTimes: "0.0000;0.6667" });
+  });
+
+  it("เส้นทางขึ้นลงอย่างเดียวหันปกติ", () => {
+    expect(facingKeys([{ x: 0, y: 0 }, { x: 0, y: 50 }])).toEqual({ values: "1 1", keyTimes: "0.0000" });
   });
 });
