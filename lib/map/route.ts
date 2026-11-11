@@ -139,6 +139,25 @@ export function routePath(points: Point[]): string {
   return "M" + points.map((p) => `${p.x} ${p.y}`).join(" L");
 }
 
+/**
+ * ทิศที่น้องมดหันตอนเดินตามเส้นทาง สำหรับ animateTransform แบบ discrete (เวลาเทียบกับระยะทาง เพราะ animateMotion เดินเร็วคงที่)
+ * รูปน้องมดหันซ้าย: เดินไปทางซ้าย = "1 1" · ไปทางขวา = "-1 1" (กลับด้าน) · ช่วงขึ้นลงตรง ๆ หันตามช่วงก่อนหน้า
+ */
+export function facingKeys(points: Point[]): { values: string; keyTimes: string } {
+  const total = routeLength(points);
+  const keys: { t: number; v: string }[] = [];
+  let walked = 0;
+  for (let i = 1; i < points.length; i++) {
+    const dx = points[i].x - points[i - 1].x;
+    const v = Math.abs(dx) < 0.5 ? (keys.at(-1)?.v ?? "1 1") : dx < 0 ? "1 1" : "-1 1";
+    if (keys.at(-1)?.v !== v) keys.push({ t: total ? walked / total : 0, v });
+    walked += Math.hypot(dx, points[i].y - points[i - 1].y);
+  }
+  if (!keys.length) keys.push({ t: 0, v: "1 1" });
+  keys[0].t = 0;
+  return { values: keys.map((k) => k.v).join(";"), keyTimes: keys.map((k) => k.t.toFixed(4)).join(";") };
+}
+
 export function routeLength(points: Point[]): number {
   let n = 0;
   for (let i = 1; i < points.length; i++) n += Math.hypot(points[i].x - points[i - 1].x, points[i].y - points[i - 1].y);
