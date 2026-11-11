@@ -8,6 +8,7 @@ import {
   TransformWrapper,
   type ReactZoomPanPinchRef,
 } from "react-zoom-pan-pinch";
+import antFace from "@/components/brand/art/logo.webp";
 import { placeById } from "@/lib/data";
 import { campusTrees } from "@/lib/map/decor";
 import { routeLength, routePath, walkingRoute } from "@/lib/map/route";
@@ -188,14 +189,14 @@ export function CampusMap({ highlights, selectedId, onSelect, refitKey, avoidBot
                 <g mask={`url(#${trailId}-mask)`} strokeLinejoin="round" strokeLinecap="round" fill="none">
                   {/* แถบเส้นทางจาง ๆ ใต้รอยเท้ามด ให้เห็นแนวทางเดินชัดแบบเส้นทางใน Google Maps */}
                   <path d={trail} stroke="var(--trail)" strokeOpacity={0.45} strokeWidth={11} />
-                  <path d={trail} className="ant-march" stroke="var(--ink)" strokeOpacity={0.55} strokeWidth={8} strokeDasharray="1 11" />
+                  <path d={trail} className="ant-march" stroke="var(--brand-ink)" strokeOpacity={0.5} strokeWidth={8} strokeDasharray="1 11" />
                   <path d={trail} className="ant-march" stroke="var(--trail)" strokeWidth={5} strokeDasharray="1 11" />
                 </g>
                 {!reduceMotion && (
                   <g>
                     <Ant />
                     {/* เดินเร็วคงที่ ~60 หน่วยต่อวินาที (ประมาณ 40 ม./วิ บนแผนที่) */}
-                    <animateMotion dur={`${Math.max(3, trailLen / 60).toFixed(1)}s`} repeatCount="indefinite" rotate="auto" begin="1s">
+                    <animateMotion dur={`${Math.max(3, trailLen / 60).toFixed(1)}s`} repeatCount="indefinite" begin="1s">
                       <mpath href={`#${trailId}`} />
                     </animateMotion>
                   </g>
@@ -690,15 +691,20 @@ function Pin({ x, y, n, size, delay }: { x: number; y: number; n: number; size: 
   );
 }
 
-/** มดตัวจิ๋วที่เดินตามรอยทาง หันหัวไปทาง +x */
+/**
+ * น้องมด (มาสคอตของเรา หน้าเดียวกับโลโก้) เดินตามรอยทาง: ตัวตั้งตรงเสมอ กระโดดเบา ๆ เป็นจังหวะก้าว
+ * มีเงาวงรีใต้ตัวให้ดูเหมือนเดินบนพื้น · ขอบขาวให้เห็นชัดบนต้นไม้และหลังคาตึก
+ */
 function Ant() {
   return (
-    <g fill="var(--ink)" stroke="var(--ink)" strokeWidth={1.1} strokeLinecap="round">
-      <path d="M-3 -1 L-6 -6 M-3 1 L-6 6 M0 -1 L0 -6 M0 1 L0 6 M3 -1 L6 -6 M3 1 L6 6" fill="none" />
-      <ellipse cx={-6} cy={0} rx={4.2} ry={3.2} stroke="none" />
-      <ellipse cx={0} cy={0} rx={2.6} ry={2.2} stroke="none" />
-      <circle cx={4.8} cy={0} r={2.6} stroke="none" />
-      <path d="M6.6 -1.4 L9.5 -4 M6.6 1.4 L9.5 4" fill="none" strokeWidth={0.8} />
+    <g pointerEvents="none">
+      <ellipse cx={0} cy={23} rx={13} ry={3.6} fill="var(--ink)" opacity={0.2} />
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0; 0 -5; 0 0" keyTimes="0; 0.45; 1" dur="0.5s" repeatCount="indefinite" />
+        <circle r={22} fill="white" />
+        <image href={antFace.src} x={-20} y={-20} width={40} height={40} preserveAspectRatio="xMidYMid slice" />
+        <circle r={22} fill="none" stroke="var(--brand)" strokeWidth={2.5} />
+      </g>
     </g>
   );
 }

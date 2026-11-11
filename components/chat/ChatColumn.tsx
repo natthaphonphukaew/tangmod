@@ -45,10 +45,11 @@ export function ChatColumn(props: Props) {
   // หยุดพิมพ์ตัวอย่างเมื่อผู้ใช้เริ่มพิมพ์ หรือตั้งลดการเคลื่อนไหวไว้ในเครื่อง
   // แตะช่องพิมพ์แล้วตัวอย่างหายทันที (ไม่ต้องรอพิมพ์ตัวแรก) กลับมาวนต่อเมื่อออกจากช่องโดยยังว่างอยู่
   const [focused, setFocused] = useState(false);
-  const showExample = !draft && !focused;
-  const example = useTypewriter(EXAMPLES, showExample && !reduceMotion && !compact);
   const scrollRef = useRef<HTMLDivElement>(null);
   const empty = thread.length === 0;
+  // ตัวอย่างคำถามพิมพ์วนเฉพาะหน้าแรก (ยังไม่เริ่มแชท) · เริ่มแชทแล้วเหลือ placeholder นิ่ง ๆ ไม่กวนตาตอนอ่านคำตอบ
+  const showExample = empty && !draft && !focused;
+  const example = useTypewriter(EXAMPLES, showExample && !reduceMotion && !compact);
 
   // screen reader: ประกาศเมื่อเริ่มหาคำตอบ และอ่านคำตอบเต็มครั้งเดียวตอนจบ (ไม่อ่านทุกตัวอักษรที่ไหลเข้ามา)
   const lastDone = thread.findLast((i) => (i.kind === "assistant" && i.status !== "streaming") || i.kind === "compass");
@@ -176,8 +177,8 @@ export function ChatColumn(props: Props) {
                 props.onInputFocus?.();
               }}
               onBlur={() => setFocused(false)}
-              placeholder="ถามมดได้เลย เช่น CB2301 อยู่ไหน"
-              className="field-sizing-content block max-h-40 min-h-6 w-full resize-none bg-transparent text-base leading-[1.6] outline-none placeholder:text-transparent"
+              placeholder={empty ? "ถามมดได้เลย เช่น CB2301 อยู่ไหน" : "ถามต่อได้เลย"}
+              className={`field-sizing-content block max-h-40 min-h-6 w-full resize-none bg-transparent text-base leading-[1.6] outline-none ${empty ? "placeholder:text-transparent" : "placeholder:text-ink-soft"}`}
             />
           </div>
           <button
