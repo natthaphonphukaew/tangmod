@@ -46,6 +46,23 @@ describe("retrieve", () => {
     expect(r.chunks.some((c) => c.id.startsWith("kb:general/transport"))).toBe(true);
   });
 
+  it("ถามเรื่องคณะ (คณบดี SIT) ไม่บังคับใส่ชิ้นตึก N11 แต่ยังจับได้ว่าพูดถึง N11", () => {
+    const r = retrieve({ message: "คณบดี SIT คือใคร" });
+    expect(r.placeIds).toContain("N11");
+    expect(r.chunks[0].id).not.toBe("place:N11");
+    expect(r.chunks.slice(0, 3).map((c) => c.id)).toContain("kb:sit/sit-people#1");
+  });
+
+  it("ถามที่ตั้งตึกคณะ หรือพิมพ์รหัสตึก ยังบังคับใส่ชิ้นตึก", () => {
+    expect(retrieve({ message: "SIT อยู่ไหน" }).chunks.map((c) => c.id)).toContain("place:N11");
+    expect(retrieve({ message: "จาก S14 ไป sit ทางไหน" }).chunks.map((c) => c.id)).toContain("place:N11");
+    expect(retrieve({ message: "N11 คืออะไร" }).chunks.map((c) => c.id)).toContain("place:N11");
+  });
+
+  it("ตึกที่ไม่ใช่ตึกคณะ (ห้องสมุด KFC) ยังบังคับใส่เสมอ", () => {
+    expect(retrieve({ message: "ห้องสมุดเปิดกี่โมง" }).chunks.map((c) => c.id)).toContain("place:N10");
+  });
+
   it("เลขห้อง CB2301 → ดึงตึก N17 และ chunk อธิบายห้องมาก่อน", () => {
     const r = retrieve({ message: "CB2301 อยู่ตรงไหน" });
     expect(r.placeIds).toContain("N17");

@@ -123,6 +123,19 @@ export function dormPins(message: string): string[] {
   return pins;
 }
 
+// ตึกคณะ (kind = faculty) มีชื่อเรียกซ้ำกับชื่อคณะ เช่น "SIT" "FIBO" "คณะศิลปศาสตร์"
+// คำถามเรื่องคณะ (คณบดี ทุน ภาษาอังกฤษ) จึงเจอตึกทุกครั้ง ถ้าบังคับใส่ชิ้นตึกจะเสียที่ 1 ใน k ไปกับข้อมูลที่ไม่เกี่ยว
+// จึงบังคับใส่ตึกคณะเฉพาะเมื่อคำถามพูดถึงที่ตั้งหรือตัวตึก ไม่งั้นให้ชิ้นตึกแข่งคะแนนกับชิ้นอื่นตามปกติ
+const LOCATION_RE = /ที่ไหน|ตรงไหน|ทางไหน|อยู่ไหน|อยู่ตึก|อยู่ชั้น|ไปยังไง|ไปไง|ไปทาง|ทางไป|จาก.{1,30}ไป|เดิน|แผนที่|หมุด|ตึก|อาคาร|ชั้น|ห้อง|ใกล้|ไกล|ข้าง|ตรงข้าม|เข้า.{0,6}ประตู|where|building|floor|map/i;
+const isFacultyPlace = (id: string) => places.find((p) => p.id === id)?.kind === "faculty";
+
+/** ตึกที่ต้องบังคับใส่ในผลค้น: ตึกทั่วไปใส่เสมอ ตึกคณะใส่เมื่อถามเรื่องที่ตั้ง หรือพิมพ์รหัสตึกมาตรง ๆ (N11) */
+export function forcedPlaceIds(message: string, placeIds: string[]): string[] {
+  if (LOCATION_RE.test(message)) return placeIds;
+  const typedCodes = new Set([...message.matchAll(/\b([NSns]\d{1,2})\b/g)].map((m) => m[1].toUpperCase()));
+  return placeIds.filter((id) => !isFacultyPlace(id) || typedCodes.has(id));
+}
+
 export type Retrieved = { chunks: Chunk[]; programIds: string[]; placeIds: string[] };
 
 export function retrieve(opts: {
@@ -167,7 +180,7 @@ export function retrieve(opts: {
   const forced = [
     ...roomChunks,
     ...entities.programIds.map((id) => byId.get(`program:${id}`)),
-    ...entities.placeIds.map((id) => byId.get(`place:${id}`)),
+    ...forcedPlaceIds(opts.message, entities.placeIds).map((id) => byId.get(`place:${id}`)),
   ].filter((c): c is Chunk => Boolean(c));
 
   const picked = new Map<string, Chunk>();
