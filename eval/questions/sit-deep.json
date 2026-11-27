@@ -1,0 +1,140 @@
+[
+  {
+    "id": "sitd-dean",
+    "cat": "official",
+    "q": "คณบดี SIT คือใคร",
+    "expect": { "include": ["ณรงค์ฤทธิ์"] }
+  },
+  {
+    "id": "sitd-dean-alt",
+    "cat": "official",
+    "q": "คณบดีคณะไอทีบางมดชื่ออะไร",
+    "expect": { "include": ["ณรงค์ฤทธิ์|วราภรณ์"] }
+  },
+  {
+    "id": "sitd-assoc-dean-academic",
+    "cat": "official",
+    "q": "รองคณบดีฝ่ายวิชาการของ SIT คือใคร",
+    "expect": { "include": ["วรรัตน์"] }
+  },
+  {
+    "id": "sitd-chair-it",
+    "cat": "official",
+    "q": "ประธานหลักสูตร IT ของ SIT คือใคร",
+    "expect": { "include": ["โอฬาร"] }
+  },
+  {
+    "id": "sitd-chair-dsi",
+    "cat": "official",
+    "q": "ใครเป็นประธานหลักสูตร DSI",
+    "expect": { "include": ["นันทพงศ์"] }
+  },
+  {
+    "id": "sitd-founded",
+    "cat": "official",
+    "q": "คณะ SIT ก่อตั้งปีไหน",
+    "expect": { "include": ["2538|1995"] }
+  },
+  {
+    "id": "sitd-symbol",
+    "cat": "official",
+    "q": "รูปปั้นสัญลักษณ์ของคณะ SIT ชื่ออะไร ใครออกแบบ",
+    "expect": { "include": ["Information Evolution", "ชำเรือง"] }
+  },
+  {
+    "id": "sitd-culture",
+    "cat": "official",
+    "q": "วัฒนธรรมองค์กรของ SIT คืออะไร",
+    "expect": { "include": ["ทำถูก", "ทำเป็น"] }
+  },
+  {
+    "id": "sitd-ar-cs-gpax",
+    "cat": "official",
+    "q": "CS SIT รอบ portfolio ใช้เกรดเฉลี่ยขั้นต่ำเท่าไหร่",
+    "expect": { "include": ["3\\.0"] }
+  },
+  {
+    "id": "sitd-ar-round3",
+    "cat": "official",
+    "q": "Active Recruitment SIT ครั้งที่ 3 เปิดรับสมัครวันไหน",
+    "expect": { "include": ["15 ธ\\.?ค|15 ธันวาคม", "18 ม\\.?ค|18 มกราคม"] }
+  },
+  {
+    "id": "sitd-dsi-vs-it",
+    "cat": "official",
+    "q": "DSI ต่างจาก IT ยังไง เขียนโค้ดเยอะไหม",
+    "expect": { "include": ["เบื้องต้น|ไม่ลึก", "ธุรกิจ|จิตวิทยา"] }
+  },
+  {
+    "id": "sitd-it-tracks",
+    "cat": "official",
+    "q": "เรียน IT บางมดเลือกสายอะไรได้บ้าง",
+    "expect": { "include": ["Frontend", "Data"] }
+  },
+  {
+    "id": "sitd-tetet-cs",
+    "cat": "official",
+    "q": "CS SIT ต้องได้ TETET เท่าไหร่ถึงจะจบ",
+    "expect": { "include": ["4"] }
+  },
+  {
+    "id": "sitd-msc-programs",
+    "cat": "official",
+    "q": "SIT มีปริญญาโทสาขาอะไรบ้าง",
+    "expect": { "include": ["ซอฟต์แวร์", "วิทยาการคอมพิวเตอร์|Computer Science"] }
+  },
+  {
+    "id": "sitd-print-free",
+    "cat": "niche",
+    "q": "เด็ก SIT ปริ้นงานฟรีได้ที่ไหน",
+    "expect": { "include": ["LAB ?2|Lab ?2|แล็บ ?2"] }
+  },
+  {
+    "id": "sitd-teams-account",
+    "cat": "niche",
+    "q": "เรียนออนไลน์วิชา SIT ต้องเข้า Teams ด้วยอีเมลอะไร",
+    "expect": { "include": ["ad\\.sit"] }
+  },
+  {
+    "id": "sitd-vm",
+    "cat": "niche",
+    "q": "นักศึกษา SIT ขอ VM ทำโปรเจกต์ได้ที่ไหน",
+    "expect": { "include": ["requestvm"] }
+  },
+  {
+    "id": "sitd-work-scholarship",
+    "cat": "official",
+    "q": "ทุนจ้างงานคณะ SIT ได้ชั่วโมงละเท่าไหร่",
+    "expect": { "include": ["50"] }
+  },
+  {
+    "id": "sitd-good-grade-scholarship",
+    "cat": "official",
+    "q": "ทุนเรียนดีของ SIT ต้องได้เกรดเท่าไหร่",
+    "expect": { "include": ["3\\.6"] }
+  },
+  {
+    "id": "sitd-ict-challenge",
+    "cat": "official",
+    "q": "ICT Challenge ของ SIT แข่งกันทีมละกี่คน",
+    "expect": { "include": ["3 คน"] }
+  },
+  {
+    "id": "sitd-advisor-phone-cs",
+    "cat": "official",
+    "q": "นักบริการการศึกษาสาขา CS ของ SIT เบอร์อะไร",
+    "expect": { "include": ["9832"] }
+  },
+  {
+    "id": "sitd-school-visit",
+    "cat": "official",
+    "q": "โรงเรียนอยากพานักเรียนไปดูงานคณะ SIT ติดต่อเบอร์ไหน",
+    "expect": { "include": ["9882"] }
+  },
+  {
+    "id": "sitd-msc-tuition-unknown",
+    "cat": "unknown",
+    "q": "ค่าเทอมปริญญาโท IT ที่ SIT เท่าไหร่",
+    "expect": { "admits_unknown": true }
+  }
+]

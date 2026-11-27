@@ -42,8 +42,9 @@
     "round": 1, "kind": "apply",
     "title": "Active Recruitment คณะ SIT รอบที่ 3",
     "faculty": "sit", "program_ids": ["sit-it", "sit-cs", "sit-dsi"],
-    "start": "2026-12-09", "end": "2027-01-18",
-    "tier": "student", "source_url": "https://www.eduzones.com/2026/08/24/kmutt-tcas70/", "updated_at": "2026-10-28"
+    "start": "2026-12-15", "end": "2027-01-18",
+    "tier": "official", "source_url": "https://www.sit.kmutt.ac.th/", "updated_at": "2026-11-27",
+    "conflict_note": "Eduzones ระบุเริ่ม 9 ธ.ค. 69 แต่หน้าแรกเว็บ SIT (27 พ.ย. 69) ระบุ Active Recruitment ครั้งที่ 3 ปีการศึกษา 2570 รับสมัคร 15 ธ.ค. 69–18 ม.ค. 70 จึงใช้ของ SIT"
   },
   {
     "id": "r1-preu",
