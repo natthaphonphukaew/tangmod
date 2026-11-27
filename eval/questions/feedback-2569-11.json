@@ -1,0 +1,50 @@
+[
+  {
+    "id": "fb11-grad-year3",
+    "cat": "official",
+    "q": "ตอนนี้ผมอยู่ปี 3 ผมอยากทราบวันที่ผมจะจบการศึกษา",
+    "expect": { "include": ["2571"] }
+  },
+  {
+    "id": "fb11-grad-year4",
+    "cat": "official",
+    "q": "ปี 4 ตอนนี้จะเรียนจบวันไหน",
+    "expect": { "include": ["28 พ\\.?ค|28 พฤษภาคม"] }
+  },
+  {
+    "id": "fb11-grad-year1",
+    "cat": "official",
+    "q": "เพิ่งเข้าปี 1 ปีนี้ จะจบปีไหน",
+    "expect": { "include": ["2573"] }
+  },
+  {
+    "id": "fb11-resign",
+    "cat": "official",
+    "q": "ลาออกยังไง",
+    "expect": { "include": ["สทน\\.? ?13|RO\\.? ?13|คำร้องขอลาออก"] }
+  },
+  {
+    "id": "fb11-resign-form",
+    "cat": "official",
+    "q": "อยากลาออกจากมอ ต้องใช้ฟอร์มอะไร",
+    "expect": { "include": ["สทน\\.? ?13|RO\\.? ?13|คำร้องขอลาออก"] }
+  },
+  {
+    "id": "fb11-bangkhae",
+    "cat": "official",
+    "q": "บางแคมาบางมดยังไงได้บ้าง",
+    "expect": { "include": ["วงเวียนใหญ่|กม\\.? ?9", "ไม่มี|ไม่ได้"] }
+  },
+  {
+    "id": "fb11-cb2-floors",
+    "cat": "unknown",
+    "q": "ตึก CB2 มีกี่ชั้น",
+    "expect": { "admits_unknown": true }
+  },
+  {
+    "id": "fb11-sit-water",
+    "cat": "unknown",
+    "q": "มีจุดน้ำดื่มในตึก SIT ไหม",
+    "expect": { "admits_unknown": true }
+  }
+]
